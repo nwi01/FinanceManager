@@ -1,19 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+//Erstellt am 31.10.2013
+
 package financesoftware;
 
 /**
- *
- * @author melanie
+ * @author Niels Willig
+ * @author Mike Mertens
+ * @author Kristina Vieten
  */
-public class FinanceSoftware {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+public class FinanceSoftware 
+{
+    public static void main(String[] args) 
+    {
+        FinanceSoftwareGUI lGUI = new FinanceSoftwareGUI();
+        lGUI.setVisible(true);
     }
 }
