@@ -5,20 +5,16 @@
 package financesoftware.gui.components;
 
 import financesoftware.gui.base.ViewComponent;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -32,12 +28,14 @@ public class AccountManagementComponent extends JComponent implements ViewCompon
         super();
         this.parentPanel = parentPanel;
 
-        GridLayout layout = new GridLayout(1, 2);
+//        GridLayout layout = new GridLayout(1, 2);
 //        FlowLayout layout = new FlowLayout();
-        this.setLayout(layout);
+//        this.setLayout(layout);
+//        this.setBorder(new EmptyBorder(9, 9, 9, 9));
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         this.add(createUserOverview());
-//        this.add(createSeparator());
+        this.add(createSeparator());
         this.add(createSpecificDatarecord());
 
         this.setVisible(true);
@@ -55,6 +53,7 @@ public class AccountManagementComponent extends JComponent implements ViewCompon
 
     private JPanel createUserOverview() {
         JPanel userOverviewPanel = new JPanel();
+        userOverviewPanel.setBorder(new EmptyBorder(9, 9, 9, 9));
         // Layout
         GridLayout layout = new GridLayout(3, 1);
         userOverviewPanel.setLayout(layout);
@@ -68,14 +67,13 @@ public class AccountManagementComponent extends JComponent implements ViewCompon
         JTable table = new JTable(getData(), getColumnNames());
         table.getAutoCreateRowSorter();
 
-        
-
         userOverviewPanel.add(table);
         return userOverviewPanel;
     }
 
     private JPanel createSpecificDatarecord() {
         JPanel specificPanel = new JPanel();
+        specificPanel.setBorder(new EmptyBorder(9, 9, 9, 9));
         GridLayout layout = new GridLayout(3, 1);
         specificPanel.setLayout(layout);
 
