@@ -6,6 +6,7 @@ package financesoftware.gui.base;
 
 import financesoftware.gui.components.AccountManagementComponent;
 import financesoftware.gui.components.CategoriesManagementComponent;
+import financesoftware.gui.components.HelpComponent;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
 
@@ -26,11 +28,12 @@ import javax.swing.UIManager;
  */
 public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
-    private final JPanel mainPanel = new JPanel();
+    private final JPanel mainPanel = new JPanel();    
     private JFrame mainFrame;
+    private JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public FinanceSoftwareGUI() {
-        super("Finanz Software");
+        super("Finanz Manager");
         // LookAndFeel
         this.setLookAndFeel();
 
@@ -42,9 +45,9 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
         this.mainFrame = this;
         JLabel label = new JLabel("efeffe");
-        this.mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(label);
-        this.mainPanel.setVisible(true);
+//        this.scrollPane.setLayout(new BorderLayout());
+        scrollPane.add(label);
+        this.scrollPane.setVisible(true);
 
 //        // Grundlegendes Layout
 //        BorderLayout layout = new BorderLayout();
@@ -71,7 +74,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
     private void createMainView() {
         // SplitPane erzeugen
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setRightComponent(this.mainPanel);
+        splitPane.setRightComponent(this.scrollPane);
         splitPane.setLeftComponent(this.createControlBar());
         splitPane.setEnabled(false);
         this.add(splitPane);
@@ -105,10 +108,10 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
             this.mainPanel.setVisible(false);
             this.mainPanel.removeAll();
             this.mainPanel.setLayout(new BorderLayout());
-
+            
             switch (index) {
                 case 0: {
-                    AccountManagementComponent component = new AccountManagementComponent();
+                    AccountManagementComponent component = new AccountManagementComponent(mainPanel);
                     mainPanel.add(component.getComponent(), BorderLayout.CENTER);
                     break;
                 }
@@ -129,6 +132,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
                     break;
                 }
                 case 6: {
+                    HelpComponent help = new HelpComponent();
+                    mainPanel.add(help.getComponent(), BorderLayout.CENTER);
                     break;
                 }
             }

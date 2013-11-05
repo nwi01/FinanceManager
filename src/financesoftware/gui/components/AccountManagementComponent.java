@@ -6,34 +6,95 @@ package financesoftware.gui.components;
 
 import financesoftware.gui.base.ViewComponent;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
 
 /**
  *
  * @author melanie
  */
-public class AccountManagementComponent extends JComponent implements ViewComponent{
-    
-    public AccountManagementComponent(){
+public class AccountManagementComponent extends JComponent implements ViewComponent {
+
+    private JPanel parentPanel;
+
+    public AccountManagementComponent(JPanel parentPanel) {
         super();
-        BorderLayout layout = new BorderLayout();
+        this.parentPanel = parentPanel;
+
+        GridLayout layout = new GridLayout(1, 2);
+//        FlowLayout layout = new FlowLayout();
         this.setLayout(layout);
+
         this.add(createUserOverview());
+//        this.add(createSeparator());
+        this.add(createSpecificDatarecord());
+
         this.setVisible(true);
     }
-    
-    private JPanel createUserOverview(){
+
+    private JPanel createSeparator() {
         JPanel panel = new JPanel();
-        // Layout
-        BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        GridLayout layout = new GridLayout(1, 1);
         panel.setLayout(layout);
-        
-        panel.add(new JLabel("Übersicht"));
-        panel.setVisible(true);
+        JSeparator separator = new JSeparator(JSeparator.VERTICAL);
+        panel.add(separator);
+
         return panel;
+    }
+
+    private JPanel createUserOverview() {
+        JPanel userOverviewPanel = new JPanel();
+        // Layout
+        GridLayout layout = new GridLayout(3, 1);
+        userOverviewPanel.setLayout(layout);
+
+        JLabel label = new JLabel("Übersicht");
+        label.setFont(new Font("Dialog", Font.PLAIN, 18));
+
+        userOverviewPanel.add(label);
+//        userOverviewPanel.setVisible(true);
+
+        JTable table = new JTable(getData(), getColumnNames());
+        table.getAutoCreateRowSorter();
+
+        
+
+        userOverviewPanel.add(table);
+        return userOverviewPanel;
+    }
+
+    private JPanel createSpecificDatarecord() {
+        JPanel specificPanel = new JPanel();
+        GridLayout layout = new GridLayout(3, 1);
+        specificPanel.setLayout(layout);
+
+        specificPanel.add(new JLabel("Test"));
+        return specificPanel;
+    }
+
+    private Object[][] getData() {
+        Object[][] data
+                = {
+                    {"Niels", "efeff", "efefe"},
+                    {"Mike", "efef", "fefolfij"}
+                };
+
+        return data;
+    }
+
+    private Object[] getColumnNames() {
+        return new Object[]{"Name", "Test1", "Test2"};
     }
 
     @Override
