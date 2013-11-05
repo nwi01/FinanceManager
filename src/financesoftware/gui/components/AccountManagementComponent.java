@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package financesoftware.gui.Components;
+package financesoftware.gui.components;
 
 import financesoftware.gui.base.ViewComponent;
 import java.awt.BorderLayout;
@@ -31,14 +31,14 @@ public class AccountManagementComponent extends JComponent implements ViewCompon
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(layout);
         
-        panel.add(new JLabel("Übersicht"), BoxLayout.LINE_AXIS);
+        panel.add(new JLabel("Übersicht"));
         panel.setVisible(true);
         return panel;
     }
 
     @Override
     public JComponent getComponent() {
-        return new JLabel("rgrg");
+        return this;
     }
 
     @Override

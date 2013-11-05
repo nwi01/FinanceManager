@@ -1,5 +1,5 @@
 //Erstellt am 31.10.2013
-package financesoftware;
+package financesoftware.base;
 
 import java.util.Date;
 

@@ -4,16 +4,18 @@
  */
 package financesoftware.gui.base;
 
-import financesoftware.gui.Components.AccountManagementComponent;
-import financesoftware.gui.Components.CategoriesManagementComponent;
+import financesoftware.gui.components.AccountManagementComponent;
+import financesoftware.gui.components.CategoriesManagementComponent;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
@@ -36,7 +38,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         this.setLocation(100, 300);
         this.setResizable(true);
         this.setSize(1000, 500);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.mainFrame = this;
         JLabel label = new JLabel("efeffe");
@@ -44,12 +46,9 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         mainPanel.add(label);
         this.mainPanel.setVisible(true);
 
-
-
 //        // Grundlegendes Layout
 //        BorderLayout layout = new BorderLayout();
 //        this.setLayout(layout);
-
         //Hinzufuegen der Menueleiste zum Frame 
         this.createMainView();
 
@@ -82,7 +81,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
     private JList createControlBar() {
         final JList list = new JList();
-        list.setListData(new String[]{"Konto verwalten", "Kategorien verwalten", "Daueraufträge verwalten", "Ein & Ausgabe", "Auswertung", "Auswertungen verwalten", "Hilfe"});
+        list.setListData(new String[]{"Konto verwalten", "Kategorien verwalten", "Daueraufträge verwalten", "Ein & Ausgabe", "Auswertung", "Auswertungen verwalten", "Hilfe", "Beenden"});
         list.setVisible(true);
 
         list.addMouseListener(this);
@@ -92,37 +91,49 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        this.mainPanel.setVisible(false);
+
         // Hier sollte das Event nur von einer JList kommen
         JList list = (JList) me.getSource();
-        
-        this.mainPanel.removeAll();
-        this.mainPanel.setLayout(new BorderLayout());
+        int index = list.getSelectedIndex();
 
-        switch (list.getSelectedIndex()) {
-            case 0: {
-                AccountManagementComponent component = new AccountManagementComponent();
-                mainPanel.add(component.getComponent(), BorderLayout.CENTER); 
-                break;
+        if (index == 7) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Wollen Sie das Programm wirklich beenden?","Programm beenden", JOptionPane.OK_CANCEL_OPTION);
+            if (confirm == 0) {
+                System.exit(0);
             }
-            case 1: {
-                mainPanel.add(new CategoriesManagementComponent().getComponent());
-                break;
+        } else {
+            this.mainPanel.setVisible(false);
+            this.mainPanel.removeAll();
+            this.mainPanel.setLayout(new BorderLayout());
+
+            switch (index) {
+                case 0: {
+                    AccountManagementComponent component = new AccountManagementComponent();
+                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
+                    break;
+                }
+                case 1: {
+                    mainPanel.add(new CategoriesManagementComponent().getComponent());
+                    break;
+                }
+                case 2: {
+                    break;
+                }
+                case 3: {
+                    break;
+                }
+                case 4: {
+                    break;
+                }
+                case 5: {
+                    break;
+                }
+                case 6: {
+                    break;
+                }
             }
-            case 2: {
-                break;
-            }
-            case 3: {
-                break;
-            }
-            case 4: {
-                break;
-            }
-            case 5: {
-                break;
-            }
+            this.mainPanel.setVisible(true);
         }
-        this.mainPanel.setVisible(true);
     }
 
     @Override
