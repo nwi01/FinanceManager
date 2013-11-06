@@ -8,6 +8,7 @@ import financesoftware.gui.components.AccountManagementComponent;
 import financesoftware.gui.components.CategoriesManagementComponent;
 import financesoftware.gui.components.HelpComponent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -44,14 +45,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.mainFrame = this;
-        JLabel label = new JLabel("efeffe");
 //        this.scrollPane.setLayout(new BorderLayout());
-        scrollPane.add(label);
         this.scrollPane.setVisible(true);
-
-//        // Grundlegendes Layout
-//        BorderLayout layout = new BorderLayout();
-//        this.setLayout(layout);
         //Hinzufuegen der Menueleiste zum Frame 
         this.createMainView();
 
@@ -78,7 +73,6 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         splitPane.setLeftComponent(this.createControlBar());
         splitPane.setEnabled(false);
         this.add(splitPane);
-//        splitPane.setRightComponent();
 
     }
 

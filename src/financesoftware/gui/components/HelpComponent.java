@@ -10,8 +10,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTree;
 
 /**
  *
@@ -20,13 +18,12 @@ import javax.swing.JTree;
 public class HelpComponent extends JComponent implements ViewComponent, MouseListener {
 
     private JList list;
-    private JPanel helpPanel;
+    private JPanel helpPanel = new JPanel();
 
     public HelpComponent() {
         super();
 
         GridLayout layout = new GridLayout(1, 2);
-//        FlowLayout layout = new FlowLayout();
         this.setLayout(layout);
 
         Object[] help = {"Grundlegendes", "Account", "Bla"};
@@ -35,18 +32,16 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setLeftComponent(list);
-        splitPane.setRightComponent(this.createHelpText());        
+        splitPane.setRightComponent(helpPanel);
         splitPane.setEnabled(false);
-        
         this.add(splitPane);
-              
+        
+        splitPane.setVisible(true);
+        
+
         this.setVisible(true);
     }
 
-    private JPanel createHelpText() {
-        helpPanel = new JPanel();
-        return helpPanel;
-    }
 
     @Override
     public JComponent getComponent() {
@@ -57,13 +52,15 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
     public void updateContent() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     /**
      * Holt sich den Hilfe Text aus einer Datei mit Hilfe des Helpers.
+     *
      * @param name
-     * @return 
+     *
+     * @return
      */
-    private String getHelpText(String name){                       
+    private String getHelpText(String name) {
         return Helper.getHelpText(name);
     }
 
@@ -71,13 +68,12 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
     public void mouseClicked(MouseEvent e) {
         JTextArea area = new JTextArea();
         area.setEditable(false);
-        int index = list.getSelectedIndex();
-        helpPanel.setVisible(false);
-        helpPanel.removeAll();
+        area.setText(this.getHelpText((String) list.getSelectedValue()));
+        area.setVisible(true);
         
-        area.setText(this.getHelpText((String)list.getSelectedValue()));
-
-        helpPanel.add(area);
+        helpPanel.setVisible(false);
+        helpPanel.removeAll();       
+        helpPanel.add(area);               
         helpPanel.setVisible(true);
     }
 
