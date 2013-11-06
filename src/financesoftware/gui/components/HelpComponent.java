@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
@@ -19,6 +20,7 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
 
     private JList list;
     private JPanel helpPanel = new JPanel();
+    private JScrollPane scrollPane = new JScrollPane(helpPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public HelpComponent() {
         super();
@@ -32,7 +34,7 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setLeftComponent(list);
-        splitPane.setRightComponent(helpPanel);
+        splitPane.setRightComponent(scrollPane);
         splitPane.setEnabled(false);
         this.add(splitPane);
         

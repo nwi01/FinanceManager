@@ -31,7 +31,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
     private final JPanel mainPanel = new JPanel();    
     private JFrame mainFrame;
-    private JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//    private JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public FinanceSoftwareGUI() {
         super("Finanz Manager");
@@ -46,7 +46,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
         this.mainFrame = this;
 //        this.scrollPane.setLayout(new BorderLayout());
-        this.scrollPane.setVisible(true);
+//        this.scrollPane.setVisible(true);
         //Hinzufuegen der Menueleiste zum Frame 
         this.createMainView();
 
@@ -69,7 +69,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
     private void createMainView() {
         // SplitPane erzeugen
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setRightComponent(this.scrollPane);
+        splitPane.setRightComponent(this.mainPanel);
         splitPane.setLeftComponent(this.createControlBar());
         splitPane.setEnabled(false);
         this.add(splitPane);
