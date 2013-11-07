@@ -1,7 +1,7 @@
 package financesoftware.gui.components;
 
 import financesoftware.gui.base.ViewComponent;
-import financesoftware.tools.Helper;
+import financesoftware.tools.GUIHelper;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -63,7 +63,7 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
      * @return
      */
     private String getHelpText(String name) {
-        return Helper.getHelpText(name);
+        return GUIHelper.getHelpText(name);
     }
 
     @Override

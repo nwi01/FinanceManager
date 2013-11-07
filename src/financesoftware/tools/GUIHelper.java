@@ -8,9 +8,19 @@ import java.util.Scanner;
  *
  * @author nwi01
  */
-public class Helper {
+public class GUIHelper {
 
-    public Helper() {
+    public GUIHelper() {
+    }
+    
+    /**
+     * Gibt ein Array zurueck, welches die verschiedenen, 
+     * vom Benutzer angelegten Auswertungen beinhaltet.
+     * Muss/ Sollte nicht unbedingt ein String[] sein, keine Ahnung was die JComboBox da verarbeiten kann. 
+     * @return 
+     */
+    public String[] getAllAnaysisVariants(){
+        return new String[]{};
     }
 
     public static String getHelpText(String name) {

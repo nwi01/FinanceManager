@@ -5,6 +5,7 @@
 package financesoftware.gui.base;
 
 import financesoftware.gui.components.AccountManagementComponent;
+import financesoftware.gui.components.AnalysisComponent;
 import financesoftware.gui.components.CategoriesManagementComponent;
 import financesoftware.gui.components.HelpComponent;
 import java.awt.BorderLayout;
@@ -120,6 +121,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
                     break;
                 }
                 case 4: {
+                    AnalysisComponent component = new AnalysisComponent();
+                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
                     break;
                 }
                 case 5: {
