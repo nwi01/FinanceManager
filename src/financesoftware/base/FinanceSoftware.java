@@ -8,7 +8,7 @@ import financesoftware.gui.base.FinanceSoftwareGUI;
  * @author Mike Mertens
  * @author Kristina Vieten
  */
-public class FinanceSoftware {
+public class FinanceSoftware {    
 
     public static void main(String[] args) {        
         FinanceSoftwareGUI lGUI = new FinanceSoftwareGUI();

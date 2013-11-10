@@ -121,7 +121,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
                     break;
                 }
                 case 4: {
-                    AnalysisComponent component = new AnalysisComponent();
+                    AnalysisComponent component = new AnalysisComponent(mainPanel);
                     mainPanel.add(component.getComponent(), BorderLayout.CENTER);
                     break;
                 }
