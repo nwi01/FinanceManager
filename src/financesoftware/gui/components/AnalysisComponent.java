@@ -52,6 +52,7 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
         
         Dimension dim = this.parentPanel.getSize();
         desktopPane.setPreferredSize(dim);
+//        desktopPane.setSize(dim);
 //        desktopPane.setLayout(new GridLayout(5, 3));
 //        mainPanel.add(createTopPanel());
         mainPanel.add(desktopPane);
