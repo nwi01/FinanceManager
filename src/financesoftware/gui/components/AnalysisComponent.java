@@ -11,6 +11,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -35,12 +36,10 @@ import org.jfree.util.Rotation;
 public class AnalysisComponent extends BaseComponent implements ViewComponent {
 
     private GUIHelper helper = new GUIHelper();
-    private JPanel parentPanel;
     private String chartTitle;
 
-    public AnalysisComponent(JPanel parentPanel) {
+    public AnalysisComponent() {
         super(true);
-        this.parentPanel = parentPanel;
 //        GridBagLayout layout = new GridBagLayout();
 //        GridBagConstraints constraints = new GridBagConstraints();
 //        constraints.gridwidth = 1;
@@ -50,16 +49,18 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
 //        GridLayout layout = new GridLayout();
         JDesktopPane desktopPane = new JDesktopPane();
         
-        Dimension dim = this.parentPanel.getSize();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         desktopPane.setPreferredSize(dim);
 //        desktopPane.setSize(dim);
-//        desktopPane.setLayout(new GridLayout(5, 3));
+//        FlowLayout layout = new FlowLayout();
+//        desktopPane.setLayout(layout);
 //        mainPanel.add(createTopPanel());
         mainPanel.add(desktopPane);
 //        this.add(desktopPane);
 
         this.createTestIFrames1(desktopPane);
         this.createTestIFrames2(desktopPane);
+
 
 
         this.setVisible(true);
