@@ -40,23 +40,12 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
 
     public AnalysisComponent() {
         super(true);
-//        GridBagLayout layout = new GridBagLayout();
-//        GridBagConstraints constraints = new GridBagConstraints();
-//        constraints.gridwidth = 1;
-//        constraints.gridheight = GridBagConstraints.REMAINDER;
-//        constraints.fill = GridBagConstraint
-//        layout.setConstraints(mainPanel, constraints);
-//        GridLayout layout = new GridLayout();
+
         JDesktopPane desktopPane = new JDesktopPane();
         
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         desktopPane.setPreferredSize(dim);
-//        desktopPane.setSize(dim);
-//        FlowLayout layout = new FlowLayout();
-//        desktopPane.setLayout(layout);
-//        mainPanel.add(createTopPanel());
         mainPanel.add(desktopPane);
-//        this.add(desktopPane);
 
         this.createTestIFrames1(desktopPane);
         this.createTestIFrames2(desktopPane);
@@ -66,11 +55,6 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
         this.setVisible(true);
     }
 
-//    private JPanel createMainAnalysisPanel() {
-//        JDesktopPane pane = new JDesktopPane();        
-//        panel.add(createTestPie());
-//        return panel;
-//    }
     private void createTestIFrames1(JDesktopPane desktopPane) {
         JInternalFrame iframe = new JInternalFrame("Chart 1", true, true, true, true);
 
