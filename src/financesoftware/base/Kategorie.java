@@ -12,7 +12,7 @@ import java.awt.Color;
  *
  * @author Mike
  */
-class Kategorie 
+public class Kategorie 
 {
     //Member
     private String lName;

@@ -10,6 +10,6 @@ package financesoftware.base;
  *
  * @author Mike
  */
-class Zeitraum {
+public class Zeitraum {
     
 }

@@ -1,8 +1,13 @@
 package financesoftware.tools;
 
+import financesoftware.base.Kategorie;
+import financesoftware.base.Konto;
+import financesoftware.base.Zeitraum;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
+import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -21,6 +26,22 @@ public class GUIHelper {
      */
     public String[] getAllAnaysisVariants(){
         return new String[]{};
+    }
+    
+    /**
+     * Uebergabeparameter noch nicht sicher
+     * Diese Methode soll ein CompareAnalysis Objekt erzeugen und speichern.
+     */
+    public void createAndSaveCompareAnalysis(String name,Zeitraum zeitraum, List<Kategorie> kategorien, List<Konto> konten){
+        
+    }
+    
+    /**
+     * Uebergabeparameter noch nicht sicher
+     * Diese Methode soll ein ChartAnalysis Objekt erzeugen und speichern.
+     */
+    public void createAndSaveChartAnalysis(String name,Zeitraum zeitraum,  List<Kategorie> kategorien, List<JFreeChart> charts){
+        
     }
 
     public static String getHelpText(String name) {

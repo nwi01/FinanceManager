@@ -1,5 +1,6 @@
-package financesoftware.base;
+package financesoftware.base.coding;
 
+import financesoftware.base.User;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

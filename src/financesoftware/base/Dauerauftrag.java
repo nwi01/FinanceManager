@@ -12,16 +12,15 @@ import java.util.Date;
  *
  * @author Mike
  */
-class Dauerauftrag {
+class Dauerauftrag extends Buchung {
 
     //Member
-    private Buchung lBuchung;
     private Date lStartzeit;
     private Zeitraum lIntervall;
 
     //Konstruktor
-    public Dauerauftrag(Buchung uBuchung, Date uStartzeit, Zeitraum uIntervall) {
-        setlBuchung(uBuchung);
+    public Dauerauftrag(double betrag, String adressat, Date uStartzeit, Zeitraum uIntervall) {
+        super(betrag, adressat);        
         setlStartzeit(uStartzeit);
         setlIntervall(uIntervall);
     }
@@ -30,20 +29,7 @@ class Dauerauftrag {
         return false;
     }
 
-    //Getter_Setter
-    /**
-     * @return the lBuchung
-     */
-    public Buchung getlBuchung() {
-        return lBuchung;
-    }
-
-    /**
-     * @param lBuchung the lBuchung to set
-     */
-    public void setlBuchung(Buchung lBuchung) {
-        this.lBuchung = lBuchung;
-    }
+    //Getter_Setter    
 
     /**
      * @return the lStartzeit

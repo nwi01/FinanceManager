@@ -4,21 +4,22 @@
  * and open the template in the editor.
  */
 
-package financesoftware.base;
+package financesoftware.base.analysis;
 
+import financesoftware.base.Kategorie;
+import financesoftware.base.Zeitraum;
 import java.util.List;
 
 /**
  *
- * @author Mike
+ * @author Niels
  */
-public class Auswertung 
+public class Analysis 
 {
     //Member
-    private String lName;
-    private Zeitraum lZeitraum;
-    private List<Kategorie> lKategorien;
-    private boolean isVergleich;
+    private String name;
+    private Zeitraum zeitraum;
+    private List<Kategorie> categories;
     
     /**
      * Konstruktor
@@ -27,12 +28,11 @@ public class Auswertung
      * @param uKategorien
      * @param uIsVergleich
      */
-    public Auswertung(String uName, Zeitraum uZeitraum, List<Kategorie> uKategorien, boolean uIsVergleich) 
+    public Analysis(String uName, Zeitraum uZeitraum, List<Kategorie> uKategorien) 
     {
-        lName = uName;
-        lZeitraum = uZeitraum;
-        lKategorien = uKategorien;
-        isVergleich = uIsVergleich;        
+        name = uName;
+        zeitraum = uZeitraum;
+        categories = uKategorien;       
     }
     
     //Getter_Setter
@@ -41,55 +41,41 @@ public class Auswertung
      * @return the lName
      */
     public String getName() {
-        return lName;
+        return name;
     }
 
     /**
      * @param lName the lName to set
      */
     public void setName(String lName) {
-        this.lName = lName;
+        this.name = lName;
     }
 
     /**
      * @return the lZeitraum
      */
     public Zeitraum getZeitraum() {
-        return lZeitraum;
+        return zeitraum;
     }
 
     /**
      * @param lZeitraum the lZeitraum to set
      */
     public void setZeitraum(Zeitraum lZeitraum) {
-        this.lZeitraum = lZeitraum;
+        this.zeitraum = lZeitraum;
     }
 
     /**
      * @return the lKategorien
      */
     public List<Kategorie> getKategorien() {
-        return lKategorien;
+        return categories;
     }
 
     /**
      * @param lKategorien the lKategorien to set
      */
     public void setKategorien(List<Kategorie> lKategorien) {
-        this.lKategorien = lKategorien;
-    }
-
-    /**
-     * @return the isVergleich
-     */
-    public boolean IsVergleich() {
-        return isVergleich;
-    }
-
-    /**
-     * @param isVergleich the isVergleich to set
-     */
-    public void setIsVergleich(boolean isVergleich) {
-        this.isVergleich = isVergleich;
+        this.categories = lKategorien;
     }
 }

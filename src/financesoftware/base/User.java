@@ -6,6 +6,7 @@
 
 package financesoftware.base;
 
+import financesoftware.base.analysis.Analysis;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class User
     private String lName = "";
     private String lPassword = "";
     private List<Konto> lKonten;
-    private List<Auswertung> lAuswertungen;
+    private List<Analysis> lAuswertungen;
     
     /**
      * Konstruktor
@@ -27,7 +28,7 @@ public class User
      * @param uKonten
      * @param uAuswertungen
      */
-        public User(String uName, String uPassword, List<Konto> uKonten, List<Auswertung> uAuswertungen)
+        public User(String uName, String uPassword, List<Konto> uKonten, List<Analysis> uAuswertungen)
     {
         lName = uName;
         lPassword = uPassword; 
@@ -79,16 +80,16 @@ public class User
     }
 
     /**
-     * @return the Auswertungen
+     * @return the Analysisen
      */
-    public List<Auswertung> getAuswertungen() {
+    public List<Analysis> getAuswertungen() {
         return lAuswertungen;
     }
 
     /**
-     * @param Auswertungen the Auswertungen to set
+     * @param Auswertungen the Analysisen to set
      */
-    public void setAuswertungen(List<Auswertung> Auswertungen) {
+    public void setAuswertungen(List<Analysis> Auswertungen) {
         this.lAuswertungen = Auswertungen;
     }
     

@@ -41,8 +41,7 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
     public AnalysisComponent() {
         super(true);
 
-        JDesktopPane desktopPane = new JDesktopPane();
-        
+        JDesktopPane desktopPane = new JDesktopPane();     
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         desktopPane.setPreferredSize(dim);
         mainPanel.add(desktopPane);
