@@ -134,7 +134,7 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         }
         
         if(e.getSource() == this.save){
-            GUIHelper.createAndSaveAnalysis();
+//            GUIHelper.createAndSaveAnalysis();
         }
         this.mainPanel.setVisible(true);
     }
