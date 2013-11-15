@@ -3,12 +3,16 @@ package financesoftware.gui.components;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 public class AnalysisManagementComponent extends BaseComponent implements ViewComponent, ActionListener {
 
     private JPanel mainPanel = new JPanel();
-    private JPanel showPanel = new JPanel();
+    private JPanel showPanel = new JPanel(); // Hier werden die einzelnen Pages/Arbeitsschritte angezeigt
     private JPanel nextAndSavePanel = new JPanel();
     private ArrayList<JPanel> sections = new ArrayList();
     private int currentPage = 0;
@@ -48,6 +52,7 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         this.save.setToolTipText("Auswertung speichern");
         this.next.setToolTipText("Einen Schritt weiter");
         this.previous.setToolTipText("Einen Schritt zurück");
+        
         //Speichern und Vorblaettern
         this.nextAndSavePanel.add(this.next);
         this.nextAndSavePanel.add(this.save);
@@ -90,6 +95,7 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
      * Erstellen der verschiedene Komponenten (Arbeitschritte) für die GUI;
      */
     private void createSections() {
+        this.createBasicStepPanel();
         JPanel panel = new JPanel();
         panel.add(new JLabel("efefe"));
 
@@ -99,6 +105,26 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         panel2.add(new JLabel("efefe2222222"));
         sections.add(panel);
         sections.add(panel2);
+    }
+    
+    private void createBasicStepPanel(){
+        JPanel panel = new JPanel();
+        BorderLayout layout = new BorderLayout();
+        panel.setLayout(layout);
+        
+        JPanel top = new JPanel();
+        BoxLayout layoutBox = new BoxLayout(top, BoxLayout.Y_AXIS);
+        
+        top.add(new JLabel("Auswertung"));
+        
+        top.add(Box.createRigidArea(new Dimension(20, 5)));
+        
+        JComboBox comboBox = new JComboBox(new String[]{"neue Auswertung","1", "2"});
+        
+        top.add(comboBox);
+        top.setVisible(true);
+        
+        this.sections.add(top);                
     }
 
     @Override

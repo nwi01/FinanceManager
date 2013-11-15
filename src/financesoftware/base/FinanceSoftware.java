@@ -2,6 +2,7 @@
 package financesoftware.base;
 
 import financesoftware.gui.base.FinanceSoftwareGUI;
+import financesoftware.gui.base.PermissionCheck;
 
 /**
  * @author Niels Willig
@@ -10,7 +11,11 @@ import financesoftware.gui.base.FinanceSoftwareGUI;
  */
 public class FinanceSoftware {    
 
-    public static void main(String[] args) {        
+    public static void main(String[] args) { 
+        // Ueberpruefung der Daten
+        PermissionCheck check = new PermissionCheck();
+        check.checkPermission();
+        
         FinanceSoftwareGUI lGUI = new FinanceSoftwareGUI();
         lGUI.setVisible(true);
     }
