@@ -1,12 +1,9 @@
-package financesoftware.base.coding;
+package financesoftware.base;
 
-import financesoftware.base.User;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.math.BigInteger;
+import java.io.FileWriter;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 /**
@@ -23,6 +20,7 @@ public abstract class Verschluesselung
      * @param uBenutzer
      * @param uPassword
      * @return User-Objekt
+     *         null --> wenn entschluesselung fehlgeschlagen
      */
     public static User load(String uBenutzer, String uPassword)
     {
@@ -43,7 +41,18 @@ public abstract class Verschluesselung
             
             String plainText = encryptBlowfish(crypto, uPassword);
             
-            //User-Objekt erstellen und zurueck geben
+            //Ueberprueft, ob die Entschluesselung geklappt hat
+            if(plainText.startsWith("FinanceManager"))
+            {
+                //User-Objekt erstellen und zurueck geben
+                plainText = plainText.substring(14).trim();
+                String[] objects = plainText.split(";");
+                
+            }
+            else
+            {
+                return null;
+            }
         }
         catch(Exception e)
         {
@@ -64,14 +73,16 @@ public abstract class Verschluesselung
     {
         //Objekt als String vorbereiten.
         
-        String lTextToDecrypt = "";
+        String lTextToDecrypt = "FinanceManager\n";
+        
+        
         String crypto = decryptBlowfish(lTextToDecrypt, uPassword);
         
         try
         {
-            File lFile = new File(toHexString(uBenutzer.getBytes()));
-            FileOutputStream lWriter = new FileOutputStream(lFile);
-            lWriter.write(crypto.getBytes());
+            FileWriter lFile = new FileWriter(toHexString(uBenutzer.getBytes()));
+            BufferedWriter lWriter = new BufferedWriter(lFile);          
+            lWriter.write(crypto);
         }
         catch(Exception e)
         {
