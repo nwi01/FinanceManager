@@ -49,6 +49,7 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         
         
         //Buttons vorbereiten
+        this.save.setVisible(false);
         this.save.setToolTipText("Auswertung speichern");
         this.next.setToolTipText("Einen Schritt weiter");
         this.previous.setToolTipText("Einen Schritt zurück");
