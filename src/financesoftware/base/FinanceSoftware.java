@@ -11,12 +11,9 @@ import financesoftware.gui.base.PermissionCheck;
  */
 public class FinanceSoftware {    
 
-    public static void main(String[] args) { 
-        // Ueberpruefung der Daten
-        PermissionCheck check = new PermissionCheck();
-        check.checkPermission();
-        
+    public static void main(String[] args) {         
         FinanceSoftwareGUI lGUI = new FinanceSoftwareGUI();
+        
         lGUI.setVisible(true);
     }
 }

@@ -9,8 +9,10 @@ import financesoftware.gui.components.AnalysisComponent;
 import financesoftware.gui.components.AnalysisManagementComponent;
 import financesoftware.gui.components.CategoriesManagementComponent;
 import financesoftware.gui.components.HelpComponent;
+import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -30,8 +32,9 @@ import javax.swing.UIManager;
  * @author melanie
  */
 public class FinanceSoftwareGUI extends JFrame implements MouseListener {
+    private GUIHelper helper = new GUIHelper(); // NUR dieser Helper sollte verwendet werden, da der User hier gesetzt wird!
 
-    private final JPanel mainPanel = new JPanel();    
+    private final JPanel mainPanel = new JPanel();
     private JFrame mainFrame;
 //    private JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -51,6 +54,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 //        this.scrollPane.setVisible(true);
         //Hinzufuegen der Menueleiste zum Frame 
         this.createMainView();
+
+        this.checkPermission();
 
         this.setVisible(true);
     }
@@ -96,7 +101,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         int index = list.getSelectedIndex();
 
         if (index == 7) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Wollen Sie das Programm wirklich beenden?","Programm beenden", JOptionPane.OK_CANCEL_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Wollen Sie das Programm wirklich beenden?", "Programm beenden", JOptionPane.OK_CANCEL_OPTION);
             if (confirm == 0) {
                 System.exit(0);
             }
@@ -104,7 +109,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
             this.mainPanel.setVisible(false);
             this.mainPanel.removeAll();
             this.mainPanel.setLayout(new BorderLayout());
-            
+
             switch (index) {
                 case 0: {
                     AccountManagementComponent component = new AccountManagementComponent(mainPanel);
@@ -155,5 +160,15 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent me) {
+    }
+
+    private void checkPermission() {
+        try {
+            PermissionCheck check = new PermissionCheck(helper);
+//            check.showLogin();
+        } catch (Exception ex) {
+            System.exit(0);
+        }
+
     }
 }

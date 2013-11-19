@@ -2,6 +2,7 @@ package financesoftware.tools;
 
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
+import financesoftware.base.User;
 import financesoftware.base.Zeitraum;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ import org.jfree.chart.JFreeChart;
  * @author nwi01
  */
 public class GUIHelper {
+    private User user;
 
     public GUIHelper() {
     }
@@ -59,5 +61,15 @@ public class GUIHelper {
         }
         
         return helpText;
+    }
+    
+    /**
+     * Ueberprueft ob der User existiert und eingelogt werden kann
+     * @param name
+     * @param password
+     * @return 
+     */
+    public boolean checkPermission(String name, String password){
+        return true;
     }
 }
