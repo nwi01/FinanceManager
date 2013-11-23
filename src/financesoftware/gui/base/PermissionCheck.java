@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -68,8 +69,10 @@ public class PermissionCheck extends JDialog implements ActionListener {
 
         // JTextFields
         nameTF = new JTextField();
-        passwordTF = new JTextField();
+        //TextField zu PasswordField geaendert MM 23.11.2013
+        passwordTF = new JPasswordField(); 
 
+        
         //JButtons
         this.saveB.addActionListener(this);
 
