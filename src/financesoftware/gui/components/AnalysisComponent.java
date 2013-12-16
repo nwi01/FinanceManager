@@ -148,4 +148,9 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
     public void updateContent() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public JComponent getComponent() {
+       return this;
+    }
 }

@@ -219,4 +219,14 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         }
         this.mainPanel.setVisible(true);
     }
+
+    @Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+    @Override
+    public void updateContent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

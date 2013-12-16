@@ -35,6 +35,7 @@ public class Konto
         lBLZ = uBLZ;
         lBuchungen = uBuchungen;
         lDauerauftraege = uDauerauftraege;
+        KontoNr = uKontoNr;
     }
     
     //Methoden
@@ -120,6 +121,12 @@ public class Konto
     }
     
     
-    
-      
+    /**
+     * TODO: Ordentliche Ausgabe! Wird wirklich benoetigt ;)
+     * @return 
+     */
+    public String toString(){
+        return this.lName + ":" + this.KontoNr;
+        
+    }     
 }

@@ -10,9 +10,9 @@ import java.util.Date;
 public class Buchung 
 {
     //Member
-    Date lDatum = new Date();
-    double lBetrag = 0.0;
-    String lAdressat = "";
+    private Date lDatum = new Date();  // TODO mit Zeitraum Objekt ersetzen ....
+    private double lBetrag = 0.0;
+    private String lAdressat = "";
     
     //Konstruktor
     public Buchung(double Betrag, String Adressat)
@@ -21,6 +21,5 @@ public class Buchung
         lAdressat = Adressat;
     }
     
-    //Methoden
-    
+    //Methoden    
 }

@@ -27,11 +27,6 @@ public class AccountManagementComponent extends JComponent implements ViewCompon
     public AccountManagementComponent(JPanel parentPanel) {
         super();
         this.parentPanel = parentPanel;
-
-//        GridLayout layout = new GridLayout(1, 2);
-//        FlowLayout layout = new FlowLayout();
-//        this.setLayout(layout);
-//        this.setBorder(new EmptyBorder(9, 9, 9, 9));
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         this.add(createUserOverview());

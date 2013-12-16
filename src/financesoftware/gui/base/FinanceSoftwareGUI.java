@@ -8,6 +8,7 @@ import financesoftware.gui.components.AccountManagementComponent;
 import financesoftware.gui.components.AnalysisComponent;
 import financesoftware.gui.components.AnalysisManagementComponent;
 import financesoftware.gui.components.CategoriesManagementComponent;
+import financesoftware.gui.components.FinanceMainComponent;
 import financesoftware.gui.components.HelpComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
@@ -32,6 +33,7 @@ import javax.swing.UIManager;
  * @author melanie
  */
 public class FinanceSoftwareGUI extends JFrame implements MouseListener {
+
     private GUIHelper helper = new GUIHelper(); // NUR dieser Helper sollte verwendet werden, da der User hier gesetzt wird!
 
     private final JPanel mainPanel = new JPanel();
@@ -45,7 +47,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
         //Standardangaben fuer das JFrame
         this.setLocation(100, 300);
-        this.setResizable(true);
+        this.setResizable(false);
         this.setSize(1000, 500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -124,6 +126,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
                     break;
                 }
                 case 3: {
+                    FinanceMainComponent component = new FinanceMainComponent(mainPanel);
+                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
                     break;
                 }
                 case 4: {
