@@ -1,9 +1,15 @@
 package financesoftware.base;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.security.NoSuchAlgorithmException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 /**
@@ -24,41 +30,48 @@ public abstract class Verschluesselung
      */
     public static User load(String uBenutzer, String uPassword)
     {
-        User Load = new User(uBenutzer, uPassword, null, null);
+        User Load;
         
         try
         {
-            FileReader lFileReader = new FileReader(toHexString(uBenutzer.getBytes()));
-            BufferedReader lReader = new BufferedReader(lFileReader);
-            
-            String lTest = "";
-            String crypto = "";
-            while(lTest != null)
+            FileInputStream lFile = new FileInputStream(toHexString(uBenutzer.getBytes()));
+            ObjectInputStream lObjectIn = new ObjectInputStream(lFile);
+
+            byte[] Input = new byte[lObjectIn.available()];
+            int k = 0;
+            try
             {
-                crypto += lTest;
-                lTest = lReader.readLine();
+                while(k < Input.length)
+                {
+                    Input[k] = lObjectIn.readByte();
+                    k++;
+                }
+            }
+            catch(EOFException e)
+            {
+               
+            }
+            catch(IOException e)
+            {
+                return null;   
             }
             
-            String plainText = encryptBlowfish(crypto, uPassword);
+            Load = encryptBlowfish(Input, uPassword);
             
-            //Ueberprueft, ob die Entschluesselung geklappt hat
-            if(plainText.startsWith("FinanceManager"))
+            if(Load.getlEncryptTest().equals("FinanceManager"))
             {
-                //User-Objekt erstellen und zurueck geben
-                plainText = plainText.substring(14).trim();
-                String[] objects = plainText.split(";");
-                
+                return Load;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
-        catch(Exception e)
+        catch(FileNotFoundException Fe)
         {
             return null;
         }
-        return Load;
+        catch(IOException Fe)
+        {
+            return null;
+        }
     }
     
     /***
@@ -75,14 +88,13 @@ public abstract class Verschluesselung
         
         String lTextToDecrypt = "FinanceManager\n";
         
-        
-        String crypto = decryptBlowfish(lTextToDecrypt, uPassword);
-        
         try
         {
-            FileWriter lFile = new FileWriter(toHexString(uBenutzer.getBytes()));
-            BufferedWriter lWriter = new BufferedWriter(lFile);          
-            lWriter.write(crypto);
+            FileOutputStream lFile = new FileOutputStream(toHexString(uBenutzer.getBytes()));
+            ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
+
+            lObjectOut.write(decryptBlowfish(lTextToDecrypt, uPassword));
+            lObjectOut.write(decryptBlowfish(uUser, uPassword));
         }
         catch(Exception e)
         {
@@ -97,14 +109,14 @@ public abstract class Verschluesselung
      * @param uKey
      * @return 
      */
-    private static String encryptBlowfish(String uText, String uKey) 
+    private static User encryptBlowfish(byte[] uUser, String uKey) 
     {
         try 
         {
             SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");
             Cipher cipher = Cipher.getInstance("Blowfish");
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            return new String(cipher.doFinal(uText.getBytes()));
+            return (User)ByteToObject(cipher.doFinal(uUser));
         }
         catch (Exception e) 
         {
@@ -118,15 +130,14 @@ public abstract class Verschluesselung
      * @param uKey
      * @return 
      */
-    private static String decryptBlowfish(String uText, String uKey)  
+    private static byte[] decryptBlowfish(Object uUser, String uKey)  
     {
         try 
         {
             SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");
             Cipher cipher = Cipher.getInstance("Blowfish");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] decrypted = cipher.doFinal(uText.getBytes());
-            return new String(decrypted);
+            return cipher.doFinal(ObjectToByte(uUser));
         }
         catch (Exception e) 
         {
@@ -153,4 +164,21 @@ public abstract class Verschluesselung
         }
         return str.toString();
     }
+    
+    public static byte[] ObjectToByte(Object obj) throws IOException 
+    {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+    
+    public static Object ByteToObject(byte[] data) throws IOException, ClassNotFoundException 
+    {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
+    }
+
+
 }

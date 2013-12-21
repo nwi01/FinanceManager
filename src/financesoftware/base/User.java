@@ -16,6 +16,7 @@ import java.util.List;
 public class User 
 {
     //Member
+    private String _lEncryptTest = "FinanceManager";
     private String lName = "";
     private String lPassword = "";
     private List<Konto> lKonten;
@@ -28,14 +29,14 @@ public class User
      * @param uKonten
      * @param uAuswertungen
      */
-        public User(String uName, String uPassword, List<Konto> uKonten, List<Analysis> uAuswertungen)
-    {
+     public User(String uName, String uPassword, List<Konto> uKonten, List<Analysis> uAuswertungen)
+     {
         lName = uName;
         lPassword = uPassword; 
         lKonten = uKonten;
         lAuswertungen = uAuswertungen;
     }
-  
+        
     //Getter_Setter
     /**
      * @return the Name
@@ -92,5 +93,11 @@ public class User
     public void setAuswertungen(List<Analysis> Auswertungen) {
         this.lAuswertungen = Auswertungen;
     }
-    
+
+    /**
+     * @return the _lEncryptTest
+     */
+    public String getlEncryptTest() {
+        return _lEncryptTest;
+    }
 }
