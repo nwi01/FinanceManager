@@ -31,7 +31,8 @@ public abstract class Verschluesselung {
      * @param uPassword
      * @return User-Objekt null --> wenn entschluesselung fehlgeschlagen
      */
-    public static User load(String uBenutzer, String uPassword) {
+    public static User load(String uBenutzer, String uPassword)
+    {
         User Load;
 
         try {
@@ -82,21 +83,27 @@ public abstract class Verschluesselung {
      * @return true --> speichern hat funktioniert false --> speichern
      * fehlgeschlagen
      */
-    public static boolean save(String uBenutzer, String uPassword, User uUser) {
-        try {
+    public static boolean save(User uUser)
+    {
+        try
+        {
+
+
 
             KeyGenerator keygen = KeyGenerator.getInstance("DES");
 // keygen.init(128); //this works fine!
             keygen.init(56); //this breaks!
 //SecretKey key = keygen.generateKey();
-
-            SecretKeySpec key = new SecretKeySpec(uPassword.getBytes(), "DES");
+            
+           
+          
+            SecretKeySpec key = new SecretKeySpec(uUser.getPassword().getBytes(), "DES");
 
             System.out.println(key.getEncoded());
             Cipher lCipher = Cipher.getInstance("DES");
             lCipher.init(Cipher.DECRYPT_MODE, key);
-
-            String dateiname = toHexString(uBenutzer.getBytes());
+            
+            String dateiname = toHexString(uUser.getName().getBytes());
             FileOutputStream lFile = new FileOutputStream(".\\" + dateiname);
             ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
             CipherOutputStream lKrypto = new CipherOutputStream(lObjectOut, lCipher);
@@ -120,9 +127,10 @@ public abstract class Verschluesselung {
      * @param uKey
      * @return
      */
-    private static User encryptBlowfish(byte[] uUser, String uKey) {
-
-        try {
+    private static User encryptBlowfish(byte[] uUser, String uKey) 
+    {
+        try 
+        {
             SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");
             Cipher cipher = Cipher.getInstance("Blowfish");
             cipher.init(Cipher.ENCRYPT_MODE, key);

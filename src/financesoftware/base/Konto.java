@@ -13,7 +13,8 @@ import java.util.List;
  *
  * @author Mike
  */
-public class Konto implements Serializable {
+public class Konto implements Serializable
+{
 
     //Member
     private String lName = "";
