@@ -73,8 +73,8 @@ public class GUIHelper {
         String[][] result = new String[konto.getBuchungen().size()][3];
         for (int i = 0; i < konto.getBuchungen().size(); i++) {
             result[i][0] = konto.getBuchungen().get(i).getDatum().toString();
-            result[i][1] = konto.getBuchungen().get(i).getAdressat();
-            result[i][2] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
+            result[i][1] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
+            result[i][2] = konto.getBuchungen().get(i).getAdressat();
 //            return new String[][]{{"Datum", "Betrag", "Empfänger"}, {"erfe","wdwd","wwww"}};
         }
         return result;
@@ -136,11 +136,11 @@ public class GUIHelper {
     }
 
     // ==================================================================================================== \\
-    
     // ======================================= Auswertung ==================================================\\
-    public List<Analysis> getAllAnalysisObjects(){
-        return this.user.getAuswertungen();      
+    public List<Analysis> getAllAnalysisObjects() {
+        return this.user.getAuswertungen();
     }
+
     public static String getHelpText(String name) {
         String helpText = "";
         File file = new File("./src/data/helpTexts/" + name + ".txt");
@@ -158,9 +158,8 @@ public class GUIHelper {
     }
 
     /**
-     * Ueberprueft ob der User existiert und eingelogt werden kann
-     * Setzt auch den USER
-     * TODO
+     * Ueberprueft ob der User existiert und eingelogt werden kann Setzt auch
+     * den USER TODO
      *
      * @param name
      * @param password
@@ -174,8 +173,8 @@ public class GUIHelper {
 //        cat.add(new Kategorie("Bla", Color.orange));
 //        list.add(new Analysis("Test", new Zeitraum(), cat));
 //        list.add(new Analysis("Test2", new Zeitraum(), cat));
-//        this.user.setAuswertungen(list);
-        return true;
+//        this.user.setAuswertungen(list);       
+        return (this.user != null);
     }
 
     // Methoden fuer die GUI 

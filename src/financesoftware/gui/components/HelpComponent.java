@@ -18,9 +18,9 @@ import javax.swing.JTextArea;
  */
 public class HelpComponent extends JComponent implements ViewComponent, MouseListener {
 
-    private JList list;
-    private JPanel helpPanel = new JPanel();
-    private JScrollPane scrollPane = new JScrollPane(helpPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private final JList list;
+    private final JPanel helpPanel = new JPanel();
+    private final JScrollPane scrollPane = new JScrollPane(helpPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public HelpComponent() {
         super();
