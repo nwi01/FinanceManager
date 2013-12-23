@@ -11,6 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 /**
  *
@@ -28,13 +31,14 @@ public abstract class Verschluesselung
      * @return User-Objekt
      *         null --> wenn entschluesselung fehlgeschlagen
      */
-    public static User load(String uBenutzer, String uPassword)
+    public static User load(String uBenutzer, String uPassword) throws ClassNotFoundException
     {
         User Load;
         
         try
         {
-            FileInputStream lFile = new FileInputStream(toHexString(uBenutzer.getBytes()));
+            String dateiname = toHexString(uBenutzer.getBytes());
+            FileInputStream lFile = new FileInputStream(".\\" + dateiname);
             ObjectInputStream lObjectIn = new ObjectInputStream(lFile);
 
             byte[] Input = new byte[lObjectIn.available()];
@@ -56,26 +60,32 @@ public abstract class Verschluesselung
                 return null;   
             }
             
-            Load = encryptBlowfish(Input, uPassword);
+            /*Load = encryptBlowfish(Input, uPassword);
             
             if(Load.getlEncryptTest().equals("FinanceManager"))
             {
                 return Load;
-            }
-            return null;
+            }*/
+            Load = (User)(ByteToObject(Input));
+            
+            System.out.println(Load.getName());
+            
+            lObjectIn.close();
+            lFile.close();
+            
+            return Load;
         }
         catch(FileNotFoundException Fe)
         {
             return null;
         }
-        catch(IOException Fe)
+        catch(Exception Fe)
         {
             return null;
         }
     }
     
     /***
-     * @MIKE: Warum muss der User +++++ pw und der user Name angegeben werden? Doppeltgemoppelt
      * 
      * @param uBenutzer
      * @param uPassword
@@ -85,22 +95,41 @@ public abstract class Verschluesselung
      */
     public static boolean save(String uBenutzer, String uPassword, User uUser)
     {
-        //Objekt als String vorbereiten.
-        
-        String lTextToDecrypt = "FinanceManager\n";
-        
         try
         {
-            FileOutputStream lFile = new FileOutputStream(toHexString(uBenutzer.getBytes()));
-            ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
 
-            lObjectOut.write(decryptBlowfish(lTextToDecrypt, uPassword));
-            lObjectOut.write(decryptBlowfish(uUser, uPassword));
+
+
+
+KeyGenerator keygen = KeyGenerator.getInstance("DES");
+// keygen.init(128); //this works fine!
+keygen.init(56); //this breaks!
+//SecretKey key = keygen.generateKey();
+            
+           
+          
+            SecretKeySpec key = new SecretKeySpec(uPassword.getBytes(), "DES");
+
+            System.out.println(key.getEncoded());
+            Cipher lCipher = Cipher.getInstance("DES");
+            lCipher.init(Cipher.DECRYPT_MODE, key);
+            
+            String dateiname = toHexString(uBenutzer.getBytes());
+            FileOutputStream lFile = new FileOutputStream(".\\" + dateiname);
+            ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
+            CipherOutputStream lKrypto = new CipherOutputStream(lObjectOut, lCipher);
+
+            lKrypto.write(ObjectToByte(uUser));
+            
+            lKrypto.close();
+            lObjectOut.close();
+            lFile.close();
         }
         catch(Exception e)
         {
             return false;
         }
+        
         return true;
     }
     
@@ -112,6 +141,14 @@ public abstract class Verschluesselung
      */
     private static User encryptBlowfish(byte[] uUser, String uKey) 
     {
+        
+        
+        
+        
+        
+        
+        
+        
         try 
         {
             SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");
@@ -135,13 +172,29 @@ public abstract class Verschluesselung
     {
         try 
         {
-            SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");
-            Cipher cipher = Cipher.getInstance("Blowfish");
+            SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            return cipher.doFinal(ObjectToByte(uUser));
+            byte[] BUser = ObjectToByte(uUser);
+            System.out.println(BUser);
+            for(int k = 0; k < BUser.length; k++)
+            {
+                if(BUser[k] == 0)
+                {
+                    System.out.println(BUser[k]);
+                    BUser[k] = (byte)(97);
+                }
+                else
+                {
+                    System.out.println("null");
+                    
+                }
+            }
+            return cipher.doFinal(BUser);
         }
         catch (Exception e) 
         {
+            System.out.println(e.getStackTrace());
             return null; 
         }
     }
@@ -171,7 +224,17 @@ public abstract class Verschluesselung
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
         os.writeObject(obj);
-        return out.toByteArray();
+        byte[] lRueckgabe = out.toByteArray();
+        if((lRueckgabe.length % 8) != 0)
+        {
+            byte[] ltemp = new byte[lRueckgabe.length + (8 - lRueckgabe.length % 8)];
+            for(int i = 0; i < lRueckgabe.length; i++)
+            {
+                ltemp[i] = lRueckgabe[i];
+            }
+            lRueckgabe = ltemp;
+        }
+        return lRueckgabe;
     }
     
     public static Object ByteToObject(byte[] data) throws IOException, ClassNotFoundException 
