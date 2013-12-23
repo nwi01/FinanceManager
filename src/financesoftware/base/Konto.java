@@ -5,6 +5,7 @@
  */
 package financesoftware.base;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import java.util.List;
  *
  * @author Mike
  */
-public class Konto {
+public class Konto implements Serializable
+{
 
     //Member
     private String lName = "";

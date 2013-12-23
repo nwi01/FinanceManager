@@ -134,7 +134,7 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
     public void mouseClicked(MouseEvent e) {
         if(e.getSource() == this.registerL){
         User user = new User(this.nameTF.getText(), this.passwordTF.getText());
-        boolean isSaved = Verschluesselung.save(this.nameTF.getText(), this.passwordTF.getText(), user);
+        boolean isSaved = Verschluesselung.save(user);
         if (isSaved) {
             GUIHelper.getInstance().setUser(Verschluesselung.load(this.nameTF.getText(), this.passwordTF.getText()));
             this.dispose();

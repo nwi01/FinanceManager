@@ -8,13 +8,14 @@ package financesoftware.base.analysis;
 
 import financesoftware.base.Kategorie;
 import financesoftware.base.Zeitraum;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Niels
  */
-public class Analysis 
+public class Analysis implements Serializable
 {
     //Member
     private String name;

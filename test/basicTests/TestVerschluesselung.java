@@ -38,10 +38,19 @@ public class TestVerschluesselung {
     @Test
     public void testVerschluesselungBasic1(){
         //erzeugen eines neuen Users
-        User us1 = new User("TestUser", "test", null, null);
+        User us1 = new User("TestUser", "testtest", null, null);
         // User speichern
         //TODO Temp. Speicherort für tests, damit der Dummy-User nicht vergammelt
         //Vll. angaben des speicherortes in xml speichern und immer auslesen ?
-        assertTrue(Verschluesselung.save("TestUser", "test", us1));
+        boolean funkt = Verschluesselung.save(us1);
+        
+        if(funkt)
+        {
+            System.out.println("Klappt");
+        }
+        else
+        {
+            System.out.println("Fehlgeschlagen");
+        }
     }
 }

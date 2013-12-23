@@ -31,7 +31,7 @@ public abstract class Verschluesselung
      * @return User-Objekt
      *         null --> wenn entschluesselung fehlgeschlagen
      */
-    public static User load(String uBenutzer, String uPassword) throws ClassNotFoundException
+    public static User load(String uBenutzer, String uPassword)
     {
         User Load;
         
@@ -93,7 +93,7 @@ public abstract class Verschluesselung
      * @return true --> speichern hat funktioniert
      *         false --> speichern fehlgeschlagen
      */
-    public static boolean save(String uBenutzer, String uPassword, User uUser)
+    public static boolean save(User uUser)
     {
         try
         {
@@ -108,13 +108,13 @@ keygen.init(56); //this breaks!
             
            
           
-            SecretKeySpec key = new SecretKeySpec(uPassword.getBytes(), "DES");
+            SecretKeySpec key = new SecretKeySpec(uUser.getPassword().getBytes(), "DES");
 
             System.out.println(key.getEncoded());
             Cipher lCipher = Cipher.getInstance("DES");
             lCipher.init(Cipher.DECRYPT_MODE, key);
             
-            String dateiname = toHexString(uBenutzer.getBytes());
+            String dateiname = toHexString(uUser.getName().getBytes());
             FileOutputStream lFile = new FileOutputStream(".\\" + dateiname);
             ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
             CipherOutputStream lKrypto = new CipherOutputStream(lObjectOut, lCipher);
@@ -141,14 +141,6 @@ keygen.init(56); //this breaks!
      */
     private static User encryptBlowfish(byte[] uUser, String uKey) 
     {
-        
-        
-        
-        
-        
-        
-        
-        
         try 
         {
             SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");

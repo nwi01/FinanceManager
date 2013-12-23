@@ -7,6 +7,7 @@
 package financesoftware.base;
 
 import financesoftware.base.analysis.Analysis;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author Mike
  */
-public class User 
+public class User implements Serializable
 {
     //Member
     private String _lEncryptTest = "FinanceManager";
