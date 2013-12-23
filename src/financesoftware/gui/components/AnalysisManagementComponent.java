@@ -3,15 +3,10 @@ package financesoftware.gui.components;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,17 +22,18 @@ import javax.swing.border.EmptyBorder;
  */
 public class AnalysisManagementComponent extends BaseComponent implements ViewComponent, ActionListener {
 
-    private JPanel mainPanel = new JPanel();
-    private JPanel showPanel = new JPanel(); // Hier werden die einzelnen Pages/Arbeitsschritte angezeigt
-    private JPanel nextAndSavePanel = new JPanel();
-    private ArrayList<JPanel> sections = new ArrayList();
+    private final JPanel mainPanel = new JPanel();
+    private final JPanel showPanel = new JPanel(); // Hier werden die einzelnen Pages/Arbeitsschritte angezeigt
+    private final JPanel nextAndSavePanel = new JPanel();
+    private final ArrayList<JPanel> sections = new ArrayList();
     private int currentPage = 0;
-    private JButton previous = new JButton("Zurück");
-    private JButton next = new JButton("Weiter");
-    private JButton save = new JButton("Speichern");
+    private final JButton previous = new JButton("Zurück");
+    private final JButton next = new JButton("Weiter");
+    private final JButton save = new JButton("Speichern");
     private JRadioButton editAnalysisB = new JRadioButton("Auswertung bearbeiten");
     private JRadioButton newAnalysisB = new JRadioButton("neue Auswertung");
     private JPanel newAnalysisComboBoxPanel = new JPanel();
+    private JComboBox comboBoxAnalysis;
 
     public AnalysisManagementComponent() {
         super(true);
@@ -122,22 +118,15 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
 
         newAnalysisComboBoxPanel = new JPanel();
         newAnalysisComboBoxPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-//        BoxLayout layoutBox = new BoxLayout(top, BoxLayout.Y_AXIS);
         BorderLayout layout2 = new BorderLayout();
 
         newAnalysisComboBoxPanel.setLayout(layout2);
 
-        // JLabel Ueberschrift
-//        JLabel header = new JLabel("Auswertung:");
-//        header.setFont(new Font("Helvetica", 20, 20));
-//        newAnalysisComboBoxPanel.add(header, BorderLayout.LINE_START);
 
-//        top.add(Box.createRigidArea(new Dimension(20, 5)));
-        // JComboBox bestehende Auswertung auswaehlen:
-        JComboBox comboBox = new JComboBox(new String[]{"neue Auswertung", "1", "2"});
-//        comboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
-//        comboBox.set
-        newAnalysisComboBoxPanel.add(comboBox, BorderLayout.CENTER);
+        comboBoxAnalysis = new JComboBox(GUIHelper.getInstance().getAllAnalysisObjects().toArray());
+        comboBoxAnalysis.addActionListener(this);
+                
+        newAnalysisComboBoxPanel.add(comboBoxAnalysis, BorderLayout.CENTER);
         newAnalysisComboBoxPanel.setVisible(false);
 
         JPanel topOuter = new JPanel();
@@ -179,11 +168,11 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         this.mainPanel.setVisible(false);
         
         if(e.getSource() == this.newAnalysisB){
-            this.newAnalysisComboBoxPanel.setVisible(true);
+            this.newAnalysisComboBoxPanel.setVisible(false);
         }
         
         if(e.getSource() == this.editAnalysisB){
-            this.newAnalysisComboBoxPanel.setVisible(false);
+            this.newAnalysisComboBoxPanel.setVisible(true);
         }
         if (e.getSource() == this.previous) {
             if (this.currentPage == 1) {
@@ -216,6 +205,10 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
 
         if (e.getSource() == this.save) {
 //            GUIHelper.createAndSaveAnalysis();
+        }
+        
+        if(e.getSource() == this.comboBoxAnalysis){
+            
         }
         this.mainPanel.setVisible(true);
     }

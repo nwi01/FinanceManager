@@ -20,7 +20,7 @@ class Dauerauftrag extends Buchung {
 
     //Konstruktor
     public Dauerauftrag(double betrag, String adressat, Date uStartzeit, Zeitraum uIntervall) {
-        super(betrag, adressat);        
+        super(betrag, adressat, uStartzeit);        
         setlStartzeit(uStartzeit);
         setlIntervall(uIntervall);
     }

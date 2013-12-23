@@ -7,6 +7,7 @@
 package financesoftware.base;
 
 import financesoftware.base.analysis.Analysis;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,8 +20,8 @@ public class User
     private String _lEncryptTest = "FinanceManager";
     private String lName = "";
     private String lPassword = "";
-    private List<Konto> lKonten;
-    private List<Analysis> lAuswertungen;
+    private List<Konto> lKonten = new ArrayList();
+    private List<Analysis> lAuswertungen = new ArrayList();
     
     /**
      * Konstruktor
@@ -35,6 +36,12 @@ public class User
         lPassword = uPassword; 
         lKonten = uKonten;
         lAuswertungen = uAuswertungen;
+    }
+     
+     public User(String uName, String uPassword)
+     {
+        lName = uName;
+        lPassword = uPassword; 
     }
         
     //Getter_Setter
@@ -79,7 +86,7 @@ public class User
     public void setKonten(List<Konto> Konten) {
         this.lKonten = Konten;
     }
-
+    
     /**
      * @return the Analysisen
      */

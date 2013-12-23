@@ -1,24 +1,36 @@
 package financesoftware.tools;
 
+import financesoftware.base.Buchung;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
 import financesoftware.base.Zeitraum;
+import financesoftware.base.analysis.Analysis;
+import java.awt.Color;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.jfree.chart.JFreeChart;
 
 /**
+ * Singelton
  *
  * @author nwi01
  */
 public class GUIHelper {
 
+    private static GUIHelper instance;
     private User user;
 
-    public GUIHelper() {
+    private GUIHelper() {
+    }
+
+    public static GUIHelper getInstance() {
+        if (instance == null) {
+            instance = new GUIHelper();
+        }
+        return instance;
     }
 
     /**
@@ -47,16 +59,25 @@ public class GUIHelper {
     public void createAndSaveChartAnalysis(String name, Zeitraum zeitraum, List<Kategorie> kategorien, List<JFreeChart> charts) {
 
     }
-    
-    // ============================================ Buchungen ============================================== \\
 
+    // ============================================ Buchungen ============================================== \\
     /**
-     * Buchung: Enthählt: String[<Buchung>][<Inhalt der Buchung>]
-     * Darf nicht null zurueckliefern.
+     * Buchung: Enthählt: String[<Buchung>][<Inhalt der Buchung>] Darf nicht
+     * null zurueckliefern.
+     *
+     * @param konto
      * @return
      */
     public static String[][] getBookingData(Konto konto) {
-        return new String[][]{{"Test", "Bla", "Bla2"},{"Test2", "10.3", "Niels"}};
+        String[][] result = new String[konto.getBuchungen().size()][3];
+        for (int i = 0; i < konto.getBuchungen().size(); i++) {
+            result[i][0] = konto.getBuchungen().get(i).getDatum().toString();
+            result[i][1] = konto.getBuchungen().get(i).getAdressat();
+            result[i][2] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
+//            return new String[][]{{"Datum", "Betrag", "Empfänger"}, {"erfe","wdwd","wwww"}};
+        }
+        return result;
+//        return new String[][]{{"Datum", "Betrag", "Empfänger"}};
     }
 
     /**
@@ -66,34 +87,59 @@ public class GUIHelper {
      * @return
      */
     public static String[] getBookingColumnName(Konto konto) {
-         return new String[]{"Datum", "Betrag", "Empfänger"};
+        return new String[]{"Datum", "Betrag", "Empfänger"};
     }
-    
-    public static double getCurrentMoney(){
-        return 1.0;
+
+    public static double getCurrentMoney(Konto konto) {
+        return konto.getAktuellerKontostand();
     }
-    
+
     /**
      * Liefert alle Konten des aktuellen Users zurueck
-     * @return 
+     *
+     * @return
      */
-    public static Konto[] getAllBankAccounts(){
-        return new Konto[]{new Konto("test1", "wdwd", "wdwd", null, null)};        
+    public static Konto[] getAllBankAccounts() {
+        return new Konto[]{new Konto("test1", "wdwd", "wdwd")};
     }
-    
+
     /**
-     * 
+     *
      * @param date
      * @param value
      * @param to
+     * @param konto
      * @return boolean:Wurde gespeichert?
      */
-    public static boolean saveNewBooking(String date, String value, String to){
-        return true;
+    public static boolean saveNewBooking(String date, String value, String to, Konto konto) {
+        if (konto != null) {
+            Long valueL = null;
+            try {
+                valueL = Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+            konto.addBuchung(new Buchung(valueL, to, date));
+            return true;
+        }
+        return false;
     }
-    
-    // ==================================================================================================== \\
 
+    private Konto getAccountByName(String name) {
+        for (Konto konto : this.user.getKonten()) {
+            if (konto.getName().equals(name)) {
+                return konto;
+            }
+        }
+        return null;
+    }
+
+    // ==================================================================================================== \\
+    
+    // ======================================= Auswertung ==================================================\\
+    public List<Analysis> getAllAnalysisObjects(){
+        return this.user.getAuswertungen();      
+    }
     public static String getHelpText(String name) {
         String helpText = "";
         File file = new File("./src/data/helpTexts/" + name + ".txt");
@@ -111,13 +157,43 @@ public class GUIHelper {
     }
 
     /**
-     * Ueberprueft ob der User existiert und eingelogt werden kann TODO
+     * Ueberprueft ob der User existiert und eingelogt werden kann
+     * Setzt auch den USER
+     * TODO
      *
      * @param name
      * @param password
      * @return
      */
     public boolean checkPermission(String name, String password) {
+//        this.user = Verschluesselung.load(name, password);
+        this.user = new User(name, password);
+        ArrayList<Analysis> list = new ArrayList();
+        ArrayList<Kategorie> cat = new ArrayList();
+        cat.add(new Kategorie("Bla", Color.orange));
+        list.add(new Analysis("Test", new Zeitraum(), cat));
+        list.add(new Analysis("Test2", new Zeitraum(), cat));
+        this.user.setAuswertungen(list);
         return true;
+    }
+
+    // Methoden fuer die GUI 
+    /**
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public boolean isUserValid() {
+        return (this.user != null);
+
     }
 }

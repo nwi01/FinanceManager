@@ -10,21 +10,16 @@ import financesoftware.gui.components.AnalysisManagementComponent;
 import financesoftware.gui.components.CategoriesManagementComponent;
 import financesoftware.gui.components.FinanceMainComponent;
 import financesoftware.gui.components.HelpComponent;
+import financesoftware.gui.components.StandingOrderManagementComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.BoxLayout;
-import javax.swing.JDialog;
+import java.util.ArrayList;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
 
@@ -34,11 +29,8 @@ import javax.swing.UIManager;
  */
 public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
-    private GUIHelper helper = new GUIHelper(); // NUR dieser Helper sollte verwendet werden, da der User hier gesetzt wird!
-
     private final JPanel mainPanel = new JPanel();
-    private JFrame mainFrame;
-//    private JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private final ArrayList<ViewComponent> components = new ArrayList();
 
     public FinanceSoftwareGUI() {
         super("Finanz Manager");
@@ -51,13 +43,13 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         this.setSize(1000, 500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.mainFrame = this;
-//        this.scrollPane.setLayout(new BorderLayout());
-//        this.scrollPane.setVisible(true);
         //Hinzufuegen der Menueleiste zum Frame 
         this.createMainView();
 
-        this.checkPermission();
+        if(!this.checkPermission()){
+            System.exit(0);
+        }
+        this.loadComponents();
 
         this.setVisible(true);
     }
@@ -112,42 +104,23 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
             this.mainPanel.removeAll();
             this.mainPanel.setLayout(new BorderLayout());
 
-            switch (index) {
-                case 0: {
-                    AccountManagementComponent component = new AccountManagementComponent(mainPanel);
-                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
-                    break;
-                }
-                case 1: {
-                    mainPanel.add(new CategoriesManagementComponent().getComponent());
-                    break;
-                }
-                case 2: {
-                    break;
-                }
-                case 3: {
-                    FinanceMainComponent component = new FinanceMainComponent(mainPanel);
-                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
-                    break;
-                }
-                case 4: {
-                    AnalysisComponent component = new AnalysisComponent();
-                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
-                    break;
-                }
-                case 5: {
-                    AnalysisManagementComponent component = new AnalysisManagementComponent();
-                    mainPanel.add(component.getComponent(), BorderLayout.CENTER);
-                    break;
-                }
-                case 6: {
-                    HelpComponent help = new HelpComponent();
-                    mainPanel.add(help.getComponent(), BorderLayout.CENTER);
-                    break;
-                }
-            }
+            mainPanel.add(this.components.get(index).getComponent());
+            
             this.mainPanel.setVisible(true);
         }
+    }
+    
+    /**
+     * Erzeugen aller GUI Komponenten
+     */
+    private void loadComponents(){
+        this.components.add(new AccountManagementComponent()); //0
+        this.components.add(new CategoriesManagementComponent()); //1
+        this.components.add(new StandingOrderManagementComponent()); //2
+        this.components.add(new FinanceMainComponent()); //3
+        this.components.add(new AnalysisComponent());
+        this.components.add(new AnalysisManagementComponent());
+        this.components.add(new HelpComponent()); //6                        
     }
 
     @Override
@@ -166,13 +139,9 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
     public void mouseExited(MouseEvent me) {
     }
 
-    private void checkPermission() {
-        try {
-            PermissionCheck check = new PermissionCheck(helper);
-//            check.showLogin();
-        } catch (Exception ex) {
-            System.exit(0);
-        }
+    private boolean checkPermission() {    
+            PermissionCheck check = new PermissionCheck();
 
+            return GUIHelper.getInstance().isUserValid();
     }
 }

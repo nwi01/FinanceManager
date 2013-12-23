@@ -75,6 +75,7 @@ public abstract class Verschluesselung
     }
     
     /***
+     * @MIKE: Warum muss der User +++++ pw und der user Name angegeben werden? Doppeltgemoppelt
      * 
      * @param uBenutzer
      * @param uPassword

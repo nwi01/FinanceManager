@@ -7,9 +7,6 @@ package financesoftware.gui.components;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.JComboBox;
@@ -18,8 +15,6 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -34,8 +29,6 @@ import org.jfree.util.Rotation;
  * @author melanie
  */
 public class AnalysisComponent extends BaseComponent implements ViewComponent {
-
-    private GUIHelper helper = new GUIHelper();
     private String chartTitle;
 
     public AnalysisComponent() {
@@ -140,7 +133,7 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent {
 
     private JPanel createAnalysisComboBox() {
         JPanel panel = new JPanel();
-        JComboBox comboBox = new JComboBox(helper.getAllAnaysisVariants());
+        JComboBox comboBox = new JComboBox(GUIHelper.getInstance().getAllAnaysisVariants());
         return panel;
     }
 

@@ -15,11 +15,61 @@ public class Buchung
     private String lAdressat = "";
     
     //Konstruktor
-    public Buchung(double Betrag, String Adressat)
+    public Buchung(double Betrag, String Adressat, Date datum)
     {
         lBetrag = Betrag;
         lAdressat = Adressat;
+        lDatum = datum;
+    }
+    
+     public Buchung(double Betrag, String Adressat, String datum)
+    {
+        lBetrag = Betrag;
+        lAdressat = Adressat;
+        lDatum = Zeitraum.parseDate(datum);
     }
     
     //Methoden    
+
+    /**
+     * @return the lDatum
+     */
+    public Date getDatum() {
+        return lDatum;
+    }
+
+    /**
+     * @param lDatum the lDatum to set
+     */
+    public void setDatum(Date lDatum) {
+        this.lDatum = lDatum;
+    }
+
+    /**
+     * @return the lBetrag
+     */
+    public double getBetrag() {
+        return lBetrag;
+    }
+
+    /**
+     * @param lBetrag the lBetrag to set
+     */
+    public void setBetrag(double lBetrag) {
+        this.lBetrag = lBetrag;
+    }
+
+    /**
+     * @return the lAdressat
+     */
+    public String getAdressat() {
+        return lAdressat;
+    }
+
+    /**
+     * @param lAdressat the lAdressat to set
+     */
+    public void setAdressat(String lAdressat) {
+        this.lAdressat = lAdressat;
+    }
 }

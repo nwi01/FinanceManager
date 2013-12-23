@@ -3,52 +3,56 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package financesoftware.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Mike
  */
-public class Konto 
-{
+public class Konto {
+
     //Member
     private String lName = "";
     private String KontoNr = "";
     private String lBLZ = "";
-    private List<Buchung> lBuchungen;
-    private List<Dauerauftrag> lDauerauftraege;
-    
+    private List<Buchung> lBuchungen = new ArrayList();
+    private List<Dauerauftrag> lDauerauftraege = new ArrayList();
+
     /**
      * Konstruktor
+     *
      * @param uName
      * @param uKontoNr
      * @param uBLZ
      * @param uBuchungen
-     * @param Dauerauftraege
+     * @param uDauerauftraege
      */
-    public Konto(String uName, String uKontoNr, String uBLZ, List<Buchung> uBuchungen, List<Dauerauftrag> uDauerauftraege)
-    {
+    public Konto(String uName, String uKontoNr, String uBLZ, List<Buchung> uBuchungen, List<Dauerauftrag> uDauerauftraege) {
         lName = uName;
         lBLZ = uBLZ;
         lBuchungen = uBuchungen;
         lDauerauftraege = uDauerauftraege;
         KontoNr = uKontoNr;
     }
-    
+
+    public Konto(String uName, String uKontoNr, String uBLZ) {
+        lName = uName;
+        lBLZ = uBLZ;
+        KontoNr = uKontoNr;
+    }
+
     //Methoden
     /**
-     *
+     * TODO
      * @return Kontostand
      */
-        public double getAktuellerKontostand()
-    {
+    public double getAktuellerKontostand() {
         return 0.0;
     }
-    
-    
+
     //Getter_Setter
     /**
      * @return the Name
@@ -106,6 +110,10 @@ public class Konto
         this.lBuchungen = Buchungen;
     }
 
+    public void addBuchung(Buchung buch) {
+        this.lBuchungen.add(buch);
+    }
+
     /**
      * @return the Dauerauftraege
      */
@@ -119,14 +127,14 @@ public class Konto
     public void setDauerauftraege(List<Dauerauftrag> Dauerauftraege) {
         this.lDauerauftraege = Dauerauftraege;
     }
-    
-    
+
     /**
      * TODO: Ordentliche Ausgabe! Wird wirklich benoetigt ;)
-     * @return 
+     *
+     * @return
      */
-    public String toString(){
+    public String toString() {
         return this.lName + ":" + this.KontoNr;
-        
-    }     
+
+    }
 }

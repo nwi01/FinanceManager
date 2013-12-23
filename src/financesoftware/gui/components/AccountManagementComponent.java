@@ -22,11 +22,9 @@ import javax.swing.border.EmptyBorder;
  */
 public class AccountManagementComponent extends JComponent implements ViewComponent {
 
-    private JPanel parentPanel;
 
-    public AccountManagementComponent(JPanel parentPanel) {
-        super();
-        this.parentPanel = parentPanel;
+    public AccountManagementComponent() {
+//        super();
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         this.add(createUserOverview());

@@ -19,7 +19,7 @@ public class Analysis
     //Member
     private String name;
     private Zeitraum zeitraum;
-    private List<Kategorie> categories;
+    private List<Kategorie> categories;    
     
     /**
      * Konstruktor
@@ -77,5 +77,10 @@ public class Analysis
      */
     public void setKategorien(List<Kategorie> lKategorien) {
         this.categories = lKategorien;
+    }
+    
+    @Override
+    public String toString(){
+       return this.name; 
     }
 }
