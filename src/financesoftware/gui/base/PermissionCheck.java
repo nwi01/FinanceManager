@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -24,6 +26,7 @@ import javax.swing.border.EmptyBorder;
  * @author nwi01
  */
 public class PermissionCheck extends JDialog implements ActionListener, MouseListener {
+
     private final JButton saveB = new JButton("OK");
     private final JPanel mainPanel = new JPanel();
     private final JLabel registerL = new JLabel("registrieren");
@@ -41,7 +44,7 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
         //Standardangaben fuer das JFrame
         this.setLocation(100, 300);
         this.setResizable(true);
-        this.setSize(300, 220);    
+        this.setSize(300, 220);
         this.setResizable(false);
 
         //Layout
@@ -132,13 +135,16 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getSource() == this.registerL){
-        User user = new User(this.nameTF.getText(), this.passwordTF.getText());
-        boolean isSaved = Verschluesselung.save(this.nameTF.getText(), this.passwordTF.getText(), user);
-        if (isSaved) {
-            GUIHelper.getInstance().setUser(Verschluesselung.load(this.nameTF.getText(), this.passwordTF.getText()));
-            this.dispose();
-        }
+        if (e.getSource() == this.registerL) {
+            User user = new User(this.nameTF.getText(), this.passwordTF.getText());
+            boolean isSaved = Verschluesselung.save(this.nameTF.getText(), this.passwordTF.getText(), user);
+            if (isSaved) {
+                User newUser = Verschluesselung.load(this.nameTF.getText(), this.passwordTF.getText());
+                if (newUser != null) {
+                    GUIHelper.getInstance().setUser(newUser);
+                    this.dispose();
+                }
+            }
         }
     }
 

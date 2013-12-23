@@ -4,6 +4,7 @@ import financesoftware.base.Buchung;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
+import financesoftware.base.Verschluesselung;
 import financesoftware.base.Zeitraum;
 import financesoftware.base.analysis.Analysis;
 import java.awt.Color;
@@ -87,7 +88,7 @@ public class GUIHelper {
      * @return
      */
     public static String[] getBookingColumnName(Konto konto) {
-        return new String[]{"Datum", "Betrag", "Empfänger"};
+        return new String[]{"Datum", "Betrag [Euro]", "Empfänger"};
     }
 
     public static double getCurrentMoney(Konto konto) {
@@ -166,14 +167,14 @@ public class GUIHelper {
      * @return
      */
     public boolean checkPermission(String name, String password) {
-//        this.user = Verschluesselung.load(name, password);
-        this.user = new User(name, password);
-        ArrayList<Analysis> list = new ArrayList();
-        ArrayList<Kategorie> cat = new ArrayList();
-        cat.add(new Kategorie("Bla", Color.orange));
-        list.add(new Analysis("Test", new Zeitraum(), cat));
-        list.add(new Analysis("Test2", new Zeitraum(), cat));
-        this.user.setAuswertungen(list);
+        this.user = Verschluesselung.load(name, password);
+//        this.user = new User(name, password);
+//        ArrayList<Analysis> list = new ArrayList();
+//        ArrayList<Kategorie> cat = new ArrayList();
+//        cat.add(new Kategorie("Bla", Color.orange));
+//        list.add(new Analysis("Test", new Zeitraum(), cat));
+//        list.add(new Analysis("Test2", new Zeitraum(), cat));
+//        this.user.setAuswertungen(list);
         return true;
     }
 
