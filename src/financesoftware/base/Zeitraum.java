@@ -114,8 +114,14 @@ public class Zeitraum {
         return cal;
     }
     
-    public static Date parseDate(String date) {
-        return new Date();
+    /**
+     * TODO:
+     * DIese methode macht aus einem String ein Zeitraum Objekt
+     * @param date
+     * @return 
+     */
+    public static Zeitraum parseDate(String date) {
+        return new Zeitraum(null, Intervall.TAEGLICH, null); // Dummy
     }
     
     public enum Intervall { TAEGLICH, WOECHENTLICH, MONATLICH, JAEHRLICH; };

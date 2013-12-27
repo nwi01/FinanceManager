@@ -10,6 +10,7 @@ import financesoftware.base.analysis.Analysis;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 import org.jfree.chart.JFreeChart;
@@ -61,6 +62,23 @@ public class GUIHelper {
 
     }
 
+    public User getDummyUser() {
+        User userD = new User("admin", "");
+        ArrayList<Analysis> list = new ArrayList();
+        ArrayList<Kategorie> cat = new ArrayList();
+        ArrayList<Konto> kon = new ArrayList();
+        cat.add(new Kategorie("Bla", Color.orange));
+        list.add(new Analysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat));
+        list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat));
+        
+        kon.add(new Konto("test", "454536", "37010050"));
+         kon.add(new Konto("test2", "45421323536", "37010050"));
+        
+        userD.setAuswertungen(list);
+        userD.setKonten(kon);
+        return userD;
+    }
+
     // ============================================ Buchungen ============================================== \\
     /**
      * Buchung: Enthählt: String[<Buchung>][<Inhalt der Buchung>] Darf nicht
@@ -101,7 +119,7 @@ public class GUIHelper {
      * @return
      */
     public static Konto[] getAllBankAccounts() {
-        return new Konto[]{new Konto("test1", "wdwd", "wdwd")};
+        return GUIHelper.getInstance().user.getKonten().toArray(new Konto[]{});
     }
 
     /**
@@ -167,13 +185,6 @@ public class GUIHelper {
      */
     public boolean checkPermission(String name, String password) {
         this.user = Verschluesselung.load(name, password);
-//        this.user = new User(name, password);
-//        ArrayList<Analysis> list = new ArrayList();
-//        ArrayList<Kategorie> cat = new ArrayList();
-//        cat.add(new Kategorie("Bla", Color.orange));
-//        list.add(new Analysis("Test", new Zeitraum(), cat));
-//        list.add(new Analysis("Test2", new Zeitraum(), cat));
-//        this.user.setAuswertungen(list);       
         return (this.user != null);
     }
 

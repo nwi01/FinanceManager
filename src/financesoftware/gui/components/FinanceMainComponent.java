@@ -35,8 +35,8 @@ import javax.swing.table.DefaultTableModel;
 public class FinanceMainComponent extends JComponent implements ViewComponent, ActionListener, ListSelectionListener {
 
     private final JTextField currentMoney = new JTextField();
-    private final JComboBox<Konto> accounts = new JComboBox(GUIHelper.getAllBankAccounts());
-    private JTable table = new JTable(GUIHelper.getBookingData((Konto) this.accounts.getSelectedItem()), GUIHelper.getBookingColumnName((Konto) this.accounts.getSelectedItem()));
+    private JComboBox<Konto> accounts = new JComboBox();
+    private JTable table = new JTable();
     // Spezielle Buchung
     private final JTextField bookingDate = new JTextField();
     private final JTextField bookingValue = new JTextField();
@@ -44,11 +44,15 @@ public class FinanceMainComponent extends JComponent implements ViewComponent, A
     private final JButton saveB = new JButton("Speichern");
     private JPanel userOverviewPanel = new JPanel();
 
-    ;
-
     public FinanceMainComponent() {
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
+        Konto[] konten = GUIHelper.getAllBankAccounts();
+        if (konten != null) {
+            accounts = new JComboBox(konten);
+            table = new JTable(GUIHelper.getBookingData((Konto) this.accounts.getSelectedItem()), GUIHelper.getBookingColumnName((Konto) this.accounts.getSelectedItem()));
+        }
 
         this.add(createInAndOutTable());
         this.add(createSpecificDatarecord());
@@ -82,7 +86,6 @@ public class FinanceMainComponent extends JComponent implements ViewComponent, A
         panel.setBorder(new EmptyBorder(60, 5, 60, 5));
 
         this.accounts.addActionListener(this);
-        
 
         panel.add(label);
         panel.add(this.accounts);
@@ -176,7 +179,7 @@ public class FinanceMainComponent extends JComponent implements ViewComponent, A
         if (e.getSource() == this.saveB) {
             Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
             boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto);
-            
+
             this.bookingDate.setText("");
             this.bookingValue.setText("");
             this.bookingTo.setText("");
