@@ -1,6 +1,7 @@
 //Erstellt am 31.10.2013
 package financesoftware.base;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -26,7 +27,8 @@ public class Buchung
     {
         lBetrag = Betrag;
         lAdressat = Adressat;
-        lDatum = Zeitraum.parseDate(datum);
+        Calendar startzeit = Zeitraum.parseCalendar(datum);
+        lDatum = new Zeitraum(startzeit);
     }
     
     //Methoden    

@@ -45,6 +45,14 @@ public class Zeitraum {
         lEndezeit  = endezeit;
     }
     
+    // Konstruktor für einfache Buchung
+    public Zeitraum(Calendar startzeit){
+        lStartzeit = startzeit;
+        lIntervall = null;
+        lAnzahlWdh = 0;
+        lEndezeit  = startzeit;
+    }
+    
     public static int[] IntervallInTage(Intervall intervall){
         int a[] = {0,0};
         
