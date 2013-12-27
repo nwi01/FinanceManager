@@ -46,7 +46,7 @@ public class Zeitraum {
     }
     
     public static int[] IntervallInTage(Intervall intervall){
-        int a[] = null;
+        int a[] = {0,0};
         
         switch(intervall){
             case TAEGLICH:     a[0]   = 1;
