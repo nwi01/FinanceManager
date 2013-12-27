@@ -1,12 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package financesoftware.base;
-
-import java.util.Date;
 
 /**
  *
@@ -15,13 +7,11 @@ import java.util.Date;
 class Dauerauftrag extends Buchung {
 
     //Member
-    private Date lStartzeit;
     private Zeitraum lIntervall;
 
     //Konstruktor
-    public Dauerauftrag(double betrag, String adressat, Date uStartzeit, Zeitraum uIntervall) {
-        super(betrag, adressat, uStartzeit);        
-        setlStartzeit(uStartzeit);
+    public Dauerauftrag(double betrag, String adressat,  Zeitraum uIntervall) {
+        super(betrag, adressat, uIntervall);        
         setlIntervall(uIntervall);
     }
 
@@ -30,20 +20,6 @@ class Dauerauftrag extends Buchung {
     }
 
     //Getter_Setter    
-
-    /**
-     * @return the lStartzeit
-     */
-    public Date getlStartzeit() {
-        return lStartzeit;
-    }
-
-    /**
-     * @param lStartzeit the lStartzeit to set
-     */
-    public void setlStartzeit(Date lStartzeit) {
-        this.lStartzeit = lStartzeit;
-    }
 
     /**
      * @return the lIntervall
