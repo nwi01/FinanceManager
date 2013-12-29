@@ -72,7 +72,7 @@ public class GUIHelper {
         list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat));
         
         kon.add(new Konto("test", "454536", "37010050"));
-         kon.add(new Konto("test2", "45421323536", "37010050"));
+         kon.add(new Konto("test2", "222222", "1231231"));
         
         userD.setAuswertungen(list);
         userD.setKonten(kon);

@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.logging.Level;
@@ -26,13 +28,13 @@ import javax.swing.border.EmptyBorder;
  *
  * @author nwi01
  */
-public class PermissionCheck extends JDialog implements ActionListener, MouseListener {
+public class PermissionCheck extends JDialog implements ActionListener, MouseListener, KeyListener {
 
     private final JButton saveB = new JButton("OK");
     private final JPanel mainPanel = new JPanel();
     private final JLabel registerL = new JLabel("registrieren");
     private JTextField nameTF = new JTextField();
-    private JTextField passwordTF = new JTextField();
+    private JPasswordField passwordTF = new JPasswordField();
 
     public PermissionCheck() {
 
@@ -56,6 +58,11 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         this.add(mainPanel, BorderLayout.CENTER);
+        
+        //Listener
+        this.nameTF.addKeyListener(this);
+        this.passwordTF.addKeyListener(this);  
+        this.saveB.addActionListener(this);
 
         this.showLogin();
 
@@ -68,14 +75,6 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
         JLabel loginL = new JLabel("Login");
         JLabel nameL = new JLabel("Name:");
         JLabel passwordL = new JLabel("Passwort:");
-
-        // JTextFields
-        nameTF = new JTextField();
-        //TextField zu PasswordField geaendert MM 23.11.2013
-        passwordTF = new JPasswordField();
-
-        //JButtons
-        this.saveB.addActionListener(this);
 
         //Page_Start
         JPanel panelStart = new JPanel();
@@ -125,19 +124,22 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.saveB) {
-            String name = this.nameTF.getText();
-            String password = this.passwordTF.getText();
-            boolean permission = GUIHelper.getInstance().checkPermission(name, password);
-            if(name.equals("admin") && password.equals("")){
-                GUIHelper.getInstance().setUser(GUIHelper.getInstance().getDummyUser());
-                permission = true;
-            }
-            if (permission) {
-                this.dispose();
-            }
-            else{
-                this.passwordTF.setForeground(Color.RED);
-            }
+            this.checkInput();
+        }
+    }
+
+    private void checkInput() {
+        String name = this.nameTF.getText();
+        String password = this.passwordTF.getText();
+        boolean permission = GUIHelper.getInstance().checkPermission(name, password);
+        if (name.equals("admin") && password.equals("")) {
+            GUIHelper.getInstance().setUser(GUIHelper.getInstance().getDummyUser());
+            permission = true;
+        }
+        if (permission) {
+            this.dispose();
+        } else {
+            this.passwordTF.setForeground(Color.RED);
         }
     }
 
@@ -145,7 +147,7 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == this.registerL) {
             User user = new User(this.nameTF.getText(), this.passwordTF.getText());
-            boolean isSaved = Verschluesselung.save( user);
+            boolean isSaved = Verschluesselung.save(user);
             if (isSaved) {
                 User newUser = Verschluesselung.load(this.nameTF.getText(), this.passwordTF.getText());
                 if (newUser != null) {
@@ -173,6 +175,23 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+            // Damit auch Enter == OK Button
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            this.checkInput();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }

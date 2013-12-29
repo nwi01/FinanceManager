@@ -4,7 +4,7 @@ package financesoftware.base;
  *
  * @author Mike
  */
-class Dauerauftrag extends Buchung {
+public class Dauerauftrag extends Buchung {
 
     //Member
     private Zeitraum lIntervall;

@@ -1,5 +1,6 @@
 package financesoftware.gui.components;
 
+import financesoftware.gui.base.ManagementBaseComponent;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
@@ -20,98 +21,21 @@ import javax.swing.border.EmptyBorder;
  *
  * @author nwi01
  */
-public class AnalysisManagementComponent extends BaseComponent implements ViewComponent, ActionListener {
+public class AnalysisManagementComponent extends ManagementBaseComponent {
 
-    private final JPanel mainPanel = new JPanel();
-    private final JPanel showPanel = new JPanel(); // Hier werden die einzelnen Pages/Arbeitsschritte angezeigt
-    private final JPanel nextAndSavePanel = new JPanel();
-    private final ArrayList<JPanel> sections = new ArrayList();
-    private int currentPage = 0;
-    private final JButton previous = new JButton("Zurück");
-    private final JButton next = new JButton("Weiter");
-    private final JButton save = new JButton("Speichern");
     private JRadioButton editAnalysisB = new JRadioButton("Auswertung bearbeiten");
     private JRadioButton newAnalysisB = new JRadioButton("neue Auswertung");
     private JPanel newAnalysisComboBoxPanel = new JPanel();
     private JComboBox comboBoxAnalysis;
 
     public AnalysisManagementComponent() {
-        super(true);
-
-        this.createSections();
-        BorderLayout layout = new BorderLayout();
-        this.setLayout(layout);
-        BorderLayout layout2 = new BorderLayout();
-        this.mainPanel.setLayout(layout2);
-
-        //ActionListener
-        previous.addActionListener(this);
-        next.addActionListener(this);
-        save.addActionListener(this);
-
-        //Buttons vorbereiten
-        this.save.setVisible(false);
-        this.save.setToolTipText("Auswertung speichern");
-        this.next.setToolTipText("Einen Schritt weiter");
-        this.previous.setToolTipText("Einen Schritt zurück");
-
-        //Speichern und Vorblaettern
-        this.nextAndSavePanel.add(this.next);
-        this.nextAndSavePanel.add(this.save);
-
-        BorderLayout layout3 = new BorderLayout();
-        this.showPanel.setLayout(layout3);
-        this.showPanel.add(this.sections.get(this.currentPage));
-
-        this.mainPanel.add(showPanel, BorderLayout.CENTER);
-        this.mainPanel.add(createControllBar(), BorderLayout.PAGE_END);
-        this.add(mainPanel, BorderLayout.CENTER);
-
-        this.setVisible(true);
-    }
-
-    private JPanel createControllBar() {
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        GridLayout layout = new GridLayout(1, 5);
-        panel.setLayout(layout);
-
-        this.previous.setVisible(false);
-        if (this.sections.size() == 1) {
-            this.next.setVisible(false);
-        }
-
-        JPanel panel2 = new JPanel();
-        panel2.add(previous);
-
-        panel.add(panel2);
-        panel.add(new JLabel());
-        panel.add(new JLabel());
-        panel.add(new JLabel());
-        panel.add(nextAndSavePanel);
-
-        return panel;
-    }
-
-    /**
-     * Erstellen der verschiedene Komponenten (Arbeitschritte) für die GUI;
-     */
-    private void createSections() {
-        this.createBasicStepPanel();
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("efefe"));
-
-//        this.mainPanel.add(panel, BorderLayout.CENTER);
-        JPanel panel2 = new JPanel();
-        panel2.add(new JLabel("efefe2222222"));
-        sections.add(panel);
-        sections.add(panel2);
+        super();
     }
 
     /**
      * Erster Schritt: Auswahl Auswertung bearbeiten oder neue anlegen
      */
-    private void createBasicStepPanel() {
+    private JPanel createBasicStepPanel() {
         JPanel panel = new JPanel();
         BorderLayout layout = new BorderLayout();
         panel.setLayout(layout);
@@ -122,10 +46,9 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
 
         newAnalysisComboBoxPanel.setLayout(layout2);
 
-
         comboBoxAnalysis = new JComboBox(GUIHelper.getInstance().getAllAnalysisObjects().toArray());
         comboBoxAnalysis.addActionListener(this);
-                
+
         newAnalysisComboBoxPanel.add(comboBoxAnalysis, BorderLayout.CENTER);
         newAnalysisComboBoxPanel.setVisible(false);
 
@@ -151,7 +74,7 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         newAnalysisPanel.add(newAnalysisB);
 
         topOuter.add(newAnalysisPanel);
-        topOuter.add(new JLabel());                
+        topOuter.add(new JLabel());
         topOuter.add(newAnalysisComboBoxPanel);
 
         panel.add(topOuter, BorderLayout.PAGE_START);
@@ -160,55 +83,23 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
         JPanel middle = new JPanel();
 
 //        panel.add(middle, BorderLayout.CENTER);
-        this.sections.add(panel);
+        return panel;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         this.mainPanel.setVisible(false);
-        
-        if(e.getSource() == this.newAnalysisB){
+
+        if (e.getSource() == this.newAnalysisB) {
             this.newAnalysisComboBoxPanel.setVisible(false);
         }
-        
-        if(e.getSource() == this.editAnalysisB){
+
+        if (e.getSource() == this.editAnalysisB) {
             this.newAnalysisComboBoxPanel.setVisible(true);
         }
-        if (e.getSource() == this.previous) {
-            if (this.currentPage == 1) {
-                this.previous.setVisible(false);
-            }
-            if (this.currentPage == this.sections.size() - 1) {
-                this.next.setVisible(true);
-                this.save.setVisible(false);
-            }
-            this.showPanel.removeAll();
-            currentPage--;
-            this.showPanel.add(this.sections.get(this.currentPage));
 
-        }
+        if (e.getSource() == this.comboBoxAnalysis) {
 
-        if (e.getSource() == this.next) {
-            if (this.currentPage == 0) {
-                this.previous.setVisible(true);
-            }
-
-            if (this.currentPage == this.sections.size() - 2) {
-                this.next.setVisible(false);
-                this.save.setVisible(true);
-            }
-
-            this.showPanel.removeAll();
-            currentPage++;
-            this.showPanel.add(this.sections.get(this.currentPage));
-        }
-
-        if (e.getSource() == this.save) {
-//            GUIHelper.createAndSaveAnalysis();
-        }
-        
-        if(e.getSource() == this.comboBoxAnalysis){
-            
         }
         this.mainPanel.setVisible(true);
     }
@@ -221,5 +112,35 @@ public class AnalysisManagementComponent extends BaseComponent implements ViewCo
     @Override
     public void updateContent() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList<JPanel> getSectionPanels() {
+            ArrayList<JPanel> sectionsD = new ArrayList();
+        sectionsD.add(this.createBasicStepPanel());
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("efefe"));
+
+//        this.mainPanel.add(panel, BorderLayout.CENTER);
+        JPanel panel2 = new JPanel();
+        panel2.add(new JLabel("efefe2222222"));
+        sectionsD.add(panel);
+        sectionsD.add(panel2);
+        return sectionsD;
+    }
+
+    @Override
+    public void specialAction(ActionEvent event) {
+
+    }
+
+    @Override
+    public void saveOrUpdate() {
+
+    }
+
+    @Override
+    public void initFields() {
+       
     }
 }
