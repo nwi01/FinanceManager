@@ -45,20 +45,35 @@ public class Zeitraum {
         lEndezeit  = endezeit;
     }
     
-    public static Calendar berechneEndezeit(Calendar startzeit, Intervall intervall, int anzahlWdh){
-        int tage = 0;
-        int monate = 0;
+    // Konstruktor für einfache Buchung
+    public Zeitraum(Calendar startzeit){
+        lStartzeit = startzeit;
+        lIntervall = null;
+        lAnzahlWdh = 0;
+        lEndezeit  = startzeit;
+    }
+    
+    public static int[] IntervallInTage(Intervall intervall){
+        int a[] = {0,0};
         
         switch(intervall){
-            case TAEGLICH:     tage   = 1;
+            case TAEGLICH:     a[0]   = 1;
                 break;
-            case WOECHENTLICH: tage   = 7;
+            case WOECHENTLICH: a[0]   = 7;
                 break;
-            case MONATLICH:    monate = 1;
+            case MONATLICH:    a[1]   = 1;
                 break;
-            case JAEHRLICH:    monate = 12;
+            case JAEHRLICH:    a[1]   = 12;
                 break;         
-        }        
+        }         
+        return a;
+    }
+        
+    public static Calendar berechneEndezeit(Calendar startzeit, Intervall intervall, int anzahlWdh){
+        int tmp[] = IntervallInTage(intervall);
+        int tage = tmp[0];
+        int monate = tmp[1];        
+               
         GregorianCalendar kalender = new GregorianCalendar(startzeit.get(Calendar.YEAR),
                                                            startzeit.get(Calendar.MONTH) + 1, 
                                                            startzeit.get(Calendar.DAY_OF_MONTH));        
@@ -73,13 +88,29 @@ public class Zeitraum {
         }         
         return kalender;
     }
-    
-    
-    // unvollständig
+       
     public static int berechneWdh(Calendar startzeit, Intervall intervall, Calendar endezeit){
-        return 1;
+        int tmp[] = IntervallInTage(intervall);
+        int tage = tmp[0];
+        int monate = tmp[1]; 
+        
+        int wdh = 0;
+        
+        GregorianCalendar kalender = new GregorianCalendar(startzeit.get(Calendar.YEAR),
+                                                           startzeit.get(Calendar.MONTH), 
+                                                           startzeit.get(Calendar.DAY_OF_MONTH)); 
+        
+        while(kalender.compareTo(endezeit) <= 0){
+            wdh++;            
+            if(tage != 0){
+                kalender.add(Calendar.DAY_OF_MONTH, tage);
+            }
+            else{
+                kalender.add(Calendar.MONTH, monate);
+            }
+        }
+        return wdh;
     }
-  
     
     public static Calendar parseCalendar(String date){
         Calendar cal = Calendar.getInstance();

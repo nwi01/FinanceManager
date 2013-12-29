@@ -7,32 +7,24 @@ package financesoftware.base;
 public class Dauerauftrag extends Buchung {
 
     //Member
-    private Zeitraum lIntervall;
 
     //Konstruktor
-    public Dauerauftrag(double betrag, String adressat,  Zeitraum uIntervall) {
-        super(betrag, adressat, uIntervall);        
-        setlIntervall(uIntervall);
+    public Dauerauftrag(double betrag, String adressat, String startzeit, 
+                        Zeitraum.Intervall intervall, int wdh) {
+        super(betrag, adressat, startzeit);  
+        Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, wdh);              
+        setDatum(uIntervall);
+    }
+    
+    public Dauerauftrag(double betrag, String adressat, String startzeit, 
+                        Zeitraum.Intervall intervall, String endezeit) {
+        super(betrag, adressat, startzeit);  
+        Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, 
+                                           Zeitraum.parseCalendar(endezeit));              
+        setDatum(uIntervall);
     }
 
     public boolean mussGebuchtWerden() {
         return false;
     }
-
-    //Getter_Setter    
-
-    /**
-     * @return the lIntervall
-     */
-    public Zeitraum getlIntervall() {
-        return lIntervall;
-    }
-
-    /**
-     * @param lIntervall the lIntervall to set
-     */
-    public void setlIntervall(Zeitraum lIntervall) {
-        this.lIntervall = lIntervall;
-    }
-
 }
