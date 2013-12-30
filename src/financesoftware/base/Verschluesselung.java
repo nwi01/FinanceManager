@@ -4,16 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.security.NoSuchAlgorithmException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -33,45 +30,69 @@ public abstract class Verschluesselung {
      */
     public static User load(String uBenutzer, String uPassword)
     {
-        User Load;
+        User Load = null;
 
         try {
+            
             String dateiname = toHexString(uBenutzer.getBytes());
+            SecretKeySpec key = new SecretKeySpec(uPassword.getBytes(), "DES");
+
+            System.out.println(key.getEncoded());
+            Cipher lCipher = Cipher.getInstance("DES");
+            lCipher.init(Cipher.ENCRYPT_MODE, key);
+            
             FileInputStream lFile = new FileInputStream(".\\" + dateiname);
-            ObjectInputStream lObjectIn = new ObjectInputStream(lFile);
-
-            byte[] Input = new byte[lObjectIn.available()];
-            int k = 0;
-            try {
-                while (k < Input.length) {
-                    Input[k] = lObjectIn.readByte();
-                    k++;
-                }
-            } catch (EOFException e) {
-
-            } catch (IOException e) {
+            CipherInputStream lKrypto = new CipherInputStream(lFile, lCipher);
+            
+            FileOutputStream lOutput = new FileOutputStream(".\\temp.temp");
+            
+            int len = lFile.available();
+            
+            if((len % 16) != 0)
+            {
+                len += (16 - len % 16);
+            }
+            
+            byte[] temp = new byte[len];
+            lKrypto.read(temp, 0, temp.length);
+            
+            lOutput.write(temp, 0, temp.length);
+            
+            FileInputStream lInput = new FileInputStream(".\\temp.temp");
+            ObjectInputStream lObjectIn = new ObjectInputStream(lInput);
+            
+            try
+            {
+                Object tempObject = lObjectIn.readObject();
+                Load = (User)tempObject;
+            }
+            catch(EOFException ex)
+            {
+                System.out.println(ex.getMessage());
+            }
+               
+            lKrypto.close();
+            lFile.close();
+            
+            lOutput.close();
+            lObjectIn.close();
+            lInput.close();
+            
+            /*
+            //temporaere Datei loeschen
+            File file = new File(".\\temp.temp");
+        
+            //Zuvor alle mit dem File verknuepften Streams schließen.
+            if(file.exists()){
+                file.delete();
+            }*/
+            
+            Load.setPassword(Load.getPassword().trim());
+            return Load;
+            
+            } catch (Exception e) {
                 return null;
             }
-
-            /*Load = encryptBlowfish(Input, uPassword);
-            
-             if(Load.getlEncryptTest().equals("FinanceManager"))
-             {
-             return Load;
-             }*/
-            Load = (User) (ByteToObject(Input));
-
-            System.out.println(Load.getName());
-
-            lObjectIn.close();
-            lFile.close();
-
-            return Load;
-        } catch (FileNotFoundException Fe) {
-            return null;
-        } catch (Exception Fe) {
-            return null;
-        }
     }
 
     /**
@@ -87,32 +108,58 @@ public abstract class Verschluesselung {
     {
         try
         {
-
-
-
-            KeyGenerator keygen = KeyGenerator.getInstance("DES");
-// keygen.init(128); //this works fine!
-            keygen.init(56); //this breaks!
-//SecretKey key = keygen.generateKey();
+            String dateiname = toHexString(uUser.getName().getBytes());
+            FileOutputStream lFile = new FileOutputStream(".\\temp.temp");
+            ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
             
+            lObjectOut.writeObject(uUser);
+
            
-          
+            
+            FileInputStream lInput = new FileInputStream(".\\temp.temp");
+            FileOutputStream lOutput = new FileOutputStream(".\\" + dateiname);
+            
             SecretKeySpec key = new SecretKeySpec(uUser.getPassword().getBytes(), "DES");
 
-            System.out.println(key.getEncoded());
             Cipher lCipher = Cipher.getInstance("DES");
             lCipher.init(Cipher.DECRYPT_MODE, key);
             
-            String dateiname = toHexString(uUser.getName().getBytes());
-            FileOutputStream lFile = new FileOutputStream(".\\" + dateiname);
-            ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
-            CipherOutputStream lKrypto = new CipherOutputStream(lObjectOut, lCipher);
+            CipherOutputStream lKrypto = new CipherOutputStream(lOutput, lCipher); 
+            
+            int len = lInput.available();
+            
+            if((len % 16) != 0)
+            {
+                len += (16 - len % 16);
+            }
+            
+            byte[] temp = new byte[len];
+            lInput.read(temp, 0, temp.length);
+            //lKrypto.write(temp, 0, temp.length);
+            //lKrypto.flush();
+            
+            for(int z = 0; z < temp.length; z++)
+            {
+                lKrypto.write(temp[z]);
+            }
 
-            lKrypto.write(ObjectToByte(uUser));
-
-            lKrypto.close();
             lObjectOut.close();
             lFile.close();
+
+            lInput.close();
+
+            lKrypto.close();
+            lOutput.close();
+
+            /*
+            //temporaere Datei loeschen
+            File file = new File(".\\temp.temp");
+        
+            //Zuvor alle mit dem File verknuepften Streams schließen.
+            if(file.exists()){
+                file.delete();
+            }*/
+            
         } catch (Exception e) {
             return false;
         }
@@ -149,8 +196,8 @@ public abstract class Verschluesselung {
      */
     private static byte[] decryptBlowfish(Object uUser, String uKey) {
         try {
-            SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "DESede");
-            Cipher cipher = Cipher.getInstance("DESede");
+            SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "DES");
+            Cipher cipher = Cipher.getInstance("DES");
             cipher.init(Cipher.DECRYPT_MODE, key);
             byte[] BUser = ObjectToByte(uUser);
             System.out.println(BUser);
