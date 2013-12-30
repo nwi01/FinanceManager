@@ -31,6 +31,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
     private final JPanel mainPanel = new JPanel();
     private final ArrayList<ViewComponent> components = new ArrayList();
+    private JList list;
 
     public FinanceSoftwareGUI() {
         super("Finanz Manager");
@@ -78,7 +79,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
     }
 
     private JList createControlBar() {
-        final JList list = new JList();
+        list = new JList();
         list.setListData(new String[]{"Konto verwalten", "Kategorien verwalten", "Daueraufträge verwalten", "Ein & Ausgabe", "Auswertung", "Auswertungen verwalten", "Hilfe", "Beenden"});
         list.setVisible(true);
 
@@ -120,7 +121,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         this.components.add(new FinanceMainComponent()); //3
         this.components.add(new AnalysisComponent());
         this.components.add(new AnalysisManagementComponent());
-        this.components.add(new HelpComponent()); //6                        
+        this.components.add(new HelpComponent()); //6
+        mainPanel.add(this.components.get(0).getComponent());
     }
 
     @Override

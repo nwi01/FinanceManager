@@ -23,6 +23,7 @@ public class User implements Serializable
     private String lPassword = "";
     private List<Konto> lKonten = new ArrayList();
     private List<Analysis> lAuswertungen = new ArrayList();
+    private List<Kategorie> kategorien = new ArrayList();
     
     /**
      * Konstruktor
@@ -107,5 +108,26 @@ public class User implements Serializable
      */
     public String getlEncryptTest() {
         return _lEncryptTest;
+    }
+
+    /**
+     * @return the kategorien
+     */
+    public List<Kategorie> getKategorien() {
+        return kategorien;
+    }
+
+     public ArrayList<String> getKategorienString() {
+         ArrayList<String> list = new ArrayList();
+         for(Kategorie kat : this.kategorien){
+             list.add(kat.toString());
+         }
+        return list;
+    }
+    /**
+     * @param kategorien the kategorien to set
+     */
+    public void setKategorien(List<Kategorie> kategorien) {
+        this.kategorien = kategorien;
     }
 }

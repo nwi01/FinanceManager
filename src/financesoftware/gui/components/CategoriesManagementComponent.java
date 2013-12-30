@@ -29,14 +29,13 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 /**
- *
+ *  TODO: Hier sollten globale Kategorien erstellt/ Verwaltet werden und in der Auswertungs Verwaltung diese zur auswertung hinzugefügt werden können
  * @author niels
  */
 public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     private JComboBox<Kategorie> categoryBox;
-    private JComboBox<Analysis> analysisBox;
-    private JCheckBox checkBoxNewCategoriy;
+    private JCheckBox checkBoxNewCategory;
     private boolean isChecked = false;
     //Kategorie
     private JTextField name;
@@ -44,19 +43,12 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void specialAction(ActionEvent event) {
-        if (event.getSource() == this.analysisBox) { 
-            this.categoryBox.setModel(new DefaultComboBoxModel( ((Analysis) this.analysisBox.getSelectedItem()).getKategorien().toArray()));
-            if (!((Analysis) this.analysisBox.getSelectedItem()).getKategorien().isEmpty()) {
-                this.categoryBox.setSelectedIndex(0);
-            }
-        }
-
         if (event.getSource() == this.categoryBox) {
             this.name.setText(((Kategorie) this.categoryBox.getSelectedItem()).getlName());
             this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).getlFarbe());
         }
 
-        if (event.getSource() == this.checkBoxNewCategoriy) {
+        if (event.getSource() == this.checkBoxNewCategory) {
             if (!isChecked) {
                 this.isChecked = true;
                 this.name.setText("");
@@ -98,24 +90,6 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
         constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 1;
-        JLabel labelU = new JLabel("Auswertung:");
-        labelU.setFont(new Font("Dialog", Font.PLAIN, 16));
-        panel.add(labelU, constraints);
-
-        constraints.gridx = 3;
-        constraints.gridwidth = 5;
-        panel.add(this.analysisBox, constraints);
-
-        constraints.gridy++;
-        constraints.gridx = 0;
-        constraints.gridwidth = 8;
-        JSeparator sep2 = new JSeparator(JSeparator.HORIZONTAL);
-        sep2.setPreferredSize(new Dimension(700, 10));
-        panel.add(sep2, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 1;
         JLabel labelC = new JLabel("Kategorie:");
         labelC.setFont(new Font("Dialog", Font.PLAIN, 18));
         panel.add(labelC, constraints);
@@ -127,7 +101,7 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
         constraints.gridy++;
         constraints.gridx = 0;
         constraints.gridwidth = 1;
-        panel.add(this.checkBoxNewCategoriy, constraints);
+        panel.add(this.checkBoxNewCategory, constraints);
 
         constraints.gridy++;
         panel.add(new JLabel("Name:"), constraints);
@@ -154,23 +128,17 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
-        this.categoryBox = new JComboBox();
+        this.categoryBox = new JComboBox(GUIHelper.getInstance().getUser().getKategorien().toArray());
         this.categoryBox.addActionListener(this);
         
         this.name = new JTextField();
         
-        this.checkBoxNewCategoriy = new JCheckBox("(neue Kategorie anlegen)");
-        this.checkBoxNewCategoriy.addActionListener(this);
+        this.checkBoxNewCategory = new JCheckBox("(neue Kategorie anlegen)");
+        this.checkBoxNewCategory.addActionListener(this);
         
         this.color = new JButton();
         this.color.addActionListener(this);
         this.color.setPreferredSize(new Dimension(100, 28));
-
-        this.analysisBox = new JComboBox(GUIHelper.getInstance().getUser().getAuswertungen().toArray());
-        this.analysisBox.addActionListener(this);
-        if (!GUIHelper.getInstance().getUser().getAuswertungen().isEmpty()) {
-            this.analysisBox.setSelectedIndex(0);
-        }
 
     }
 }

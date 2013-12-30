@@ -82,9 +82,14 @@ public class GUIHelper {
         kon.add(kon1);
         kon.add(new Konto("test", "454536", "37010050"));
         kon.add(new Konto("test2", "222222", "1231231"));
+        
+        ArrayList<Kategorie> kateg = new ArrayList();
+        kateg.add(new Kategorie("Bla", Color.orange));
+        kateg.add(new Kategorie("Bla2", Color.green));
 
         userD.setAuswertungen(list);
         userD.setKonten(kon);
+        userD.setKategorien(kateg);
         return userD;
     }
 
