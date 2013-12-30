@@ -85,17 +85,40 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-        String nameS = this.kontoName.getText();
-        String kontoNrS = this.kontoNummer.getText();
-        String kontoBLZS = this.kontoBLZ.getText();
+        if (this.isChecked) {
+            String nameS = this.kontoName.getText();
+            String kontoNrS = this.kontoNummer.getText();
+            String kontoBLZS = this.kontoBLZ.getText();
 
-        try {
-            Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS);
-            this.user.addKonto(newKonto);
+            try {
+                Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS);
+                this.user.addKonto(newKonto);
+                Verschluesselung.save(user);
+                this.kontoBox.addItem(newKonto);
+            } catch (Exception e) {
+                System.out.println("Speichern fehlgeschlagen");
+            }
+        } else {
+            String userName = this.name.getText();
+            String userPw = this.passwordTF.getPassword().toString();
+
+            String nameS = this.kontoName.getText();
+            String kontoNrS = this.kontoNummer.getText();
+            String kontoBLZS = this.kontoBLZ.getText();
+
+            if (!nameS.equals("") && !kontoNrS.equals("") && !kontoBLZS.equals("")) {
+                currentKonto.setName(nameS);
+                currentKonto.setKontoNr(kontoNrS);
+                currentKonto.setBLZ(kontoBLZS);                
+            }
+
+            if (!userName.equals("") && !userPw.equals("")) {
+                this.user.setName(userName);
+                this.user.setPassword(userPw);
+            }
+            
             Verschluesselung.save(user);
-            this.kontoBox.addItem(newKonto);
-        } catch (Exception e) {
-            System.out.println("Speichern fehlgeschlagen");
+
         }
     }
 
