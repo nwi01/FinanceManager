@@ -38,7 +38,8 @@ public class TestVerschluesselung {
     @Test
     public void testVerschluesselungBasic1(){
         //erzeugen eines neuen Users
-        User us1 = new User("TestUser", "testtest", null, null);
+        //Benutzername gekuerzt aufgrund des bestehenden Problems
+        User us1 = new User("admi", "testuser", null, null);
         // User speichern
         //TODO Temp. Speicherort für tests, damit der Dummy-User nicht vergammelt
         //Vll. angaben des speicherortes in xml speichern und immer auslesen ?
@@ -47,6 +48,9 @@ public class TestVerschluesselung {
         if(funkt)
         {
             System.out.println("Klappt");
+            User temp = Verschluesselung.load("admi", "testuser");
+            
+            System.out.println(temp.getName());
         }
         else
         {
