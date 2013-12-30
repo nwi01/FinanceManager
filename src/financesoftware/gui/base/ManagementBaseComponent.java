@@ -6,26 +6,19 @@
 package financesoftware.gui.base;
 
 import financesoftware.base.User;
-import financesoftware.gui.base.ViewComponent;
 import financesoftware.gui.components.BaseComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.metal.MetalBorders;
 
 /**
  * Hiermit koennen standardisierte Verwaltungungs Komponenten erzeugt werden. Es
@@ -78,8 +71,6 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
     private JPanel createControllBar() {
         JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-//        GridLayout layout = new GridLayout(1, 5);
-//        panel.setLayout(layout);
 
         this.previous.setVisible(false);
         if (this.sections.size() == 1) {

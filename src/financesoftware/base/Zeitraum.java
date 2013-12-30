@@ -123,6 +123,14 @@ public class Zeitraum {
     }
     
     /**
+     * Gibt alle Enums zurueck
+     * @return 
+     */
+    public static Intervall[] getIntervallEnums(){
+        return Intervall.values();        
+    }
+    
+    /**
      * TODO:
      * DIese methode macht aus einem String ein Zeitraum Objekt
      * @param date
@@ -131,6 +139,33 @@ public class Zeitraum {
     public static Zeitraum parseDate(String date) {
         return new Zeitraum(null, Intervall.TAEGLICH, null); // Dummy
     }
+
+    /**
+     * @return the lIntervall
+     */
+    public Intervall getIntervall() {
+        return lIntervall;
+    }
+
+    /**
+     * @param lIntervall the lIntervall to set
+     */
+    public void setIntervall(Intervall lIntervall) {
+        this.lIntervall = lIntervall;
+    }
+    
+    
+    /**
+     * 
+     * TODO ordentlich machen!
+     * @return 
+     */
+    public String toString(){
+        // Ausgabe DD.MM.YYYY bitte
+        return this.lStartzeit.getTime().toString() + "Intervall: " + this.lIntervall.toString();
+    }
+    
+    
     
     public enum Intervall { TAEGLICH, WOECHENTLICH, MONATLICH, JAEHRLICH; };
 

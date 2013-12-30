@@ -54,4 +54,8 @@ public class Kategorie
     public void setlFarbe(Color lFarbe) {
         this.lFarbe = lFarbe;
     }
+    
+    public String toString(){
+        return this.lName;
+    }
 }

@@ -129,6 +129,10 @@ public class Konto implements Serializable
     public void setDauerauftraege(List<Dauerauftrag> Dauerauftraege) {
         this.lDauerauftraege = Dauerauftraege;
     }
+    
+    public void addDauerauftrag(Dauerauftrag dau){
+        this.lDauerauftraege.add(dau);
+    }
 
     /**
      * TODO: Ordentliche Ausgabe! Wird wirklich benoetigt ;)

@@ -27,4 +27,9 @@ public class Dauerauftrag extends Buchung {
     public boolean mussGebuchtWerden() {
         return false;
     }
+    
+    @Override
+    public String toString(){
+        return this.getAdressat() + ": " + this.getBetrag();
+    }
 }

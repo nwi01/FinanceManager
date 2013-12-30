@@ -1,6 +1,7 @@
 package financesoftware.tools;
 
 import financesoftware.base.Buchung;
+import financesoftware.base.Dauerauftrag;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
@@ -65,15 +66,23 @@ public class GUIHelper {
     public User getDummyUser() {
         User userD = new User("admin", "");
         ArrayList<Analysis> list = new ArrayList();
-        ArrayList<Kategorie> cat = new ArrayList();
+        ArrayList<Kategorie> cat1 = new ArrayList();
+        ArrayList<Kategorie> cat2 = new ArrayList();
         ArrayList<Konto> kon = new ArrayList();
-        cat.add(new Kategorie("Bla", Color.orange));
-        list.add(new Analysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat));
-        list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat));
-        
+        cat1.add(new Kategorie("Bla", Color.orange));
+        cat1.add(new Kategorie("Bla2", Color.black));
+
+        cat2.add(new Kategorie("Bl324a", Color.gray));
+        cat2.add(new Kategorie("Bl32423a", Color.green));
+        list.add(new Analysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat1));
+        list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat2));
+
+        Konto kon1 = new Konto("test", "454536", "37010050");
+        kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10));
+        kon.add(kon1);
         kon.add(new Konto("test", "454536", "37010050"));
-         kon.add(new Konto("test2", "222222", "1231231"));
-        
+        kon.add(new Konto("test2", "222222", "1231231"));
+
         userD.setAuswertungen(list);
         userD.setKonten(kon);
         return userD;
