@@ -28,8 +28,12 @@ public class Zeitraum {
     private int lAnzahlWdh;
     private Calendar lEndezeit;
     
-    
-    // Konstruktor, wenn angegeben wurde "fuer ... Wochen/Tage"
+    /**
+     * Konstruktor, wenn angegeben wurde "fuer ... Wochen/Tage"
+     * @param startzeit
+     * @param intervall
+     * @param anzahlWdh 
+     */
     public Zeitraum(Calendar startzeit, Intervall intervall, int anzahlWdh){
         lStartzeit = startzeit;
         lIntervall = intervall;
@@ -37,7 +41,12 @@ public class Zeitraum {
         lEndezeit  = berechneEndezeit(startzeit, intervall, anzahlWdh);
     }
     
-    // Konstruktor, wenn angegeben wurde "ausfuehren bis zum dd.mm.yyyy"
+    /**
+     * Konstruktor, wenn angegeben wurde "ausfuehren bis zum dd.mm.yyyy"
+     * @param startzeit
+     * @param intervall
+     * @param endezeit 
+     */
     public Zeitraum(Calendar startzeit, Intervall intervall, Calendar endezeit){
         lStartzeit = startzeit;
         lIntervall = intervall;
@@ -45,7 +54,10 @@ public class Zeitraum {
         lEndezeit  = endezeit;
     }
     
-    // Konstruktor für einfache Buchung
+    /**
+     * Konstruktor für einfache Buchung
+     * @param startzeit 
+     */
     public Zeitraum(Calendar startzeit){
         lStartzeit = startzeit;
         lIntervall = null;
@@ -53,6 +65,11 @@ public class Zeitraum {
         lEndezeit  = startzeit;
     }
     
+    /**
+     * berechnet Intervall in Tage und Monate
+     * @param intervall
+     * @return 
+     */
     public static int[] IntervallInTage(Intervall intervall){
         int a[] = {0,0};
         
@@ -68,7 +85,14 @@ public class Zeitraum {
         }         
         return a;
     }
-        
+    
+    /**
+     * berechnet bei vorgegebener Startzeit, Intervall und Anzahl der Wdh die Endezeit
+     * @param startzeit
+     * @param intervall
+     * @param anzahlWdh
+     * @return 
+     */
     public static Calendar berechneEndezeit(Calendar startzeit, Intervall intervall, int anzahlWdh){
         int tmp[] = IntervallInTage(intervall);
         int tage = tmp[0];
@@ -88,7 +112,14 @@ public class Zeitraum {
         }         
         return kalender;
     }
-       
+     
+    /**
+     * berechnet bei gegebener Startzeit, Intervall und Endezeit die Anzahl der Wdh
+     * @param startzeit
+     * @param intervall
+     * @param endezeit
+     * @return 
+     */
     public static int berechneWdh(Calendar startzeit, Intervall intervall, Calendar endezeit){
         int tmp[] = IntervallInTage(intervall);
         int tage = tmp[0];
@@ -112,6 +143,11 @@ public class Zeitraum {
         return wdh;
     }
     
+    /**
+     * String in Calendar-Objekt
+     * @param date
+     * @return 
+     */
     public static Calendar parseCalendar(String date){
         Calendar cal = Calendar.getInstance();
         String[] getrennt = date.split("\\.");
@@ -122,6 +158,22 @@ public class Zeitraum {
         return cal;
     }
     
+    // Getter und Setter
+    
+    /**
+     * @return the lStartzeit
+     */
+    public Calendar getStartzeit(){
+        return lStartzeit;
+    }
+    
+    /**
+     * @param lStartzeit the lStartzeit to set
+     */
+    public void setStartzeit(Calendar lStartzeit){
+        this.lStartzeit = lStartzeit;
+    }
+    
     /**
      * Gibt alle Enums zurueck
      * @return 
@@ -130,16 +182,6 @@ public class Zeitraum {
         return Intervall.values();        
     }
     
-    /**
-     * TODO:
-     * DIese methode macht aus einem String ein Zeitraum Objekt
-     * @param date
-     * @return 
-     */
-    public static Zeitraum parseDate(String date) {
-        return new Zeitraum(null, Intervall.TAEGLICH, null); // Dummy
-    }
-
     /**
      * @return the lIntervall
      */
@@ -154,6 +196,35 @@ public class Zeitraum {
         this.lIntervall = lIntervall;
     }
     
+    /**
+     * @return the lAnzahlWdh
+     */
+    public int getAnzahlWdh(){
+        return lAnzahlWdh;
+    }
+    
+    /**
+     * @param lAnzahlWdh the lAnzahlWdh to set
+     */
+    public void setAnzahlWdh(int lAnzahlWdh){
+        this.lAnzahlWdh = lAnzahlWdh;
+    }
+    
+    /**
+     * @return the lEndezeit
+     */
+    public Calendar getEndezeit(){
+        return lEndezeit;
+    }
+    
+    /**
+     * @param lEndezeit the lEndezeit to set
+     */
+    public void setEndezeit(Calendar lEndezeit){
+        this.lEndezeit = lEndezeit;
+    }
+    
+    // Getter und Setter Ende
     
     /**
      * 
@@ -166,7 +237,9 @@ public class Zeitraum {
     }
     
     
-    
+    /**
+     * Enum fuer Intervall
+     */
     public enum Intervall { TAEGLICH, WOECHENTLICH, MONATLICH, JAEHRLICH; };
 
 }
