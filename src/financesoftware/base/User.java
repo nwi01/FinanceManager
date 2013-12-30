@@ -130,4 +130,8 @@ public class User implements Serializable
     public void setKategorien(List<Kategorie> kategorien) {
         this.kategorien = kategorien;
     }
+    
+    public void addKonto(Konto konto){
+        this.lKonten.add(konto);
+    }
 }

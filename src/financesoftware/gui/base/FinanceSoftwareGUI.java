@@ -122,7 +122,7 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
         this.components.add(new AnalysisComponent());
         this.components.add(new AnalysisManagementComponent());
         this.components.add(new HelpComponent()); //6
-        mainPanel.add(this.components.get(0).getComponent());
+//        mainPanel.add(this.components.get(6).getComponent());
     }
 
     @Override

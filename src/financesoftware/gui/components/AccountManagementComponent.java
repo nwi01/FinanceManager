@@ -7,6 +7,7 @@ package financesoftware.gui.components;
 import financesoftware.base.Buchung;
 import financesoftware.base.Dauerauftrag;
 import financesoftware.base.Konto;
+import financesoftware.base.Verschluesselung;
 import financesoftware.gui.base.ManagementBaseComponent;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -72,10 +73,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 this.kontoNummer.setText("");
                 this.kontoBLZ.setText("");
                 this.isChecked = true;
-            }
-            else{
+            } else {
                 //Event ausloesen
-                this.kontoBox.setSelectedIndex(this.kontoBox.getSelectedIndex());
+                if (this.kontoBox.getSelectedIndex() != -1) {
+                    this.kontoBox.setSelectedIndex(this.kontoBox.getSelectedIndex());
+                }
                 this.isChecked = false;
             }
         }
@@ -83,6 +85,18 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
+        String nameS = this.kontoName.getText();
+        String kontoNrS = this.kontoNummer.getText();
+        String kontoBLZS = this.kontoBLZ.getText();
+
+        try {
+            Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS);
+            this.user.addKonto(newKonto);
+            Verschluesselung.save(user);
+            this.kontoBox.addItem(newKonto);
+        } catch (Exception e) {
+            System.out.println("Speichern fehlgeschlagen");
+        }
     }
 
     private JPanel createUserManagement() {

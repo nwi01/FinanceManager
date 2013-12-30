@@ -50,7 +50,6 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
         //ActionListener
         previous.addActionListener(this);
         next.addActionListener(this);
-        save.addActionListener(this);
 
         //Buttons vorbereiten
         this.save.setVisible(false);
@@ -160,7 +159,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
         }
 
         if (e.getSource() == this.save) {
-            //TODO
+            this.saveOrUpdate();
             return true;
         }
 

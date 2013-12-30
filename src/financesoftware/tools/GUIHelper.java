@@ -82,7 +82,7 @@ public class GUIHelper {
         kon.add(kon1);
         kon.add(new Konto("test", "454536", "37010050"));
         kon.add(new Konto("test2", "222222", "1231231"));
-        
+
         ArrayList<Kategorie> kateg = new ArrayList();
         kateg.add(new Kategorie("Bla", Color.orange));
         kateg.add(new Kategorie("Bla2", Color.green));
@@ -102,14 +102,22 @@ public class GUIHelper {
      * @return
      */
     public static String[][] getBookingData(Konto konto) {
-        String[][] result = new String[konto.getBuchungen().size()][3];
-        for (int i = 0; i < konto.getBuchungen().size(); i++) {
-            result[i][0] = konto.getBuchungen().get(i).getDatum().toString();
-            result[i][1] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
-            result[i][2] = konto.getBuchungen().get(i).getAdressat();
+        if (konto != null) {
+            String[][] result = new String[konto.getBuchungen().size()][3];
+            for (int i = 0; i < konto.getBuchungen().size(); i++) {
+                result[i][0] = konto.getBuchungen().get(i).getDatum().toString();
+                result[i][1] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
+                result[i][2] = konto.getBuchungen().get(i).getAdressat();
 //            return new String[][]{{"Datum", "Betrag", "Empfänger"}, {"erfe","wdwd","wwww"}};
+            }
+            if (result.length == 0) {
+                return new String[][]{{"Keine Einträge vorhanden"}};
+            }
+            return result;
+        } else {
+            return new String[][]{{"Keine Einträge vorhanden"}};
         }
-        return result;
+
 //        return new String[][]{{"Datum", "Betrag", "Empfänger"}};
     }
 
@@ -124,7 +132,11 @@ public class GUIHelper {
     }
 
     public static double getCurrentMoney(Konto konto) {
-        return konto.getAktuellerKontostand();
+        if (konto != null) {
+            return konto.getAktuellerKontostand();
+        } else {
+            return 0;
+        }
     }
 
     /**
