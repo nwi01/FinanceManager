@@ -3,6 +3,7 @@ package financesoftware.base;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public abstract class Verschluesselung {
         try {
             
             String dateiname = toHexString(uBenutzer.getBytes());
-            SecretKeySpec key = new SecretKeySpec(uPassword.getBytes(), "DES");
+            SecretKeySpec key = new SecretKeySpec(getKey(uPassword).getBytes(), "DES");
 
             System.out.println(key.getEncoded());
             Cipher lCipher = Cipher.getInstance("DES");
@@ -53,8 +54,16 @@ public abstract class Verschluesselung {
                 len += (16 - len % 16);
             }
             
-            byte[] temp = new byte[len];
-            lKrypto.read(temp, 0, temp.length);
+            byte[] temp = new byte[len+50];
+            try
+            {
+                lKrypto.read(temp, 0, temp.length);
+            }
+            catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+            
             
             lOutput.write(temp, 0, temp.length);
             
@@ -78,14 +87,13 @@ public abstract class Verschluesselung {
             lObjectIn.close();
             lInput.close();
             
-            /*
             //temporaere Datei loeschen
             File file = new File(".\\temp.temp");
         
             //Zuvor alle mit dem File verknuepften Streams schließen.
             if(file.exists()){
                 file.delete();
-            }*/
+            }
             
             Load.setPassword(Load.getPassword().trim());
             return Load;
@@ -106,6 +114,7 @@ public abstract class Verschluesselung {
      */
     public static boolean save(User uUser)
     {
+        
         try
         {
             String dateiname = toHexString(uUser.getName().getBytes());
@@ -119,7 +128,7 @@ public abstract class Verschluesselung {
             FileInputStream lInput = new FileInputStream(".\\temp.temp");
             FileOutputStream lOutput = new FileOutputStream(".\\" + dateiname);
             
-            SecretKeySpec key = new SecretKeySpec(uUser.getPassword().getBytes(), "DES");
+            SecretKeySpec key = new SecretKeySpec(getKey(uUser.getPassword()).getBytes(), "DES");
 
             Cipher lCipher = Cipher.getInstance("DES");
             lCipher.init(Cipher.DECRYPT_MODE, key);
@@ -134,6 +143,7 @@ public abstract class Verschluesselung {
             }
             
             byte[] temp = new byte[len];
+          
             lInput.read(temp, 0, temp.length);
             //lKrypto.write(temp, 0, temp.length);
             //lKrypto.flush();
@@ -151,14 +161,13 @@ public abstract class Verschluesselung {
             lKrypto.close();
             lOutput.close();
 
-            /*
             //temporaere Datei loeschen
             File file = new File(".\\temp.temp");
         
             //Zuvor alle mit dem File verknuepften Streams schließen.
             if(file.exists()){
                 file.delete();
-            }*/
+            }
             
         } catch (Exception e) {
             return false;
@@ -178,12 +187,30 @@ public abstract class Verschluesselung {
     {
         try 
         {
-            SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "Blowfish");
+            SecretKeySpec key = new SecretKeySpec(getKey(uKey).getBytes(), "Blowfish");
             Cipher cipher = Cipher.getInstance("Blowfish");
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return (User) ByteToObject(cipher.doFinal(uUser));
         } catch (Exception e) {
             return null;
+        }
+    }
+    
+    private static String getKey(String uPassword)
+    {
+        String lRueckgabe = uPassword;
+        
+        if(lRueckgabe.length() < 8)
+        {
+            while(lRueckgabe.length() < 8)
+            {
+                lRueckgabe += "a";
+            }
+            return lRueckgabe;
+        }
+        else
+        {
+            return lRueckgabe.substring(0, 8);
         }
     }
 
