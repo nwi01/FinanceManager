@@ -42,10 +42,10 @@ public abstract class Verschluesselung {
             Cipher lCipher = Cipher.getInstance("DES");
             lCipher.init(Cipher.ENCRYPT_MODE, key);
             
-            FileInputStream lFile = new FileInputStream(".\\" + dateiname);
+            FileInputStream lFile = new FileInputStream("./" + dateiname);
             CipherInputStream lKrypto = new CipherInputStream(lFile, lCipher);
             
-            FileOutputStream lOutput = new FileOutputStream(".\\temp.temp");
+            FileOutputStream lOutput = new FileOutputStream("./temp.temp");
             
             int len = lFile.available();
             
@@ -63,23 +63,14 @@ public abstract class Verschluesselung {
             {
                 System.out.println(e.getMessage());
             }
-            
-            
             lOutput.write(temp, 0, temp.length);
             
-            FileInputStream lInput = new FileInputStream(".\\temp.temp");
+            FileInputStream lInput = new FileInputStream("./temp.temp");
             ObjectInputStream lObjectIn = new ObjectInputStream(lInput);
             
-            try
-            {
-                Object tempObject = lObjectIn.readObject();
-                Load = (User)tempObject;
-            }
-            catch(EOFException ex)
-            {
-                System.out.println(ex.getMessage());
-            }
-               
+            Object tempObject = lObjectIn.readObject();
+            Load = (User)tempObject;
+          
             lKrypto.close();
             lFile.close();
             
@@ -87,18 +78,13 @@ public abstract class Verschluesselung {
             lObjectIn.close();
             lInput.close();
             
-            //temporaere Datei loeschen
-            File file = new File(".\\temp.temp");
-        
-            //Zuvor alle mit dem File verknuepften Streams schließen.
-            if(file.exists()){
-                file.delete();
-            }
-            
+            deleteTmp();
+                  
             Load.setPassword(Load.getPassword().trim());
             return Load;
             
             } catch (Exception e) {
+                deleteTmp();
                 return null;
             }
     }
@@ -114,19 +100,18 @@ public abstract class Verschluesselung {
      */
     public static boolean save(User uUser)
     {
-        
         try
         {
             String dateiname = toHexString(uUser.getName().getBytes());
-            FileOutputStream lFile = new FileOutputStream(".\\temp.temp");
+            FileOutputStream lFile = new FileOutputStream("./temp.temp");
             ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
             
             lObjectOut.writeObject(uUser);
 
            
             
-            FileInputStream lInput = new FileInputStream(".\\temp.temp");
-            FileOutputStream lOutput = new FileOutputStream(".\\" + dateiname);
+            FileInputStream lInput = new FileInputStream("./temp.temp");
+            FileOutputStream lOutput = new FileOutputStream("./" + dateiname);
             
             SecretKeySpec key = new SecretKeySpec(getKey(uUser.getPassword()).getBytes(), "DES");
 
@@ -160,20 +145,23 @@ public abstract class Verschluesselung {
 
             lKrypto.close();
             lOutput.close();
-
+        } catch (Exception e) {
+            deleteTmp();
+            return false;
+        }
+        deleteTmp();
+        return true;
+    }
+    
+    private static void deleteTmp()
+    {
             //temporaere Datei loeschen
-            File file = new File(".\\temp.temp");
+            File file = new File("./temp.temp");
         
             //Zuvor alle mit dem File verknuepften Streams schließen.
             if(file.exists()){
                 file.delete();
             }
-            
-        } catch (Exception e) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
