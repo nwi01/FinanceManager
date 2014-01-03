@@ -43,7 +43,7 @@ public class TestCSVImport {
         if(lTest.size() > 0)
         {
             System.out.println("Import stattgefunden");
-            System.out.println(lTest.get(0).getDatum().getStartzeit().toString());
+            System.out.println(lTest.get(0).getDatum().getStartzeit().getTime().toString());
         }
         else
         {
