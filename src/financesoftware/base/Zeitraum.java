@@ -241,5 +241,10 @@ public class Zeitraum {
      * Enum fuer Intervall
      */
     public enum Intervall { TAEGLICH, WOECHENTLICH, MONATLICH, JAEHRLICH; };
-
 }
+
+
+
+
+
+
