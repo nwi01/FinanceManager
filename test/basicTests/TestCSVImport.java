@@ -38,12 +38,11 @@ public class TestCSVImport {
     @Test
     public void testCSVIMportBasic1(){
         
-        List<Buchung> lTest = CSVImport.Import("KSK", "./KSKTestDatei.csv");
+        boolean lTest = CSVImport.Import("KSK", "./KSKTestDatei.csv");
         
-        if(lTest.size() > 0)
+        if(lTest)
         {
             System.out.println("Import stattgefunden");
-            System.out.println(lTest.get(0).getDatum().getStartzeit().getTime().toString());
         }
         else
         {

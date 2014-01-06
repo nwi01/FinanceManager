@@ -164,7 +164,7 @@ public class GUIHelper {
             } catch (NumberFormatException e) {
                 return false;
             }
-            konto.addBuchung(new Buchung(valueL, to, date));
+            konto.addBuchung(new Buchung(valueL, to, date, ""));
             return true;
         }
         return false;
