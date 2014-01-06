@@ -29,6 +29,13 @@ public class Buchung
         Calendar startzeit = Zeitraum.parseCalendar(datum);
         lDatum = new Zeitraum(startzeit);
     }
+     
+     public Buchung(double Betrag, String Adressat, Calendar startzeit,  String Verwendungszweck)
+    {
+        lBetrag = Betrag;
+        lAdressat = Adressat;
+        lDatum = new Zeitraum(startzeit);
+    }
     
     //Methoden    
 

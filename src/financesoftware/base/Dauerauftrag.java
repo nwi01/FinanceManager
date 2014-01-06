@@ -15,20 +15,20 @@ public class Dauerauftrag extends Buchung {
     
     /**
      * Konstruktor, wenn Anzahl Wdh angegeben
+     * nach Aufruf muss buchen() aufgerufen werden
      * @param betrag
      * @param adressat
      * @param startzeit
      * @param intervall
      * @param wdh 
-     */
+     */    
     public Dauerauftrag(double betrag, String adressat, String startzeit, 
                         Zeitraum.Intervall intervall, int wdh) {
         super(betrag, adressat, startzeit, "");  
         Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, wdh);              
         setDatum(uIntervall);
-        this.aktiv = true;
-        // buchen
-        this.letzteAusfuehrung = this.getDatum().getStartzeit();
+        this.aktiv = false;
+        this.letzteAusfuehrung = null;
     }
     
     /**
@@ -45,8 +45,8 @@ public class Dauerauftrag extends Buchung {
         Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, 
                                            Zeitraum.parseCalendar(endezeit));              
         setDatum(uIntervall);
-        this.aktiv = true;
-        this.letzteAusfuehrung = this.getDatum().getStartzeit();
+        this.aktiv = false;
+        this.letzteAusfuehrung = null;
     }
     
     // Getter & Setter
@@ -81,39 +81,30 @@ public class Dauerauftrag extends Buchung {
     
     // Getter & Setter Ende
     
-
-    /**
-     * Ueberpruefung, ob Dauerauftrag gebucht werden muss
-     * @return boolean: muss gebucht werden?
-     */
-    public boolean mussGebuchtWerden() {
-        boolean mussGebuchtWerden = false;
-        Calendar heute = Calendar.getInstance();
-        int tage[] = Zeitraum.IntervallInTage(this.getDatum().getIntervall());
-        
-        if(tage[0] != 0){
-            this.letzteAusfuehrung.add(Calendar.DAY_OF_MONTH, tage[0]);
-        }
-        else{
-            this.letzteAusfuehrung.add(Calendar.MONTH, tage[1]);
-        }
-        
-        if(this.letzteAusfuehrung.compareTo(heute) <= 0){
-           mussGebuchtWerden = true; 
-        }
-        
-        return mussGebuchtWerden;
-    }
     
     /**
      * bucht die faelligen Buchungen des Dauerauftrags
      */
-    public void buchen(){
+    public void buchen(Konto konto){
         boolean buchenPruefen = true;
-        Calendar heute = Calendar.getInstance();
+        Calendar heute = Calendar.getInstance();        
         int tage[] = Zeitraum.IntervallInTage(this.getDatum().getIntervall());
-        Calendar letzteAusfTmp = this.letzteAusfuehrung;
         
+        if(this.letzteAusfuehrung == null){
+            if(heute.compareTo(this.getDatum().getStartzeit()) > 0){
+                Buchung neu = new Buchung(this.getBetrag(),this.getAdressat(),
+                                          this.getDatum().getStartzeit(), "verwendungszweck");
+                konto.addBuchung(neu);
+                this.letzteAusfuehrung = this.getDatum().getStartzeit();
+                buchenPruefen = true;
+                this.aktiv = true;
+            }
+            else{
+                buchenPruefen = false;
+            }
+        }              
+        
+        Calendar letzteAusfTmp = this.letzteAusfuehrung;
         while(buchenPruefen){        
             if(tage[0] != 0){
                 letzteAusfTmp.add(Calendar.DAY_OF_MONTH, tage[0]);
@@ -122,12 +113,14 @@ public class Dauerauftrag extends Buchung {
                 letzteAusfTmp.add(Calendar.MONTH, tage[1]);
             }
             
-            if(letzteAusfTmp.compareTo(this.getDatum().getEndezeit()) >= 0){
+            if(letzteAusfTmp.compareTo(this.getDatum().getEndezeit()) > 0){
                 buchenPruefen = false;
                 this.aktiv = false;
             }
             else if(letzteAusfTmp.compareTo(heute) <= 0){
-                //Buchen
+                Buchung neu = new Buchung(this.getBetrag(),this.getAdressat(),
+                                          this.getDatum().getStartzeit(), "verwendungszweck");
+                konto.addBuchung(neu);
                 this.letzteAusfuehrung = letzteAusfTmp;
                 buchenPruefen = true; 
             }
