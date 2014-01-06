@@ -1,5 +1,6 @@
 package basicTests;
 
+import financesoftware.base.Konto;
 import financesoftware.base.User;
 import financesoftware.base.Verschluesselung;
 import org.junit.After;
@@ -47,10 +48,37 @@ public class TestVerschluesselung {
         
         if(funkt)
         {
-            System.out.println("Klappt");
+            System.out.println("Einfaches Speichern");
             User temp = Verschluesselung.load("Mike", "testpw");
+            if(temp != null)
+            {
+                System.out.println("Einfaches Laden.");
+                System.out.println(temp.getName());
             
-            System.out.println(temp.getName());
+                temp.addKonto(new Konto("KSK", "56464", "31251220", 0.0));
+                System.out.println("Konto hinzugefuegt.");
+                
+                 boolean SaveWithAcc = Verschluesselung.save(temp);
+                 
+                 if(SaveWithAcc)
+                 {
+                     System.out.println("Speichern mit einem Konto");
+                     User LoadWithAcc = Verschluesselung.load("Mike", "testpw");
+                     
+                     if(LoadWithAcc != null)
+                     {
+                         System.out.println("Laden mit einem Konto erfolgreich");
+                     }
+                     else
+                     {
+                         System.out.println("Laden mit einem Konto fehlgeschlagen");
+                     }                         
+                 }
+                 else
+                 {
+                      System.out.println("Speichern mit einem Konto fehlgeschlagen");
+                 }
+            }
         }
         else
         {
