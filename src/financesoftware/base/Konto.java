@@ -19,6 +19,7 @@ public class Konto implements Serializable
     //Member
     private String lName = "";
     private String KontoNr = "";
+    private double lKontostand;
     private String lBLZ = "";
     private List<Buchung> lBuchungen = new ArrayList();
     private List<Dauerauftrag> lDauerauftraege = new ArrayList();
@@ -29,21 +30,31 @@ public class Konto implements Serializable
      * @param uName
      * @param uKontoNr
      * @param uBLZ
+     * @param Kontostand
      * @param uBuchungen
      * @param uDauerauftraege
      */
-    public Konto(String uName, String uKontoNr, String uBLZ, List<Buchung> uBuchungen, List<Dauerauftrag> uDauerauftraege) {
+    public Konto(String uName, String uKontoNr, String uBLZ, double Kontostand, List<Buchung> uBuchungen, List<Dauerauftrag> uDauerauftraege) {
         lName = uName;
         lBLZ = uBLZ;
+        lKontostand = Kontostand;
         lBuchungen = uBuchungen;
         lDauerauftraege = uDauerauftraege;
         KontoNr = uKontoNr;
     }
 
-    public Konto(String uName, String uKontoNr, String uBLZ) {
+    /**
+     *
+     * @param uName
+     * @param uKontoNr
+     * @param uBLZ
+     * @param Kontostand
+     */
+    public Konto(String uName, String uKontoNr, String uBLZ, double Kontostand) {
         lName = uName;
         lBLZ = uBLZ;
         KontoNr = uKontoNr;
+        lKontostand = Kontostand;
     }
 
     //Methoden
@@ -52,7 +63,7 @@ public class Konto implements Serializable
      * @return Kontostand
      */
     public double getAktuellerKontostand() {
-        return 0.0;
+        return lKontostand;
     }
 
     //Getter_Setter
@@ -105,14 +116,8 @@ public class Konto implements Serializable
         return lBuchungen;
     }
 
-    /**
-     * @param Buchungen the Buchungen to set
-     */
-    public void setBuchungen(List<Buchung> Buchungen) {
-        this.lBuchungen = Buchungen;
-    }
-
     public void addBuchung(Buchung buch) {
+        lKontostand += buch.getBetrag();
         this.lBuchungen.add(buch);
     }
 

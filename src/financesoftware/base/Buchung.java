@@ -15,18 +15,25 @@ public class Buchung
     private String lAdressat = "";
     
     //Konstruktor
-    public Buchung(double Betrag, String Adressat, Zeitraum datum)
+    public Buchung(double Betrag, String Adressat, Zeitraum datum, String Verwendungszweck)
     {
         lBetrag = Betrag;
         lAdressat = Adressat;
         lDatum = datum;
     }
     
-     public Buchung(double Betrag, String Adressat, String datum)
+     public Buchung(double Betrag, String Adressat, String datum,  String Verwendungszweck)
     {
         lBetrag = Betrag;
         lAdressat = Adressat;
         Calendar startzeit = Zeitraum.parseCalendar(datum);
+        lDatum = new Zeitraum(startzeit);
+    }
+     
+     public Buchung(double Betrag, String Adressat, Calendar startzeit,  String Verwendungszweck)
+    {
+        lBetrag = Betrag;
+        lAdressat = Adressat;
         lDatum = new Zeitraum(startzeit);
     }
     

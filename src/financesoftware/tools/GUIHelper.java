@@ -77,11 +77,11 @@ public class GUIHelper {
         list.add(new Analysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat1));
         list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat2));
 
-        Konto kon1 = new Konto("test", "454536", "37010050");
+        Konto kon1 = new Konto("test", "454536", "37010050", 0.0);
         kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10));
         kon.add(kon1);
-        kon.add(new Konto("test", "454536", "37010050"));
-        kon.add(new Konto("test2", "222222", "1231231"));
+        kon.add(new Konto("test", "454536", "37010050", 0.0));
+        kon.add(new Konto("test2", "222222", "1231231", 0.0));
 
         ArrayList<Kategorie> kateg = new ArrayList();
         kateg.add(new Kategorie("Bla", Color.orange));
@@ -156,7 +156,7 @@ public class GUIHelper {
             } catch (NumberFormatException e) {
                 return false;
             }
-            konto.addBuchung(new Buchung(valueL, to, date));
+            konto.addBuchung(new Buchung(valueL, to, date, ""));
             return true;
         }
         return false;

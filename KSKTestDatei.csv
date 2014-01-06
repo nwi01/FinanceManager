@@ -1,2 +1,2 @@
-Auftragskonto;Buchungstag;Valutadatum;Buchungstext;Verwendungszweck;Beg¸nstigter/Zahlungspflichtiger;Kontonummer;BLZ;Betrag;W‰hrung;Info
-654651;11. Nov;11.11.2013;ONLINE-UEBERWEISUNG;Hier steht der Verwendungszwechk inkl datum;Empf‰ngername;Empf‰ngerKontonummer;Die BLZ bei meinem Beispiel in Buchstaben;55.21;EUR;Umsatz gebucht
+Auftragskonto;Buchungstag;Valutadatum;Buchungstext;Verwendungszweck;BegÅnstigter/Zahlungspflichtiger;Kontonummer;BLZ;Betrag;WÑhrung;Info
+45614;11. Nov;11.11.2013;ONLINE-UEBERWEISUNG;Hier steht der Verwendungszwechk inkl datum;EmpfÑngername;EmpfÑngerKontonummer;Die BLZ bei meinem Beispiel in Buchstaben;Betrag entweder positiv oder negativ;EUR;Umsatz gebucht
