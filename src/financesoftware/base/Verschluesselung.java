@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -81,6 +82,16 @@ public abstract class Verschluesselung {
             deleteTmp();
                   
             Load.setPassword(Load.getPassword().trim());
+            
+            if(Load.getKonten() == null)
+            {
+                Load.setKonten(new ArrayList<Konto>());
+            }
+            
+            if(Load.getKategorien() == null)
+            {
+                Load.setKategorien(new ArrayList<Kategorie>());
+            }
             return Load;
             
             } catch (Exception e) {
