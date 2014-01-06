@@ -44,8 +44,11 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.categoryBox) {
-            this.name.setText(((Kategorie) this.categoryBox.getSelectedItem()).getlName());
-            this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).getlFarbe());
+            if(((Kategorie)(this.categoryBox.getSelectedItem())) != null)
+            {
+                this.name.setText(((Kategorie) this.categoryBox.getSelectedItem()).getlName());
+                this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).getlFarbe());
+            }
         }
 
         if (event.getSource() == this.checkBoxNewCategory) {

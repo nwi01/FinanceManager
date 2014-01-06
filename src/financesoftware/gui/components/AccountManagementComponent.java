@@ -43,6 +43,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     private JTextField kontoName;
     private JTextField kontoNummer;
     private JTextField kontoBLZ;
+    private JTextField aktKontostand;
 
     private Konto currentKonto;
 
@@ -89,9 +90,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String nameS = this.kontoName.getText();
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
+            //TODO: NIELS: GUI anpassen. NumericField einfuegen fuer den Startkontostand.
+            double aktKontostand = Double.parseDouble(this.aktKontostand.getText());
 
             try {
-                Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS);
+                Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS, aktKontostand);
                 this.user.addKonto(newKonto);
                 Verschluesselung.save(user);
                 this.kontoBox.addItem(newKonto);

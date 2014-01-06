@@ -150,10 +150,13 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
         if (event.getSource() == this.auftraege) {
             Dauerauftrag auf = (Dauerauftrag) this.auftraege.getSelectedItem();
-            this.startDate.setText(auf.getDatum().toString());
-            this.money.setText(auf.getBetrag() + "");
-            this.to.setText(auf.getAdressat());
-            this.intervall.setSelectedItem(auf.getDatum().getIntervall());
+            if(auf != null)
+            {
+                this.startDate.setText(auf.getDatum().toString());
+                this.money.setText(auf.getBetrag() + "");
+                this.to.setText(auf.getAdressat());
+                this.intervall.setSelectedItem(auf.getDatum().getIntervall());
+            }
         }
 
         if (event.getSource() == this.startDate) {

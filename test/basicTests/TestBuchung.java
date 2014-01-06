@@ -43,7 +43,7 @@ public class TestBuchung {
 
     @Test
     public void testBuchung1(){        
-        Buchung bu = new Buchung(3.5, "Niels", "30.05.2013");
+        Buchung bu = new Buchung(3.5, "Niels", "30.05.2013", "Dies ist der Verwenungszweck");
         assertTrue(bu.getAdressat().equals("Niels"));
         assertTrue(bu.getBetrag() == 3.5);
         //TODO

@@ -195,6 +195,7 @@ public class FinanceMainComponent extends JComponent implements ViewComponent, A
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
+        System.out.println("Test");
 
     }
 
