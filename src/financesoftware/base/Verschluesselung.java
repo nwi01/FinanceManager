@@ -54,7 +54,7 @@ public abstract class Verschluesselung {
                 len += (16 - len % 16);
             }
             
-            byte[] temp = new byte[len+50];
+            byte[] temp = new byte[len+10000];
             try
             {
                 lKrypto.read(temp, 0, temp.length);

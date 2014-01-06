@@ -91,10 +91,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
             //TODO: NIELS: GUI anpassen. NumericField einfuegen fuer den Startkontostand.
-            double aktKontostand = Double.parseDouble(this.aktKontostand.getText());
+            //double aktKontostand = Double.parseDouble(this.aktKontostand.getText());
 
             try {
-                Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS, aktKontostand);
+                //Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS, aktKontostand);
+                Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS, 0.0);
                 this.user.addKonto(newKonto);
                 Verschluesselung.save(user);
                 this.kontoBox.addItem(newKonto);
@@ -110,9 +111,8 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String kontoBLZS = this.kontoBLZ.getText();
 
             if (!nameS.equals("") && !kontoNrS.equals("") && !kontoBLZS.equals("")) {
-                currentKonto.setName(nameS);
-                currentKonto.setKontoNr(kontoNrS);
-                currentKonto.setBLZ(kontoBLZS);                
+                currentKonto = new Konto(nameS, kontoNrS, kontoBLZS, 0.0);
+                user.addKonto(currentKonto);
             }
 
             if (!userName.equals("") && !userPw.equals("")) {
@@ -121,7 +121,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             }
             
             Verschluesselung.save(user);
-
         }
     }
 
