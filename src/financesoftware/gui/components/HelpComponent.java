@@ -50,9 +50,7 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
         return this;
     }
 
-    @Override
-    public void updateContent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateContent() {       
     }
 
     /**

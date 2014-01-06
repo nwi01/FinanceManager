@@ -16,6 +16,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -36,7 +37,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     //Konto
     private JCheckBox checkBoxNewAccount;
-    private boolean isChecked = false;
     private JComboBox<Konto> kontoBox;
     private JComboBox<Buchung> buchungBox;
     private JComboBox<Dauerauftrag> dauerauftragBox;
@@ -67,25 +67,30 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         }
 
         if (event.getSource() == this.checkBoxNewAccount) {
-            if (!isChecked) {
-                // Felder leeren
-                this.kontoName.setText("");
-                this.kontoNummer.setText("");
-                this.kontoBLZ.setText("");
-                this.isChecked = true;
+            if (!checkBoxNewAccount.isSelected()) {
+                if (this.kontoBox.getModel().getSize() != 0) {
+                    this.kontoName.setText(((Konto) this.kontoBox.getSelectedItem()).getName());
+                    this.kontoNummer.setText(((Konto) this.kontoBox.getSelectedItem()).getKontoNr());
+                    this.kontoBLZ.setText(((Konto) this.kontoBox.getSelectedItem()).getBLZ());
+                } else {
+                    // Felder leeren
+                    this.kontoName.setText("");
+                    this.kontoNummer.setText("");
+                    this.kontoBLZ.setText("");
+                }
+
             } else {
                 //Event ausloesen
                 if (this.kontoBox.getSelectedIndex() != -1) {
                     this.kontoBox.setSelectedIndex(this.kontoBox.getSelectedIndex());
                 }
-                this.isChecked = false;
             }
         }
     }
 
     @Override
     public void saveOrUpdate() {
-        if (this.isChecked) {
+        if (this.checkBoxNewAccount.isSelected()) {
             String nameS = this.kontoName.getText();
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
@@ -93,8 +98,9 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             try {
                 Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS);
                 this.user.addKonto(newKonto);
-                Verschluesselung.save(user);
-                this.kontoBox.addItem(newKonto);
+                this.kontoBox.setVisible(true);
+                this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+                this.kontoBox.setSelectedItem(newKonto);
             } catch (Exception e) {
                 System.out.println("Speichern fehlgeschlagen");
             }
@@ -109,17 +115,17 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             if (!nameS.equals("") && !kontoNrS.equals("") && !kontoBLZS.equals("")) {
                 currentKonto.setName(nameS);
                 currentKonto.setKontoNr(kontoNrS);
-                currentKonto.setBLZ(kontoBLZS);                
+                currentKonto.setBLZ(kontoBLZS);
             }
 
             if (!userName.equals("") && !userPw.equals("")) {
                 this.user.setName(userName);
                 this.user.setPassword(userPw);
             }
-            
+            this.kontoBox.setVisible(true);
             Verschluesselung.save(user);
-
         }
+        this.checkBoxNewAccount.setEnabled(true);
     }
 
     private JPanel createUserManagement() {
@@ -225,6 +231,9 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         this.name.setText(this.user.getName());
         this.passwordTF.setText("Tesdfwefefefst");
 
+        this.checkBoxNewAccount = new JCheckBox("(neues Konto anlegen)");
+        this.checkBoxNewAccount.addActionListener(this);
+
         // Konto Felder
         this.kontoName = new JTextField();
         this.kontoNummer = new JTextField();
@@ -234,10 +243,16 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         kontoBox.addActionListener(this);
         if (!this.user.getKonten().isEmpty()) {
             this.kontoBox.setSelectedIndex(0);
+        } else {
+            this.checkBoxNewAccount.setSelected(true);
+            this.checkBoxNewAccount.setEnabled(false);
+            this.kontoBox.setVisible(false);
         }
-        this.checkBoxNewAccount = new JCheckBox("(neues Konto anlegen)");
-        this.checkBoxNewAccount.addActionListener(this);
 
+    }
+
+    @Override
+    public void updateContent() {
     }
 
 }

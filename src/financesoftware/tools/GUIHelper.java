@@ -139,14 +139,6 @@ public class GUIHelper {
         }
     }
 
-    /**
-     * Liefert alle Konten des aktuellen Users zurueck
-     *
-     * @return
-     */
-    public static Konto[] getAllBankAccounts() {
-        return GUIHelper.getInstance().user.getKonten().toArray(new Konto[]{});
-    }
 
     /**
      *

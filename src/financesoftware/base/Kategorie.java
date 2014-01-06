@@ -7,12 +7,13 @@
 package financesoftware.base;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  *
  * @author Mike
  */
-public class Kategorie 
+public class Kategorie implements Serializable
 {
     //Member
     private String lName;
@@ -55,6 +56,7 @@ public class Kategorie
         this.lFarbe = lFarbe;
     }
     
+    @Override
     public String toString(){
         return this.lName;
     }

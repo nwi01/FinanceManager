@@ -17,7 +17,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -309,14 +308,8 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         return panel;
     }
 
-    @Override
-    public JComponent getComponent() {
-        return this;
-    }
 
-    @Override
-    public void updateContent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateContent() {     
     }
 
     @Override
@@ -398,9 +391,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
                 this.availCategoriesList.setListData(this.availCharts.toArray());
             }
         }
-        
-        
-
+               
         if (event.getSource() == this.kontoBox) {
         }
 
@@ -408,7 +399,10 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-
+        if(isChecked){
+            this.analysisBox.setVisible(true);
+            //TODO 
+        }
     }
 
     @Override
@@ -455,6 +449,11 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         this.analysisBox.addActionListener(this);
         if (!GUIHelper.getInstance().getUser().getAuswertungen().isEmpty()) {
             this.analysisBox.setSelectedIndex(0);
+        }
+        else{
+            this.analysisBox.setVisible(false);
+            this.checkBoxNewAnalysis.setSelected(true);
+            this.checkBoxNewAnalysis.setEnabled(false);
         }
     }
 }

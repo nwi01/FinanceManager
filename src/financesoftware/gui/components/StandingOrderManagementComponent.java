@@ -55,7 +55,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
-       
+
         constraints.gridy++;
         constraints.gridx = 0;
         constraints.gridwidth = 8;
@@ -126,14 +126,34 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         return panel;
     }
 
-    @Override
-    public JComponent getComponent() {
-        return this;
-    }
 
     @Override
     public void updateContent() {
+        this.konten.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+        if (!this.user.getKonten().isEmpty()) {
+            if (this.auftraege.getModel().getSize() != 0) {
+                this.setAllEnabled(true);
+            } else {
+                this.startDate.setEnabled(true);
+                this.money.setEnabled(true);
+                this.to.setEnabled(true);
+                this.intervall.setEnabled(true);
+                this.konten.setEnabled(true);
+            }
+        } else {
+            this.setAllEnabled(false);
+            this.checkBoxNewStandingOrder.setSelected(true);
+        }
+    }
 
+    private void setAllEnabled(boolean isEnabled) {
+        this.checkBoxNewStandingOrder.setEnabled(isEnabled);
+        this.startDate.setEnabled(isEnabled);
+        this.money.setEnabled(isEnabled);
+        this.to.setEnabled(isEnabled);
+        this.intervall.setEnabled(isEnabled);
+        this.auftraege.setEnabled(isEnabled);
+        this.konten.setEnabled(isEnabled);
     }
 
     @Override
@@ -150,8 +170,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
         if (event.getSource() == this.auftraege) {
             Dauerauftrag auf = (Dauerauftrag) this.auftraege.getSelectedItem();
-            if(auf != null)
-            {
+            if (auf != null) {
                 this.startDate.setText(auf.getDatum().toString());
                 this.money.setText(auf.getBetrag() + "");
                 this.to.setText(auf.getAdressat());
@@ -203,13 +222,20 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.money = new JTextField();
         this.to = new JTextField();
 
-        this.auftraege = new JComboBox();
-        this.auftraege.addActionListener(this);
+        this.auftraege = null;
+
         this.konten = new JComboBox(this.user.getKonten().toArray());
         this.konten.addActionListener(this);
         if (!this.user.getKonten().isEmpty()) {
+            this.auftraege = new JComboBox(this.user.getKonten().get(0).getDauerauftraege().toArray());
             this.konten.setSelectedIndex(0);
+        } else {
+            this.auftraege = new JComboBox();
+            this.setAllEnabled(false);
+            this.checkBoxNewStandingOrder.setSelected(true);
         }
+
+        this.auftraege.addActionListener(this);
 
     }
 

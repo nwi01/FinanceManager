@@ -6,6 +6,7 @@
 package financesoftware.gui.base;
 
 import financesoftware.base.User;
+import financesoftware.base.Verschluesselung;
 import financesoftware.gui.components.BaseComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.BorderLayout;
@@ -93,8 +94,8 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        panel.add(this.previous, constraints);  
-        
+        panel.add(this.previous, constraints);
+
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx++;
         panel.add(this.next, constraints);
@@ -104,12 +105,8 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
     @Override
     public JComponent getComponent() {
+        this.updateContent();
         return this;
-    }
-
-    @Override
-    public void updateContent() {
-
     }
 
     @Override
@@ -160,6 +157,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
         if (e.getSource() == this.save) {
             this.saveOrUpdate();
+            Verschluesselung.save(this.user);
             return true;
         }
 

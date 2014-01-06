@@ -12,6 +12,6 @@ import javax.swing.JComponent;
  */
 public interface ViewComponent {
     JComponent getComponent();
-    
+
     void updateContent();
 }

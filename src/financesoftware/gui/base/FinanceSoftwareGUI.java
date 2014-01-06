@@ -92,8 +92,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent me) {
 
         // Hier sollte das Event nur von einer JList kommen
-        JList list = (JList) me.getSource();
-        int index = list.getSelectedIndex();
+        JList dummyList = (JList) me.getSource();
+        int index = dummyList.getSelectedIndex();
 
         if (index == 7) {
             int confirm = JOptionPane.showConfirmDialog(this, "Wollen Sie das Programm wirklich beenden?", "Programm beenden", JOptionPane.OK_CANCEL_OPTION);

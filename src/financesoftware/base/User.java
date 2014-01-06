@@ -124,6 +124,10 @@ public class User implements Serializable
          }
         return list;
     }
+     
+     public void addKategorie(Kategorie kat){
+         this.kategorien.add(kat);
+     }
     /**
      * @param kategorien the kategorien to set
      */

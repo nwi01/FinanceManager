@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
  *
  * @author melanie
  */
-public abstract class BaseComponent extends JComponent implements ViewComponent {
+ public abstract class BaseComponent extends JComponent implements ViewComponent {
     public JPanel mainPanel = new JPanel();
     
     

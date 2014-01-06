@@ -29,14 +29,15 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 /**
- *  TODO: Hier sollten globale Kategorien erstellt/ Verwaltet werden und in der Auswertungs Verwaltung diese zur auswertung hinzugefügt werden können
+ * TODO: Hier sollten globale Kategorien erstellt/ Verwaltet werden und in der
+ * Auswertungs Verwaltung diese zur auswertung hinzugefügt werden können
+ *
  * @author niels
  */
 public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     private JComboBox<Kategorie> categoryBox;
     private JCheckBox checkBoxNewCategory;
-    private boolean isChecked = false;
     //Kategorie
     private JTextField name;
     private JButton color;
@@ -44,20 +45,23 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.categoryBox) {
-            if(((Kategorie)(this.categoryBox.getSelectedItem())) != null)
-            {
+            if (((Kategorie) (this.categoryBox.getSelectedItem())) != null) {
                 this.name.setText(((Kategorie) this.categoryBox.getSelectedItem()).getlName());
                 this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).getlFarbe());
             }
         }
 
         if (event.getSource() == this.checkBoxNewCategory) {
-            if (!isChecked) {
-                this.isChecked = true;
-                this.name.setText("");
+            if (!this.checkBoxNewCategory.isSelected()) {
+                this.checkBoxNewCategory.setSelected(false);
+                if (this.categoryBox.getModel().getSize() != 0) {
+                    this.name.setText(this.categoryBox.getSelectedItem().toString());
+                } else {
+                    this.name.setText("");
+                }
             } else {
                 this.categoryBox.setSelectedIndex(this.categoryBox.getSelectedIndex());
-                this.isChecked = false;
+                this.checkBoxNewCategory.setSelected(true);
             }
         }
 
@@ -69,7 +73,21 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-
+        if (!this.name.getText().equals("") && this.color.getBackground() != null) {
+            if (this.checkBoxNewCategory.isSelected()) {
+                Kategorie kat = new Kategorie(this.name.getText(), this.color.getBackground());
+                this.user.addKategorie(kat);
+                this.categoryBox.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
+                this.categoryBox.setSelectedItem(kat);
+                this.categoryBox.setEnabled(true);
+                this.checkBoxNewCategory.setEnabled(true);
+            } else{
+                if(this.categoryBox.getModel().getSize() != 0){
+                    ((Kategorie)this.categoryBox.getSelectedItem()).setlName(this.name.getText());
+                     ((Kategorie)this.categoryBox.getSelectedItem()).setlFarbe(this.color.getBackground());
+                }
+            }
+        }
     }
 
     private JPanel createCategoriesPanel() {
@@ -131,17 +149,28 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
-        this.categoryBox = new JComboBox(GUIHelper.getInstance().getUser().getKategorien().toArray());
-        this.categoryBox.addActionListener(this);
-        
         this.name = new JTextField();
-        
+
         this.checkBoxNewCategory = new JCheckBox("(neue Kategorie anlegen)");
         this.checkBoxNewCategory.addActionListener(this);
-        
+
         this.color = new JButton();
         this.color.addActionListener(this);
         this.color.setPreferredSize(new Dimension(100, 28));
 
+        this.categoryBox = new JComboBox(GUIHelper.getInstance().getUser().getKategorien().toArray());
+        this.categoryBox.addActionListener(this);
+        if (!GUIHelper.getInstance().getUser().getKategorien().isEmpty()) {
+            this.categoryBox.setSelectedIndex(0);
+        } else {
+            this.categoryBox.setEnabled(false);
+            this.checkBoxNewCategory.setSelected(true);
+            this.checkBoxNewCategory.setEnabled(false);
+        }
+
+    }
+
+    @Override
+    public void updateContent() {
     }
 }
