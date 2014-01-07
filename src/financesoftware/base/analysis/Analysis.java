@@ -7,8 +7,11 @@
 package financesoftware.base.analysis;
 
 import financesoftware.base.Kategorie;
+import financesoftware.base.Konto;
 import financesoftware.base.Zeitraum;
+import financesoftware.tools.GUIHelper;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**

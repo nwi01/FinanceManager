@@ -7,6 +7,7 @@
 package financesoftware.base;
 
 import financesoftware.base.analysis.Analysis;
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +39,26 @@ public class User implements Serializable
         lPassword = uPassword; 
         lKonten = uKonten;
         lAuswertungen = uAuswertungen;
+        this.createDefaultCategories();        
     }
      
      public User(String uName, String uPassword)
      {
         lName = uName;
-        lPassword = uPassword; 
+        lPassword = uPassword;
+        this.createDefaultCategories();
     }
+     
+     /**
+      * Standard Kategorien
+      * TODO: Sollte aktiviert werden, wenn die verschluesselung klappt
+      */
+     private void createDefaultCategories(){
+//         this.kategorien.add(new Kategorie("Essen", Color.ORANGE));
+//         this.kategorien.add(new Kategorie("Auto", Color.blue));
+//         this.kategorien.add(new Kategorie("Elektronik", Color.gray));
+//         this.kategorien.add(new Kategorie("Pflanzen", Color.green));
+     }
         
     //Getter_Setter
     /**

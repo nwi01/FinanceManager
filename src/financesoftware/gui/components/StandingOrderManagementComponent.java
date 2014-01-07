@@ -14,12 +14,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -38,6 +40,10 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JTextField money;
     private JTextField to;
     private User user;
+    private JRadioButton repeat;
+    private JRadioButton untilDate;
+    private JTextField untilDateTextField;
+    private JTextField repeatTextField;
 
     public StandingOrderManagementComponent() {
         super();
@@ -98,7 +104,31 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         panel.add(this.checkBoxNewStandingOrder, constraints);
 
         constraints.gridy++;
+        constraints.gridx = 0;
         constraints.insets = new Insets(5, 5, 5, 5);
+        JPanel panel2 = new JPanel();
+        panel2.add(this.repeat);
+        panel2.add(this.repeatTextField);
+        panel.add(panel2, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy++;
+        JPanel panel3 = new JPanel();
+        panel3.add(this.untilDate);
+        panel3.add(this.untilDateTextField);
+        panel.add(panel3, constraints);
+
+        constraints.gridy++;
+        constraints.gridx = 0;
+        constraints.gridwidth = 8;
+        JSeparator sep3 = new JSeparator(JSeparator.HORIZONTAL);
+        sep3.setPreferredSize(new Dimension(700, 10));
+        panel.add(sep3, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy++;
+        constraints.gridwidth = 1;
+
         panel.add(new JLabel("Startdatum:"), constraints);
 
         constraints.gridx++;
@@ -125,7 +155,6 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
         return panel;
     }
-
 
     @Override
     public void updateContent() {
@@ -154,6 +183,10 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.intervall.setEnabled(isEnabled);
         this.auftraege.setEnabled(isEnabled);
         this.konten.setEnabled(isEnabled);
+        this.repeat.setEnabled(isEnabled);
+        this.untilDate.setEnabled(isEnabled);
+        this.repeatTextField.setEnabled(isEnabled);
+        this.untilDateTextField.setEnabled(isEnabled);
     }
 
     @Override
@@ -193,6 +226,16 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 this.isChecked = false;
             }
         }
+
+        if (event.getSource() == this.repeat) {
+            this.untilDateTextField.setEnabled(false);
+            this.repeatTextField.setEnabled(true);
+        }
+
+        if (event.getSource() == this.untilDate) {
+            this.untilDateTextField.setEnabled(true);
+            this.repeatTextField.setEnabled(false);
+        }
     }
 
     @Override
@@ -209,6 +252,18 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
+        this.repeat = new JRadioButton("Wiederholungen:       ");
+        this.untilDate = new JRadioButton("bis zum:                     ");
+        ButtonGroup group = new ButtonGroup();
+        group.add(this.repeat);
+        group.add(this.untilDate);
+        this.repeat.addActionListener(this);
+        this.untilDate.addActionListener(this);
+        this.untilDateTextField = new JTextField();
+        this.untilDateTextField.setPreferredSize(new Dimension(100, 28));
+        this.repeatTextField = new JTextField();
+        this.repeatTextField.setPreferredSize(new Dimension(100, 28));
+
         this.checkBoxNewStandingOrder = new JCheckBox("(neuen Dauerauftrag anlegen)");
         this.checkBoxNewStandingOrder.addActionListener(this);
 

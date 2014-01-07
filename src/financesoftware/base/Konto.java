@@ -13,8 +13,7 @@ import java.util.List;
  *
  * @author Mike
  */
-public class Konto implements Serializable
-{
+public class Konto implements Serializable {
 
     //Member
     private String lName = "";
@@ -23,6 +22,9 @@ public class Konto implements Serializable
     private String lBLZ = "";
     private List<Buchung> lBuchungen = new ArrayList();
     private List<Dauerauftrag> lDauerauftraege = new ArrayList();
+    private String iban;
+    private String bic;
+    private boolean isOldStyle = true;
 
     /**
      * Konstruktor
@@ -44,6 +46,21 @@ public class Konto implements Serializable
     }
 
     /**
+     * 
+     * @param uName
+     * @param Kontostand
+     * @param iban
+     * @param bic 
+     */
+    public Konto(String uName, double Kontostand, String iban, String bic) {
+        lName = uName;
+        this.iban = iban;
+        this.bic = bic;
+        lKontostand = Kontostand;
+        this.isOldStyle = false;
+    }
+
+    /**
      *
      * @param uName
      * @param uKontoNr
@@ -60,6 +77,7 @@ public class Konto implements Serializable
     //Methoden
     /**
      * TODO
+     *
      * @return Kontostand
      */
     public double getAktuellerKontostand() {
@@ -134,8 +152,8 @@ public class Konto implements Serializable
     public void setDauerauftraege(List<Dauerauftrag> Dauerauftraege) {
         this.lDauerauftraege = Dauerauftraege;
     }
-    
-    public void addDauerauftrag(Dauerauftrag dau){
+
+    public void addDauerauftrag(Dauerauftrag dau) {
         this.lDauerauftraege.add(dau);
     }
 
@@ -147,5 +165,13 @@ public class Konto implements Serializable
     public String toString() {
         return this.lName + ":" + this.KontoNr;
 
+    }
+    
+    /**
+     * Neues oder altes Verfahren?
+     * @return 
+     */
+    public boolean isOldStyle(){
+        return this.isOldStyle;
     }
 }

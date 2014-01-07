@@ -16,12 +16,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -43,6 +45,12 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     private JTextField kontoName;
     private JTextField kontoNummer;
     private JTextField kontoBLZ;
+    private JTextField kontoIBAN;
+    private JTextField kontoBIC;
+    private JTextField kontoStand;
+
+    private JRadioButton oldStyle;
+    private JRadioButton newStyle;
 
     private Konto currentKonto;
 
@@ -60,6 +68,12 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.kontoName.setText(currentKonto.getName());
             this.kontoNummer.setText(currentKonto.getKontoNr());
             this.kontoBLZ.setText(currentKonto.getBLZ());
+
+            if (currentKonto.isOldStyle()) {
+                this.oldStyle.setSelected(true);
+            } else {
+                this.newStyle.setSelected(true);
+            }
         }
 
         if (event.getSource() == this.dauerauftragBox) {
@@ -86,6 +100,23 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 }
             }
         }
+
+        if (event.getSource() == this.oldStyle) {
+            enableOrDisableOldStyle(true);
+        }
+
+        if (event.getSource() == this.newStyle) {
+            enableOrDisableOldStyle(false);
+        }
+
+    }
+
+    private void enableOrDisableOldStyle(boolean setOldStyleEnabled) {
+        this.kontoIBAN.setEnabled(!setOldStyleEnabled);
+        this.kontoBIC.setEnabled(!setOldStyleEnabled);
+
+        this.kontoNummer.setEnabled(setOldStyleEnabled);
+        this.kontoBLZ.setEnabled(setOldStyleEnabled);
     }
 
     @Override
@@ -94,13 +125,16 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String nameS = this.kontoName.getText();
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
+            String kontoStandS = this.kontoStand.getText();
 
             try {
-                Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS);
-                this.user.addKonto(newKonto);
-                this.kontoBox.setVisible(true);
-                this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
-                this.kontoBox.setSelectedItem(newKonto);
+                if (!(nameS.isEmpty() && kontoNrS.isEmpty() && kontoBLZS.isEmpty() && kontoStandS.isEmpty())) {
+                    Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS, Double.parseDouble(kontoStandS));
+                    this.user.addKonto(newKonto);
+                    this.kontoBox.setVisible(true);
+                    this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+                    this.kontoBox.setSelectedItem(newKonto);
+                }
             } catch (Exception e) {
                 System.out.println("Speichern fehlgeschlagen");
             }
@@ -130,7 +164,8 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     private JPanel createUserManagement() {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(800, 500));
+//        panel.setBackground(Color.red);
+//        panel.setPreferredSize(new Dimension(800, 500));
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         //Layout
@@ -188,6 +223,12 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         constraints.gridy++;
         constraints.gridx = 0;
         constraints.gridwidth = 1;
+        panel.add(this.oldStyle, constraints);
+
+        constraints.gridy++;
+        panel.add(this.newStyle, constraints);
+
+        constraints.gridy++;
         panel.add(new JLabel("Name:"), constraints);
 
         constraints.gridx++;
@@ -205,6 +246,26 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
         constraints.gridx++;
         panel.add(this.kontoBLZ, constraints);
+
+        constraints.gridy++;
+        constraints.gridx = 0;
+        panel.add(new JLabel("IBAN:"), constraints);
+
+        constraints.gridx++;
+        panel.add(this.kontoIBAN, constraints);
+
+        constraints.gridx++;
+        panel.add(new JLabel("BIC:"), constraints);
+
+        constraints.gridx++;
+        panel.add(this.kontoBIC, constraints);
+
+        constraints.gridy++;
+        constraints.gridx = 0;
+        panel.add(new JLabel("Konto-Stand:"), constraints);
+
+        constraints.gridx++;
+        panel.add(this.kontoStand, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -235,6 +296,19 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         this.checkBoxNewAccount.addActionListener(this);
 
         // Konto Felder
+        this.oldStyle = new JRadioButton("(Alte Variante)");
+        this.oldStyle.addActionListener(this);
+        this.newStyle = new JRadioButton("(Neue Variante)");
+        this.newStyle.addActionListener(this);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(this.oldStyle);
+        group.add(this.newStyle);
+
+        this.kontoStand = new JTextField();
+        this.kontoStand.setPreferredSize(new Dimension(100, 28));
+        this.kontoIBAN = new JTextField();
+        this.kontoBIC = new JTextField();
         this.kontoName = new JTextField();
         this.kontoNummer = new JTextField();
         this.kontoBLZ = new JTextField();
@@ -248,6 +322,9 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.checkBoxNewAccount.setEnabled(false);
             this.kontoBox.setVisible(false);
         }
+
+        this.newStyle.setSelected(true);
+        enableOrDisableOldStyle(false);
 
     }
 

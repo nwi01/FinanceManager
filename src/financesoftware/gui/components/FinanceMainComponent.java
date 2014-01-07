@@ -258,6 +258,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.userOverviewPanel = new JPanel();
         this.currentMoney = new JTextField();
         this.currentMoney.setPreferredSize(new Dimension(100, 28));
+        this.currentMoney.setEditable(false);
         this.accounts = new JComboBox(this.user.getKonten().toArray());
         this.accounts.addActionListener(
                 this);

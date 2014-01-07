@@ -74,10 +74,10 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
         this.previous.setVisible(false);
         if (this.sections.size() == 1) {
-            this.next.setVisible(false);
+            this.getNext().setVisible(false);
             this.save.setVisible(true);
         } else {
-            this.next.setVisible(true);
+            this.getNext().setVisible(true);
             this.save.setVisible(false);
         }
 
@@ -98,7 +98,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx++;
-        panel.add(this.next, constraints);
+        panel.add(this.getNext(), constraints);
         panel.add(this.save, constraints);
         return panel;
     }
@@ -130,7 +130,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
                 this.previous.setVisible(false);
             }
             if (this.currentPage == this.sections.size() - 1) {
-                this.next.setVisible(true);
+                this.getNext().setVisible(true);
                 this.save.setVisible(false);
             }
             this.showPanel.removeAll();
@@ -139,13 +139,13 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
             return true;
         }
 
-        if (e.getSource() == this.next) {
+        if (e.getSource() == this.getNext()) {
             if (this.currentPage == 0) {
                 this.previous.setVisible(true);
             }
 
             if (this.currentPage == this.sections.size() - 2) {
-                this.next.setVisible(false);
+                this.getNext().setVisible(false);
                 this.save.setVisible(true);
             }
 
@@ -187,5 +187,12 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
     public abstract ArrayList<JPanel> getSectionPanels();
 
     public abstract void initFields();
+
+    /**
+     * @return the next
+     */
+    public JButton getNext() {
+        return next;
+    }
 
 }
