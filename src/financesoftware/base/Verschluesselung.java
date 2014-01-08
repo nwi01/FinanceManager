@@ -1,19 +1,14 @@
-package financesoftware.base;
+package javaverschluesselungsstream;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -35,7 +30,26 @@ public abstract class Verschluesselung {
         User Load = null;
 
         try {
+            File lFile = new File("./test.crypt");
+
+            //Verschluesselung hinzufuegen
+            byte[] input = FileUtils.readFileToByteArray(lFile);
             
+            //byte[] output = Crypt(input, uPassword, false);
+            byte[] output = input;
+            
+            
+            File lFile2 = new File("./temp.temp");
+            
+            FileUtils.writeByteArrayToFile(lFile2, output);
+            
+            FileInputStream lInputStream = new FileInputStream(lFile2);
+            Load = JAXB.unmarshal( lFile, User.class );
+
+            lInputStream.close();
+            
+            
+            /*
             String dateiname = toHexString(uBenutzer.getBytes());
             SecretKeySpec key = new SecretKeySpec(getKey(uPassword).getBytes(), "DES");
 
@@ -79,8 +93,6 @@ public abstract class Verschluesselung {
             lObjectIn.close();
             lInput.close();
             
-            deleteTmp();
-                  
             Load.setPassword(Load.getPassword().trim());
             
             if(Load.getKonten() == null)
@@ -91,11 +103,9 @@ public abstract class Verschluesselung {
             if(Load.getKategorien() == null)
             {
                 Load.setKategorien(new ArrayList<Kategorie>());
-            }
+            }*/
             return Load;
-            
             } catch (Exception e) {
-                deleteTmp();
                 return null;
             }
     }
@@ -113,6 +123,27 @@ public abstract class Verschluesselung {
     {
         try
         {
+            FileOutputStream lFile = new FileOutputStream("./temp.temp");
+            
+            JAXBContext context = JAXBContext.newInstance( User.class );
+            Marshaller m = context.createMarshaller();
+            m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+            m.marshal(uUser, lFile);
+
+            //Verschluesselung hinzufuegen.
+            File lFile2 = new File("./temp.temp");
+            byte[] input = FileUtils.readFileToByteArray(lFile2);
+            
+            //byte[] output = Crypt(input, uUser.getPassword(), true);            
+           byte[] output = input;
+            FileUtils.writeByteArrayToFile(new File("./test.crypt"), output);
+            lFile.close();
+            
+            
+            
+            /*
+            
+            
             String dateiname = toHexString(uUser.getName().getBytes());
             FileOutputStream lFile = new FileOutputStream("./temp.temp");
             ObjectOutputStream lObjectOut = new ObjectOutputStream(lFile);
@@ -141,28 +172,110 @@ public abstract class Verschluesselung {
             byte[] temp = new byte[len];
           
             lInput.read(temp, 0, temp.length);
-            //lKrypto.write(temp, 0, temp.length);
-            //lKrypto.flush();
-            
-            for(int z = 0; z < temp.length; z++)
-            {
-                lKrypto.write(temp[z]);
-            }
-
+            lKrypto.write(temp, 0, temp.length);
+            lKrypto.flush();
+           
             lObjectOut.close();
             lFile.close();
 
             lInput.close();
 
             lKrypto.close();
-            lOutput.close();
+            lOutput.close();*/
+            
+            lFile.close();
         } catch (Exception e) {
-            deleteTmp();
             return false;
         }
-        deleteTmp();
         return true;
     }
+    
+    /**
+     * 
+     * @param ToCrypt
+     * @param uPassword
+     * @param zuVerschluesseln
+     * @return 
+     */
+    private static byte[] Crypt(byte[] ToCrypt, String uPassword, boolean zuVerschluesseln)
+    {
+        byte[] lPassword = uPassword.getBytes();
+        byte[] lRueckgabe = ToCrypt;
+        
+        for(int i = 1; i <= lRueckgabe.length; i++)
+        {
+            if(zuVerschluesseln)
+            {
+                int lTmp = lRueckgabe[i-1];
+                int lValue = getValue(lPassword, i);
+        
+                lTmp += lValue;
+        
+                if(lTmp < -128)
+                {
+                    lTmp += 255;
+                }
+
+                if(lTmp > 127)
+                {
+                    lTmp -= 255;
+                }
+                lRueckgabe[i-1] = (byte) lTmp;
+            }
+            else
+            {
+                int lTmp = lRueckgabe[i-1];
+                int lValue = getValue(lPassword, i);
+        
+                lTmp -= lValue;
+        
+                if(lTmp < -128)
+                {
+                    lTmp += 255;
+                }
+
+                if(lTmp > 127)
+                {
+                    lTmp -= 255;
+                }
+                lRueckgabe[i-1] = (byte) lTmp;
+            }
+        }
+        return lRueckgabe;
+    }
+    
+    private static int getValue(byte[] uPassword, int index)
+    {
+        int lRueckgabe = 0;
+      
+        for(int i = 1; i <= uPassword.length; i++)
+        {
+            int q = i*i*i;
+            for(int k = i; k <= uPassword.length; k++)
+            {
+                if((k % 5) == 0)
+                {
+                    q -= k*k;
+                }
+                else
+                {
+                    q += k;
+                }
+            }
+            
+            if((i % 2) == 0 || lRueckgabe > 10000)
+            {
+                q -= uPassword[i-1]/2;
+            }
+            else
+            {
+                q += uPassword[i-1]/2;
+            }
+            lRueckgabe += q;
+        }
+        return lRueckgabe;
+    }
+    
     
     private static void deleteTmp()
     {
@@ -175,24 +288,22 @@ public abstract class Verschluesselung {
             }
     }
 
-    /**
-     * *
-     *
-     * @param uText
-     * @param uKey
-     * @return
-     */
-    private static User encryptBlowfish(byte[] uUser, String uKey) 
-    {
-        try 
-        {
-            SecretKeySpec key = new SecretKeySpec(getKey(uKey).getBytes(), "Blowfish");
-            Cipher cipher = Cipher.getInstance("Blowfish");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return (User) ByteToObject(cipher.doFinal(uUser));
-        } catch (Exception e) {
-            return null;
+   public static String toHexString(byte[] ba) 
+   {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < ba.length; i++) {
+            str.append(String.format("%x", ba[i]));
         }
+        return str.toString();
+    }
+
+    public static String fromHexString(String hex) 
+    {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < hex.length(); i += 2) {
+            str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
+        }
+        return str.toString();
     }
     
     private static String getKey(String uPassword)
@@ -212,6 +323,24 @@ public abstract class Verschluesselung {
             return lRueckgabe.substring(0, 8);
         }
     }
+    
+    
+    
+    
+     private static byte[] encryptBlowfish(byte[] uUser, String uKey) 
+    {
+        try 
+        {
+            SecretKeySpec key = new SecretKeySpec(getKey(uKey).getBytes(), "Blowfish");
+            Cipher cipher = Cipher.getInstance("Blowfish");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return cipher.doFinal(uUser);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+   
 
     /**
      * *
@@ -220,64 +349,17 @@ public abstract class Verschluesselung {
      * @param uKey
      * @return
      */
-    private static byte[] decryptBlowfish(Object uUser, String uKey) {
+    private static byte[] decryptBlowfish(byte[] uUser, String uKey) {
         try {
             SecretKeySpec key = new SecretKeySpec(uKey.getBytes(), "DES");
             Cipher cipher = Cipher.getInstance("DES");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] BUser = ObjectToByte(uUser);
+            byte[] BUser = uUser;
             System.out.println(BUser);
-            for (int k = 0; k < BUser.length; k++) {
-                if (BUser[k] == 0) {
-                    System.out.println(BUser[k]);
-                    BUser[k] = (byte) (97);
-                } else {
-                    System.out.println("null");
-
-                }
-            }
             return cipher.doFinal(BUser);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
             return null;
         }
     }
-
-    public static String toHexString(byte[] ba) {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < ba.length; i++) {
-            str.append(String.format("%x", ba[i]));
-        }
-        return str.toString();
-    }
-
-    public static String fromHexString(String hex) {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < hex.length(); i += 2) {
-            str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
-        }
-        return str.toString();
-    }
-
-    public static byte[] ObjectToByte(Object obj) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(obj);
-        byte[] lRueckgabe = out.toByteArray();
-        if ((lRueckgabe.length % 8) != 0) {
-            byte[] ltemp = new byte[lRueckgabe.length + (8 - lRueckgabe.length % 8)];
-            for (int i = 0; i < lRueckgabe.length; i++) {
-                ltemp[i] = lRueckgabe[i];
-            }
-            lRueckgabe = ltemp;
-        }
-        return lRueckgabe;
-    }
-
-    public static Object ByteToObject(byte[] data) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
-        return is.readObject();
-    }
-
 }

@@ -19,7 +19,6 @@ import java.util.List;
 public class User implements Serializable
 {
     //Member
-    private String _lEncryptTest = "FinanceManager";
     private String lName = "";
     private String lPassword = "";
     private List<Konto> lKonten = new ArrayList();
@@ -115,13 +114,6 @@ public class User implements Serializable
      */
     public void setAuswertungen(List<Analysis> Auswertungen) {
         this.lAuswertungen = Auswertungen;
-    }
-
-    /**
-     * @return the _lEncryptTest
-     */
-    public String getlEncryptTest() {
-        return _lEncryptTest;
     }
 
     /**
