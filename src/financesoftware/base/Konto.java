@@ -27,6 +27,12 @@ public class Konto implements Serializable {
     private boolean isOldStyle = true;
 
     /**
+     * Default-Konstruktor
+     */
+    public Konto()
+    {}
+    
+    /**
      * Konstruktor
      *
      * @param uName

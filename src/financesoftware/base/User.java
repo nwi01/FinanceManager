@@ -11,11 +11,13 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Mike
  */
+@XmlRootElement
 public class User implements Serializable
 {
     //Member
@@ -24,6 +26,12 @@ public class User implements Serializable
     private List<Konto> lKonten = new ArrayList();
     private List<Analysis> lAuswertungen = new ArrayList();
     private List<Kategorie> kategorien = new ArrayList();
+    
+    /**
+     * Default-Konstruktor
+     */
+    public User()
+    {}
     
     /**
      * Konstruktor

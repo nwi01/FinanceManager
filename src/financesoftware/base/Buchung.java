@@ -14,7 +14,12 @@ public class Buchung
     private double lBetrag = 0.0;
     private String lAdressat = "";
     
-    //Konstruktor
+    /**
+     * Default-Konstruktor
+     */
+    public Buchung()
+    {}
+    
     public Buchung(double Betrag, String Adressat, Zeitraum datum, String Verwendungszweck)
     {
         lBetrag = Betrag;

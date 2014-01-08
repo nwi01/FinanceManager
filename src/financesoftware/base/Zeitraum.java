@@ -27,6 +27,12 @@ public class Zeitraum {
     private Calendar lEndezeit;
     
     /**
+     * Default-Konstruktor
+     */
+    public Zeitraum()
+    {}
+    
+    /**
      * Konstruktor, wenn angegeben wurde "fuer ... Wochen/Tage"
      * @param startzeit
      * @param intervall

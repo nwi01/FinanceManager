@@ -12,6 +12,11 @@ public class Dauerauftrag extends Buchung {
     Calendar letzteAusfuehrung;
     boolean aktiv; 
     
+    /**
+     * Default-Konstruktor
+     */
+    public Dauerauftrag()
+    {}
     
     /**
      * Konstruktor, wenn Anzahl Wdh angegeben

@@ -20,6 +20,12 @@ public class Kategorie implements Serializable
     private Color lFarbe;
     
     //Konstruktor
+    /**
+     * Default-Konstruktor
+     */
+    public Kategorie()
+    {}
+    
     public Kategorie(String uName, Color uFarbe)
     {
         lName = uName;
