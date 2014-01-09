@@ -17,7 +17,10 @@ public class Kategorie implements Serializable
 {
     //Member
     private String lName;
-    private Color lFarbe;
+    private int lAlpha;
+    private int lRed;
+    private int lBlue;
+    private int lGreen;
     
     //Konstruktor
     /**
@@ -29,7 +32,10 @@ public class Kategorie implements Serializable
     public Kategorie(String uName, Color uFarbe)
     {
         lName = uName;
-        lFarbe = uFarbe;
+        lAlpha = uFarbe.getAlpha();
+        lRed = uFarbe.getRed();
+        lBlue = uFarbe.getBlue();
+        lGreen = uFarbe.getGreen();
     }
     
     //Getter_Setter
@@ -51,19 +57,80 @@ public class Kategorie implements Serializable
     /**
      * @return the lFarbe
      */
-    public Color getlFarbe() {
-        return lFarbe;
+    public Color Farbe() {
+        return new Color(getlRed(), getlGreen(), getlBlue(), getlAlpha());
     }
 
+    
+    
     /**
      * @param lFarbe the lFarbe to set
      */
-    public void setlFarbe(Color lFarbe) {
-        this.lFarbe = lFarbe;
+    public void setFarbe(Color uFarbe) {
+        setlAlpha(uFarbe.getAlpha());
+        setlRed(uFarbe.getRed());
+        setlBlue(uFarbe.getBlue());
+        setlGreen(uFarbe.getGreen());
     }
     
     @Override
     public String toString(){
         return this.lName;
+    }
+
+    /**
+     * @return the lAlpha
+     */
+    public int getlAlpha() {
+        return lAlpha;
+    }
+
+    /**
+     * @param lAlpha the lAlpha to set
+     */
+    public void setlAlpha(int lAlpha) {
+        this.lAlpha = lAlpha;
+    }
+
+    /**
+     * @return the lRed
+     */
+    public int getlRed() {
+        return lRed;
+    }
+
+    /**
+     * @param lRed the lRed to set
+     */
+    public void setlRed(int lRed) {
+        this.lRed = lRed;
+    }
+
+    /**
+     * @return the lBlue
+     */
+    public int getlBlue() {
+        return lBlue;
+    }
+
+    /**
+     * @param lBlue the lBlue to set
+     */
+    public void setlBlue(int lBlue) {
+        this.lBlue = lBlue;
+    }
+
+    /**
+     * @return the lGreen
+     */
+    public int getlGreen() {
+        return lGreen;
+    }
+
+    /**
+     * @param lGreen the lGreen to set
+     */
+    public void setlGreen(int lGreen) {
+        this.lGreen = lGreen;
     }
 }

@@ -27,7 +27,7 @@ public abstract class Verschluesselung {
         User Load = null;
 
         try {
-            File lFile = new File("./test.crypt");
+            File lFile = new File("./temp.temp");
 
             //Verschluesselung hinzufuegen
             byte[] input = FileUtils.readFileToByteArray(lFile);
@@ -43,7 +43,9 @@ public abstract class Verschluesselung {
             lInputStream.close();
             deleteTmp();
             return Load;
-            } catch (Exception e) {
+            } 
+            catch (Exception e) 
+            {
                 return null;
             }
     }
@@ -73,7 +75,7 @@ public abstract class Verschluesselung {
             byte[] input = FileUtils.readFileToByteArray(lFile2);
             byte[] output = Crypt(input, uUser.getPassword(), true);            
 
-            FileUtils.writeByteArrayToFile(new File("./test.crypt"), output);
+            FileUtils.writeByteArrayToFile(new File("./temp.temp"), output);
             lFile.close();
             deleteTmp();
         } catch (Exception e) {
@@ -186,23 +188,5 @@ public abstract class Verschluesselung {
             if(file.exists()){
                 file.delete();
             }
-    }
-
-   public static String toHexString(byte[] ba) 
-   {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < ba.length; i++) {
-            str.append(String.format("%x", ba[i]));
-        }
-        return str.toString();
-    }
-
-    public static String fromHexString(String hex) 
-    {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < hex.length(); i += 2) {
-            str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
-        }
-        return str.toString();
     }
 }

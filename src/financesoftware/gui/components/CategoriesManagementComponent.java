@@ -47,7 +47,7 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
         if (event.getSource() == this.categoryBox) {
             if (((Kategorie) (this.categoryBox.getSelectedItem())) != null) {
                 this.name.setText(((Kategorie) this.categoryBox.getSelectedItem()).getlName());
-                this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).getlFarbe());
+                this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).Farbe());
             }
         }
 
@@ -84,7 +84,7 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
             } else{
                 if(this.categoryBox.getModel().getSize() != 0){
                     ((Kategorie)this.categoryBox.getSelectedItem()).setlName(this.name.getText());
-                     ((Kategorie)this.categoryBox.getSelectedItem()).setlFarbe(this.color.getBackground());
+                     ((Kategorie)this.categoryBox.getSelectedItem()).setFarbe(this.color.getBackground());
                 }
             }
         }
