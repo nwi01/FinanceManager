@@ -240,7 +240,29 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-
+        Konto k = (Konto)this.konten.getSelectedItem();
+        Dauerauftrag d = (Dauerauftrag) this.auftraege.getSelectedItem();
+        String startzeit = this.startDate.getText();
+        Zeitraum.Intervall i = (Zeitraum.Intervall) this.intervall.getSelectedItem();
+        double betrag = Double.parseDouble(this.money.getText());
+        String adressat = this.to.getText();
+        boolean bWdh = this.repeat.isSelected();
+        int wdh = Integer.parseInt(this.repeatTextField.getText());
+        String endezeit = this.untilDateTextField.getText();
+        
+        if(isChecked){
+            if(bWdh){
+                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit, 
+                                                    i, wdh, "verwendung");
+                k.addDauerauftrag(neu);                
+            }
+            else{
+                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit, 
+                                                    i, endezeit, "verwendung");
+                k.addDauerauftrag(neu);
+            }            
+        }
+        // else Update
     }
 
     @Override

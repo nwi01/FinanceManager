@@ -13,6 +13,7 @@ public class Buchung
     private Zeitraum lDatum;  // TODO mit Zeitraum Objekt ersetzen ....
     private double lBetrag = 0.0;
     private String lAdressat = "";
+    private String lVerwendungszweck;
     
     /**
      * Default-Konstruktor
@@ -25,6 +26,7 @@ public class Buchung
         lBetrag = Betrag;
         lAdressat = Adressat;
         lDatum = datum;
+        lVerwendungszweck = Verwendungszweck;
     }
     
      public Buchung(double Betrag, String Adressat, String datum,  String Verwendungszweck)
@@ -33,6 +35,7 @@ public class Buchung
         lAdressat = Adressat;
         Calendar startzeit = Zeitraum.parseCalendar(datum);
         lDatum = new Zeitraum(startzeit);
+        lVerwendungszweck = Verwendungszweck;
     }
      
      public Buchung(double Betrag, String Adressat, Calendar startzeit,  String Verwendungszweck)
@@ -40,6 +43,7 @@ public class Buchung
         lBetrag = Betrag;
         lAdressat = Adressat;
         lDatum = new Zeitraum(startzeit);
+        lVerwendungszweck = Verwendungszweck;
     }
     
     //Methoden    
@@ -84,5 +88,9 @@ public class Buchung
      */
     public void setAdressat(String lAdressat) {
         this.lAdressat = lAdressat;
+    }
+    
+    public String getVerwendungszweck(){
+        return lVerwendungszweck;
     }
 }

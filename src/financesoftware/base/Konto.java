@@ -7,6 +7,7 @@ package financesoftware.base;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -179,5 +180,53 @@ public class Konto implements Serializable {
      */
     public boolean isOldStyle(){
         return this.isOldStyle;
+    }
+    
+    
+    public void buchen(Dauerauftrag dauerauftrag){
+        boolean buchenPruefen = true;
+        Calendar heute = Calendar.getInstance(); 
+        int tage[] = Zeitraum.IntervallInTage(dauerauftrag.getDatum().getIntervall());
+        
+        if(dauerauftrag.letzteAusfuehrung == null){
+            if(heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0){
+                Buchung neu = new Buchung(dauerauftrag.getBetrag(),dauerauftrag.getAdressat(),
+                                          dauerauftrag.getDatum().getStartzeit(), 
+                                          dauerauftrag.getVerwendungszweck());
+                this.addBuchung(neu);
+                dauerauftrag.letzteAusfuehrung = dauerauftrag.getDatum().getStartzeit();
+                buchenPruefen = true;
+                dauerauftrag.aktiv = true;
+            }
+            else{
+                buchenPruefen = false;
+            }
+        } 
+        Calendar letzteAusfTmp = dauerauftrag.letzteAusfuehrung;
+        while(buchenPruefen){        
+            if(tage[0] != 0){
+                letzteAusfTmp.add(Calendar.DAY_OF_MONTH, tage[0]);
+            }
+            else{
+                letzteAusfTmp.add(Calendar.MONTH, tage[1]);
+            }
+            
+            if(letzteAusfTmp.compareTo(dauerauftrag.getDatum().getEndezeit()) > 0){
+                buchenPruefen = false;
+                dauerauftrag.aktiv = false;
+            }
+            else if(letzteAusfTmp.compareTo(heute) <= 0){
+                Buchung neu = new Buchung(dauerauftrag.getBetrag(),dauerauftrag.getAdressat(),
+                                          dauerauftrag.getDatum().getStartzeit(),
+                                          dauerauftrag.getVerwendungszweck());
+                this.addBuchung(neu);
+                dauerauftrag.letzteAusfuehrung = letzteAusfTmp;
+                buchenPruefen = true; 
+            }
+            else{
+                buchenPruefen = false;
+            }
+               
+        }     
     }
 }

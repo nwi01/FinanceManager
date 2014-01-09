@@ -78,7 +78,7 @@ public class GUIHelper {
         list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat2));
 
         Konto kon1 = new Konto("test", "454536", "37010050", 0.0);
-        kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10));
+        kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10, "verwendung"));
         kon.add(kon1);
         kon.add(new Konto("test", "454536", "37010050", 0.0));
         kon.add(new Konto("test2", "222222", "1231231", 0.0));
@@ -222,7 +222,20 @@ public class GUIHelper {
     }
 
     public boolean isUserValid() {
-        return (this.user != null);
-
+        if(this.user != null){
+            List<Konto> konten = this.user.getKonten();
+            for(int i = 0; i < konten.size(); i++){
+                Konto k = konten.get(i);
+                List<Dauerauftrag> dauerauftraege = k.getDauerauftraege();
+                for(int j = 0; j < dauerauftraege.size(); j++){
+                    Dauerauftrag d = dauerauftraege.get(i);
+                    k.buchen(d);
+                }
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

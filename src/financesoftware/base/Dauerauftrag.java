@@ -26,10 +26,11 @@ public class Dauerauftrag extends Buchung {
      * @param startzeit
      * @param intervall
      * @param wdh 
+     * @param verwendung
      */    
     public Dauerauftrag(double betrag, String adressat, String startzeit, 
-                        Zeitraum.Intervall intervall, int wdh) {
-        super(betrag, adressat, startzeit, "");  
+                        Zeitraum.Intervall intervall, int wdh, String verwendung) {
+        super(betrag, adressat, startzeit, verwendung);  
         Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, wdh);              
         setDatum(uIntervall);
         this.aktiv = false;
@@ -45,8 +46,8 @@ public class Dauerauftrag extends Buchung {
      * @param endezeit 
      */
     public Dauerauftrag(double betrag, String adressat, String startzeit, 
-                        Zeitraum.Intervall intervall, String endezeit) {
-        super(betrag, adressat, startzeit, "");  
+                        Zeitraum.Intervall intervall, String endezeit, String verwendung) {
+        super(betrag, adressat, startzeit, verwendung);  
         Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, 
                                            Zeitraum.parseCalendar(endezeit));              
         setDatum(uIntervall);
@@ -90,51 +91,9 @@ public class Dauerauftrag extends Buchung {
     /**
      * bucht die faelligen Buchungen des Dauerauftrags
      */
-    public void buchen(Konto konto){
-        boolean buchenPruefen = true;
-        Calendar heute = Calendar.getInstance();        
-        int tage[] = Zeitraum.IntervallInTage(this.getDatum().getIntervall());
+                
         
-        if(this.letzteAusfuehrung == null){
-            if(heute.compareTo(this.getDatum().getStartzeit()) > 0){
-                Buchung neu = new Buchung(this.getBetrag(),this.getAdressat(),
-                                          this.getDatum().getStartzeit(), "verwendungszweck");
-                konto.addBuchung(neu);
-                this.letzteAusfuehrung = this.getDatum().getStartzeit();
-                buchenPruefen = true;
-                this.aktiv = true;
-            }
-            else{
-                buchenPruefen = false;
-            }
-        }              
-        
-        Calendar letzteAusfTmp = this.letzteAusfuehrung;
-        while(buchenPruefen){        
-            if(tage[0] != 0){
-                letzteAusfTmp.add(Calendar.DAY_OF_MONTH, tage[0]);
-            }
-            else{
-                letzteAusfTmp.add(Calendar.MONTH, tage[1]);
-            }
-            
-            if(letzteAusfTmp.compareTo(this.getDatum().getEndezeit()) > 0){
-                buchenPruefen = false;
-                this.aktiv = false;
-            }
-            else if(letzteAusfTmp.compareTo(heute) <= 0){
-                Buchung neu = new Buchung(this.getBetrag(),this.getAdressat(),
-                                          this.getDatum().getStartzeit(), "verwendungszweck");
-                konto.addBuchung(neu);
-                this.letzteAusfuehrung = letzteAusfTmp;
-                buchenPruefen = true; 
-            }
-            else{
-                buchenPruefen = false;
-            }
-               
-        }     
-    }
+     
     
     @Override
     public String toString(){
