@@ -52,7 +52,7 @@ public class TestVerschluesselung {
          user.addAuswertung(new ChartAnalysis("Test", new Zeitraum(new GregorianCalendar(), new GregorianCalendar()), user.getKategorien(), false, user.getKonten().get(0)));                  
          assertTrue(Verschluesselung.save(user));
          
-         assertTrue(Verschluesselung.load(user.getName(), user.getPassword()) != null);
+         assertNotNull(Verschluesselung.load(user.getName(), user.getPassword()));
     }
     
     @Test
