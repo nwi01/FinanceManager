@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -58,6 +59,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     private JCheckBox checkBoxNewBooking;
     private JScrollPane tableScrollPane;
     private JComboBox<Kategorie> categories;
+    private JTextArea verwendungszweck;
 
     private JPanel createInAndOut() {
         JPanel panel = new JPanel();
@@ -137,6 +139,15 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         cons.gridx++;
         panel.add(this.bookingTo, cons);
 
+        cons.gridx--;
+        cons.gridy++;
+        panel.add(new JLabel("Verwendungszweck:"), cons);
+
+        cons.gridx++;
+        cons.gridwidth = 2;
+        cons.gridheight = 3;
+        panel.add(this.verwendungszweck, cons);
+
         return panel;
     }
 
@@ -182,16 +193,18 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     public void saveOrUpdate() {
         if (this.checkBoxNewBooking.isSelected()) {
             Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
-            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto, (Kategorie) this.categories.getSelectedItem());
+            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), 
+                    selectedKonto, (Kategorie) this.categories.getSelectedItem(), this.verwendungszweck.getText());
 
             this.bookingDate.setText("");
             this.bookingValue.setText("");
             this.bookingTo.setText("");
+            this.verwendungszweck.setText("");
             if (saved) {
                 table.setVisible(false);
                 this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData(selectedKonto), GUIHelper.getBookingColumnName(selectedKonto)));
                 this.currentMoney.setText(String.valueOf(GUIHelper.getCurrentMoney(selectedKonto)));
-            table.setVisible(true);
+                table.setVisible(true);
 //            userOverviewPanel.repaint();
             }
         }
@@ -206,6 +219,8 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     @Override
     public void initFields() {
+        this.verwendungszweck = new JTextArea();
+        this.verwendungszweck.setPreferredSize(new Dimension(150, 100));
         this.categories = new JComboBox(this.user.getKategorien().toArray());
         //Tabelle
         this.table = new JTable();

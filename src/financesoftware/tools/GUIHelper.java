@@ -152,7 +152,7 @@ public class GUIHelper {
      * @param konto
      * @return boolean:Wurde gespeichert?
      */
-    public static boolean saveNewBooking(String date, String value, String to, Konto konto, Kategorie kat) {
+    public static boolean saveNewBooking(String date, String value, String to, Konto konto, Kategorie kat, String verwendungszweck) {
         if (konto != null) {
             Double valueL = null;
             try {
