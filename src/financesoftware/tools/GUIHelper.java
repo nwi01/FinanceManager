@@ -8,6 +8,7 @@ import financesoftware.base.User;
 import financesoftware.base.Verschluesselung;
 import financesoftware.base.Zeitraum;
 import financesoftware.base.analysis.Analysis;
+import financesoftware.base.analysis.ChartAnalysis;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
@@ -74,11 +75,12 @@ public class GUIHelper {
 
         cat2.add(new Kategorie("Bl324a", Color.gray));
         cat2.add(new Kategorie("Bl32423a", Color.green));
-        list.add(new Analysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat1));
-        list.add(new Analysis("Test2", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat2));
+
+//        list.add(new ChartAnalysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat1));
+//        list.add(new Analysis("Test2", new Zeitraum(Calendar.geInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat2));
 
         Konto kon1 = new Konto("test", "454536", "37010050", 0.0);
-        kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10, "verwendung"));
+        kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10, "verwendung", new Kategorie("Bl324a", Color.gray)));
         kon.add(kon1);
         kon.add(new Konto("test", "454536", "37010050", 0.0));
         kon.add(new Konto("test2", "222222", "1231231", 0.0));
@@ -148,7 +150,7 @@ public class GUIHelper {
      * @param konto
      * @return boolean:Wurde gespeichert?
      */
-    public static boolean saveNewBooking(String date, String value, String to, Konto konto) {
+    public static boolean saveNewBooking(String date, String value, String to, Konto konto, Kategorie kat) {
         if (konto != null) {
             Long valueL = null;
             try {
@@ -156,7 +158,7 @@ public class GUIHelper {
             } catch (NumberFormatException e) {
                 return false;
             }
-            konto.addBuchung(new Buchung(valueL, to, date, ""));
+            konto.addBuchung(new Buchung(valueL, to, date, "", kat));
             return true;
         }
         return false;

@@ -27,10 +27,11 @@ public class Dauerauftrag extends Buchung {
      * @param intervall
      * @param wdh 
      * @param verwendung
+     * @param kat
      */    
     public Dauerauftrag(double betrag, String adressat, String startzeit, 
-                        Zeitraum.Intervall intervall, int wdh, String verwendung) {
-        super(betrag, adressat, startzeit, verwendung);  
+                        Zeitraum.Intervall intervall, int wdh, String verwendung, Kategorie kat) {
+        super(betrag, adressat, startzeit, verwendung, kat);  
         Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, wdh);              
         setDatum(uIntervall);
         this.aktiv = false;
@@ -46,8 +47,8 @@ public class Dauerauftrag extends Buchung {
      * @param endezeit 
      */
     public Dauerauftrag(double betrag, String adressat, String startzeit, 
-                        Zeitraum.Intervall intervall, String endezeit, String verwendung) {
-        super(betrag, adressat, startzeit, verwendung);  
+                        Zeitraum.Intervall intervall, String endezeit, String verwendung, Kategorie kat) {
+        super(betrag, adressat, startzeit, verwendung, kat);  
         Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), intervall, 
                                            Zeitraum.parseCalendar(endezeit));              
         setDatum(uIntervall);

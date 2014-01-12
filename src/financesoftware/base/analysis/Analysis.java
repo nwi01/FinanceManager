@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Niels
  */
-public class Analysis implements Serializable
+public abstract class Analysis implements Serializable
 {
     //Member
     private String name;

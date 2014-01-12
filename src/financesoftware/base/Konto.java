@@ -8,6 +8,7 @@ package financesoftware.base;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,9 +31,9 @@ public class Konto implements Serializable {
     /**
      * Default-Konstruktor
      */
-    public Konto()
-    {}
-    
+    public Konto() {
+    }
+
     /**
      * Konstruktor
      *
@@ -53,11 +54,11 @@ public class Konto implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param uName
      * @param Kontostand
      * @param iban
-     * @param bic 
+     * @param bic
      */
     public Konto(String uName, double Kontostand, String iban, String bic) {
         lName = uName;
@@ -173,60 +174,99 @@ public class Konto implements Serializable {
         return this.lName + ":" + this.KontoNr;
 
     }
-    
+
     /**
      * Neues oder altes Verfahren?
-     * @return 
+     *
+     * @return
      */
-    public boolean isOldStyle(){
+    public boolean isOldStyle() {
         return this.isOldStyle;
     }
+
+    /**
+     * Alle Betraege aller Buchungen werden addiert
+     *
+     * @return
+     */
+    public Double getAllOutgoings() {
+        double allOutgoings = 0.;
+
+        for (Buchung buchung : this.getBuchungen()) {
+            allOutgoings += buchung.getBetrag();
+        }
+        return allOutgoings;
+    }
+
+    /**
+     * Gibt eine HashMap mit einer Kategorie als Schlüssel und einem Double (Anteil) zurueck.
+     * @param kategorien
+     * @param konto
+     * @return 
+     */
+    public HashMap<Kategorie, Double> getAllParts(List<Kategorie> kategorien) {
+        List<Buchung> buchungen = this.getBuchungen();
+        double allOutgoings = this.getAllOutgoings();
+
+        HashMap<Kategorie, Double> mapping = new HashMap();
+        for (Kategorie kategorie : kategorien) {
+            mapping.put(kategorie, getPart(kategorie));
+        }
+        return mapping;
+    }
     
-    
-    public void buchen(Dauerauftrag dauerauftrag){
-        boolean buchenPruefen = true;
-        Calendar heute = Calendar.getInstance(); 
-        int tage[] = Zeitraum.IntervallInTage(dauerauftrag.getDatum().getIntervall());
+    public double getPart(Kategorie kategorie){
+        double allOutgoings = this.getAllOutgoings();
         
-        if(dauerauftrag.letzteAusfuehrung == null){
-            if(heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0){
-                Buchung neu = new Buchung(dauerauftrag.getBetrag(),dauerauftrag.getAdressat(),
-                                          dauerauftrag.getDatum().getStartzeit(), 
-                                          dauerauftrag.getVerwendungszweck());
+        double part = 0;
+        for(Buchung buchung : this.getBuchungen()){
+            if(buchung.getKategorie().equals(kategorie)){
+                part += buchung.getBetrag();
+            }
+        }        
+        return part/allOutgoings;
+    }
+
+    public void buchen(Dauerauftrag dauerauftrag) {
+        boolean buchenPruefen = true;
+        Calendar heute = Calendar.getInstance();
+        int tage[] = Zeitraum.IntervallInTage(dauerauftrag.getDatum().getIntervall());
+
+        if (dauerauftrag.letzteAusfuehrung == null) {
+            if (heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0) {
+                Buchung neu = new Buchung(dauerauftrag.getBetrag(), dauerauftrag.getAdressat(),
+                        dauerauftrag.getDatum().getStartzeit(),
+                        dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
                 this.addBuchung(neu);
                 dauerauftrag.letzteAusfuehrung = dauerauftrag.getDatum().getStartzeit();
                 buchenPruefen = true;
                 dauerauftrag.aktiv = true;
-            }
-            else{
+            } else {
                 buchenPruefen = false;
             }
-        } 
+        }
         Calendar letzteAusfTmp = dauerauftrag.letzteAusfuehrung;
-        while(buchenPruefen){        
-            if(tage[0] != 0){
+        while (buchenPruefen) {
+            if (tage[0] != 0) {
                 letzteAusfTmp.add(Calendar.DAY_OF_MONTH, tage[0]);
-            }
-            else{
+            } else {
                 letzteAusfTmp.add(Calendar.MONTH, tage[1]);
             }
-            
-            if(letzteAusfTmp.compareTo(dauerauftrag.getDatum().getEndezeit()) > 0){
+
+            if (letzteAusfTmp.compareTo(dauerauftrag.getDatum().getEndezeit()) > 0) {
                 buchenPruefen = false;
                 dauerauftrag.aktiv = false;
-            }
-            else if(letzteAusfTmp.compareTo(heute) <= 0){
-                Buchung neu = new Buchung(dauerauftrag.getBetrag(),dauerauftrag.getAdressat(),
-                                          dauerauftrag.getDatum().getStartzeit(),
-                                          dauerauftrag.getVerwendungszweck());
+            } else if (letzteAusfTmp.compareTo(heute) <= 0) {
+                Buchung neu = new Buchung(dauerauftrag.getBetrag(), dauerauftrag.getAdressat(),
+                        dauerauftrag.getDatum().getStartzeit(),
+                        dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
                 this.addBuchung(neu);
                 dauerauftrag.letzteAusfuehrung = letzteAusfTmp;
-                buchenPruefen = true; 
-            }
-            else{
+                buchenPruefen = true;
+            } else {
                 buchenPruefen = false;
             }
-               
-        }     
+
+        }
     }
 }

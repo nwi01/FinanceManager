@@ -1,6 +1,7 @@
 package financesoftware.gui.components;
 
 import financesoftware.base.Dauerauftrag;
+import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
 import financesoftware.base.Zeitraum;
@@ -23,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 /**
@@ -34,7 +36,6 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JComboBox<Konto> konten;
     private JComboBox<Dauerauftrag> auftraege;
     private JCheckBox checkBoxNewStandingOrder;
-    private boolean isChecked = false;
     private JTextField startDate;
     private JComboBox intervall;
     private JTextField money;
@@ -43,7 +44,8 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JRadioButton repeat;
     private JRadioButton untilDate;
     private JTextField untilDateTextField;
-    private JTextField repeatTextField;
+    private JSpinner repeatTextField;
+    private JComboBox<Kategorie> categories;
 
     public StandingOrderManagementComponent() {
         super();
@@ -199,6 +201,9 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
             if (!((Konto) this.konten.getSelectedItem()).getDauerauftraege().isEmpty()) {
                 this.auftraege.setSelectedIndex(0);
             }
+            else{
+                this.checkBoxNewStandingOrder.setSelected(true);
+            }
         }
 
         if (event.getSource() == this.auftraege) {
@@ -216,14 +221,12 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         }
 
         if (event.getSource() == this.checkBoxNewStandingOrder) {
-            if (!this.isChecked) {
+            if (!this.checkBoxNewStandingOrder.isSelected()) {
                 this.startDate.setText("");
                 this.money.setText("");
                 this.to.setText("");
-                this.isChecked = true;
             } else {
                 this.auftraege.setSelectedIndex(this.auftraege.getSelectedIndex());
-                this.isChecked = false;
             }
         }
 
@@ -240,27 +243,26 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-        Konto k = (Konto)this.konten.getSelectedItem();
+        Konto k = (Konto) this.konten.getSelectedItem();
         Dauerauftrag d = (Dauerauftrag) this.auftraege.getSelectedItem();
         String startzeit = this.startDate.getText();
         Zeitraum.Intervall i = (Zeitraum.Intervall) this.intervall.getSelectedItem();
         double betrag = Double.parseDouble(this.money.getText());
         String adressat = this.to.getText();
         boolean bWdh = this.repeat.isSelected();
-        int wdh = Integer.parseInt(this.repeatTextField.getText());
+        int wdh = (Integer) this.repeatTextField.getValue();
         String endezeit = this.untilDateTextField.getText();
-        
-        if(isChecked){
-            if(bWdh){
-                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit, 
-                                                    i, wdh, "verwendung");
-                k.addDauerauftrag(neu);                
-            }
-            else{
-                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit, 
-                                                    i, endezeit, "verwendung");
+
+        if (this.checkBoxNewStandingOrder.isSelected()) {
+            if (bWdh) {
+                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
+                        i, wdh, "verwendung", (Kategorie)this.categories.getSelectedItem());
                 k.addDauerauftrag(neu);
-            }            
+            } else {
+                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
+                        i, endezeit, "verwendung", (Kategorie)this.categories.getSelectedItem());
+                k.addDauerauftrag(neu);
+            }
         }
         // else Update
     }
@@ -274,6 +276,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
+        this.categories = new JComboBox(this.user.getKategorien().toArray());
         this.repeat = new JRadioButton("Wiederholungen:       ");
         this.untilDate = new JRadioButton("bis zum:                     ");
         ButtonGroup group = new ButtonGroup();
@@ -283,7 +286,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.untilDate.addActionListener(this);
         this.untilDateTextField = new JTextField();
         this.untilDateTextField.setPreferredSize(new Dimension(100, 28));
-        this.repeatTextField = new JTextField();
+        this.repeatTextField = new JSpinner();
         this.repeatTextField.setPreferredSize(new Dimension(100, 28));
 
         this.checkBoxNewStandingOrder = new JCheckBox("(neuen Dauerauftrag anlegen)");
@@ -314,6 +317,8 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
         this.auftraege.addActionListener(this);
 
+        this.untilDateTextField.setEnabled(false);
+        this.repeatTextField.setEnabled(true);
     }
 
 }

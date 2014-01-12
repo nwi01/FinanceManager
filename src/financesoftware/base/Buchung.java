@@ -1,53 +1,71 @@
 //Erstellt am 31.10.2013
 package financesoftware.base;
 
+import java.awt.Color;
 import java.util.Calendar;
 
 /**
  *
  * @author Mike
  */
-public class Buchung 
-{
+public class Buchung {
+
     //Member
     private Zeitraum lDatum;  // TODO mit Zeitraum Objekt ersetzen ....
     private double lBetrag = 0.0;
     private String lAdressat = "";
     private String lVerwendungszweck;
-    
+    private Kategorie kategorie;
+
     /**
      * Default-Konstruktor
      */
-    public Buchung()
-    {}
-    
-    public Buchung(double Betrag, String Adressat, Zeitraum datum, String Verwendungszweck)
-    {
+    public Buchung() {
+    }
+
+    public Buchung(double Betrag, String Adressat, Zeitraum datum, String Verwendungszweck) {
         lBetrag = Betrag;
         lAdressat = Adressat;
         lDatum = datum;
         lVerwendungszweck = Verwendungszweck;
+        this.kategorie = new Kategorie("Import", Color.orange);
     }
-    
-     public Buchung(double Betrag, String Adressat, String datum,  String Verwendungszweck)
-    {
+
+    public Buchung(double Betrag, String Adressat, String datum, String Verwendungszweck) {
         lBetrag = Betrag;
         lAdressat = Adressat;
         Calendar startzeit = Zeitraum.parseCalendar(datum);
         lDatum = new Zeitraum(startzeit);
         lVerwendungszweck = Verwendungszweck;
+        this.kategorie = new Kategorie("Import", Color.orange);
     }
-     
-     public Buchung(double Betrag, String Adressat, Calendar startzeit,  String Verwendungszweck)
-    {
+
+    public Buchung(double Betrag, String Adressat, Zeitraum datum, String Verwendungszweck, Kategorie kat) {
+        lBetrag = Betrag;
+        lAdressat = Adressat;
+        lDatum = datum;
+        lVerwendungszweck = Verwendungszweck;
+        this.kategorie = kat;
+    }
+
+    public Buchung(double Betrag, String Adressat, String datum, String Verwendungszweck, Kategorie kat) {
+        lBetrag = Betrag;
+        lAdressat = Adressat;
+        Calendar startzeit = Zeitraum.parseCalendar(datum);
+        lDatum = new Zeitraum(startzeit);
+        lVerwendungszweck = Verwendungszweck;
+        this.kategorie = kat;
+    }
+
+    public Buchung(double Betrag, String Adressat, Calendar startzeit, String Verwendungszweck, Kategorie kat) {
         lBetrag = Betrag;
         lAdressat = Adressat;
         lDatum = new Zeitraum(startzeit);
         lVerwendungszweck = Verwendungszweck;
+        this.kategorie = kat;
     }
-    
-    //Methoden    
 
+    //Methoden    
     /**
      * @return the lDatum
      */
@@ -89,8 +107,22 @@ public class Buchung
     public void setAdressat(String lAdressat) {
         this.lAdressat = lAdressat;
     }
-    
-    public String getVerwendungszweck(){
+
+    public String getVerwendungszweck() {
         return lVerwendungszweck;
+    }
+
+    /**
+     * @return the kategorie
+     */
+    public Kategorie getKategorie() {
+        return kategorie;
+    }
+
+    /**
+     * @param kategorie the kategorie to set
+     */
+    public void setKategorie(Kategorie kategorie) {
+        this.kategorie = kategorie;
     }
 }

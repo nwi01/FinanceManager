@@ -5,6 +5,7 @@
  */
 package financesoftware.gui.components;
 
+import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.gui.base.ManagementBaseComponent;
 import financesoftware.gui.base.ViewComponent;
@@ -53,6 +54,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     private JPanel userOverviewPanel;
     private JCheckBox checkBoxNewBooking;
     private JScrollPane tableScrollPane;
+    private JComboBox<Kategorie> categories;
 
     private JPanel createInAndOut() {
         JPanel panel = new JPanel();
@@ -220,7 +222,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     @Override
     public void saveOrUpdate() {
         Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
-        boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto);
+        boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto, (Kategorie)this.categories.getSelectedItem());
 
         this.bookingDate.setText("");
         this.bookingValue.setText("");
@@ -243,6 +245,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     @Override
     public void initFields() {
+        this.categories = new JComboBox(this.user.getKategorien().toArray());
         //Tabelle
         this.table = new JTable();
         this.table.setShowHorizontalLines(true);
