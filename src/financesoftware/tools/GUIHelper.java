@@ -154,9 +154,9 @@ public class GUIHelper {
      */
     public static boolean saveNewBooking(String date, String value, String to, Konto konto, Kategorie kat) {
         if (konto != null) {
-            Long valueL = null;
+            Double valueL = null;
             try {
-                valueL = Long.parseLong(value);
+                valueL = Double.parseDouble(value);
             } catch (NumberFormatException e) {
                 return false;
             }

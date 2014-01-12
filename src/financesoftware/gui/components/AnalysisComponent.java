@@ -21,6 +21,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -129,6 +130,7 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
                 yEnd += 100;
             }
             iframe.add(chartPanel);
+            this.desktopPane.add(iframe);
         }
         this.analysisPanel.removeAll();
         this.analysisPanel.add(this.desktopPane);
@@ -241,7 +243,9 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
         return panel;
     }
 
+    @Override
     public void updateContent() {
+        this.analysisBox.setModel(new DefaultComboBoxModel(this.user.getAuswertungen().toArray()));
     }
 
     @Override

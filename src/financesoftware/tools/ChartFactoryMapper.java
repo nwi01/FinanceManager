@@ -58,6 +58,7 @@ public class ChartFactoryMapper {
         HashMap<Kategorie, Double> mappingCategory = konto.getAllParts(ana.getKategorien());
 
         ArrayList<JFreeChart> charts = new ArrayList();
+//        if
         for (ChartEnum chartName : ana.getCharts()) {
             charts.add(this.getChartByName(chartName, mappingCategory));
         }

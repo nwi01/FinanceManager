@@ -4,6 +4,7 @@ import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.Zeitraum;
 import financesoftware.tools.ChartFactoryMapper;
+import java.util.ArrayList;
 import java.util.List;
 import org.jfree.chart.JFreeChart;
 
@@ -12,7 +13,7 @@ import org.jfree.chart.JFreeChart;
  * @author nwi01
  */
 public class ChartAnalysis extends Analysis {
-    private List<ChartEnum> charts;
+    private List<ChartEnum> charts = new ArrayList();
     private Konto konto;
     
     public ChartAnalysis(){

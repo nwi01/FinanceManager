@@ -157,8 +157,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
         if (e.getSource() == this.save) {
             this.saveOrUpdate();
-            Verschluesselung.save(this.user);
-            return true;
+            return Verschluesselung.save(this.user);
         }
 
         return false;

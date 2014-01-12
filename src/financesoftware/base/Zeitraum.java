@@ -241,9 +241,10 @@ public class Zeitraum {
      * TODO ordentlich machen!
      * @return 
      */
+    @Override
     public String toString(){
         // Ausgabe DD.MM.YYYY bitte
-        return this.lStartzeit.getTime().toString() + "Intervall: " + this.lIntervall.toString();
+        return this.lStartzeit.getTime().toString();
     }
     
     

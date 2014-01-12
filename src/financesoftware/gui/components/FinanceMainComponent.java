@@ -49,7 +49,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     private JTextField currentMoney;
     private JComboBox<Konto> accounts;
-    private JTable table = new JTable();
+    private JTable table;
     // Spezielle Buchung
     private JTextField bookingDate;
     private JTextField bookingValue;
@@ -147,18 +147,20 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
             this.accounts.setEnabled(true);
             this.accounts.setSelectedIndex(0);
             this.enableOrDisable(true);
+
+            this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
         } else {
             this.enableOrDisable(false);
         }
         this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
     }
-    
-    private void enableOrDisable(boolean enable){
+
+    private void enableOrDisable(boolean enable) {
         this.checkBoxNewBooking.setEnabled(enable);
         this.categories.setEnabled(enable);
         this.bookingDate.setEnabled(enable);
         this.bookingTo.setEnabled(enable);
-        this.bookingValue.setEnabled(enable);        
+        this.bookingValue.setEnabled(enable);
     }
 
     @Override
@@ -178,18 +180,20 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     @Override
     public void saveOrUpdate() {
-        Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
-        boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto, (Kategorie) this.categories.getSelectedItem());
+        if (this.checkBoxNewBooking.isSelected()) {
+            Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
+            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto, (Kategorie) this.categories.getSelectedItem());
 
-        this.bookingDate.setText("");
-        this.bookingValue.setText("");
-        this.bookingTo.setText("");
-        if (saved) {
-            table.setVisible(false);
-            this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData(selectedKonto), GUIHelper.getBookingColumnName(selectedKonto)));
-            this.currentMoney.setText(String.valueOf(GUIHelper.getCurrentMoney(selectedKonto)));
+            this.bookingDate.setText("");
+            this.bookingValue.setText("");
+            this.bookingTo.setText("");
+            if (saved) {
+                table.setVisible(false);
+                this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData(selectedKonto), GUIHelper.getBookingColumnName(selectedKonto)));
+                this.currentMoney.setText(String.valueOf(GUIHelper.getCurrentMoney(selectedKonto)));
             table.setVisible(true);
-            userOverviewPanel.repaint();
+//            userOverviewPanel.repaint();
+            }
         }
     }
 
@@ -216,7 +220,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.bookingValue = new JFormattedTextField(NumberFormat.getNumberInstance());
         this.bookingTo = new JTextField();
         this.userOverviewPanel = new JPanel();
-        this.currentMoney =  new JFormattedTextField(NumberFormat.getCurrencyInstance());
+        this.currentMoney = new JFormattedTextField(NumberFormat.getCurrencyInstance());
         this.currentMoney.setPreferredSize(new Dimension(100, 28));
         this.currentMoney.setEditable(false);
         this.accounts = new JComboBox(this.user.getKonten().toArray());
