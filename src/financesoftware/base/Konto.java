@@ -238,14 +238,19 @@ public class Konto implements Serializable {
                         dauerauftrag.getDatum().getStartzeit(),
                         dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
                 this.addBuchung(neu);
-                dauerauftrag.letzteAusfuehrung = dauerauftrag.getDatum().getStartzeit();
+                Calendar tmp = Calendar.getInstance();
+                tmp.setTime(dauerauftrag.getDatum().getStartzeit().getTime());
+                dauerauftrag.setLetzteAusfuehrung(tmp);
                 buchenPruefen = true;
                 dauerauftrag.aktiv = true;
             } else {
                 buchenPruefen = false;
             }
         }
-        Calendar letzteAusfTmp = dauerauftrag.letzteAusfuehrung;
+        Calendar letzteAusfTmp = Calendar.getInstance();
+        if(buchenPruefen){            
+            letzteAusfTmp.setTime(dauerauftrag.getLetzteAusfuehrung().getTime());
+        }
         while (buchenPruefen) {
             if (tage[0] != 0) {
                 letzteAusfTmp.add(Calendar.DAY_OF_MONTH, tage[0]);
@@ -261,7 +266,9 @@ public class Konto implements Serializable {
                         dauerauftrag.getDatum().getStartzeit(),
                         dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
                 this.addBuchung(neu);
-                dauerauftrag.letzteAusfuehrung = letzteAusfTmp;
+                Calendar tmp1 = Calendar.getInstance();
+                tmp1.setTime(letzteAusfTmp.getTime());
+                dauerauftrag.setLetzteAusfuehrung(tmp1);
                 buchenPruefen = true;
             } else {
                 buchenPruefen = false;

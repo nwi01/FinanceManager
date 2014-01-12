@@ -4,6 +4,7 @@ import financesoftware.base.Dauerauftrag;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
+import financesoftware.base.Verschluesselung;
 import financesoftware.base.Zeitraum;
 import financesoftware.gui.base.ManagementBaseComponent;
 import financesoftware.tools.GUIHelper;
@@ -275,8 +276,22 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 k.addDauerauftrag(neu);
             }
         }
-        // else Update
+        else{
+            d.setAdressat(adressat);
+            d.setBetrag(betrag);
+            if(bWdh){
+                Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), i, wdh);              
+                d.setDatum(uIntervall);
+            }
+            else{
+                Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), i, 
+                                           Zeitraum.parseCalendar(endezeit));              
+                d.setDatum(uIntervall);
+            }
+            Verschluesselung.save(user);
+        }
     }
+
 
     @Override
     public ArrayList<JPanel> getSectionPanels() {
