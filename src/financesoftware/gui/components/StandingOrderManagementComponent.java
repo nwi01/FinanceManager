@@ -270,11 +270,17 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
                         i, wdh, "verwendung", (Kategorie) this.categories.getSelectedItem());
                 k.addDauerauftrag(neu);
+                k.buchen(neu);
             } else {
                 Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
                         i, endezeit, "verwendung", (Kategorie) this.categories.getSelectedItem());
                 k.addDauerauftrag(neu);
+                k.buchen(neu);
             }
+            
+            this.startDate.setText("");
+            this.money.setText("");
+            this.to.setText("");
         }
         else{
             d.setAdressat(adressat);
@@ -288,8 +294,9 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                                            Zeitraum.parseCalendar(endezeit));              
                 d.setDatum(uIntervall);
             }
-            Verschluesselung.save(user);
+            
         }
+        Verschluesselung.save(user);
     }
 
 

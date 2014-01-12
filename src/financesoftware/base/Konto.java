@@ -233,7 +233,7 @@ public class Konto implements Serializable {
         int tage[] = Zeitraum.IntervallInTage(dauerauftrag.getDatum().getIntervall());
 
         if (dauerauftrag.letzteAusfuehrung == null) {
-            if (heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0) {
+            if (heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0) {                
                 Buchung neu = new Buchung(dauerauftrag.getBetrag(), dauerauftrag.getAdressat(),
                         dauerauftrag.getDatum().getStartzeit(),
                         dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
@@ -262,9 +262,10 @@ public class Konto implements Serializable {
                 buchenPruefen = false;
                 dauerauftrag.aktiv = false;
             } else if (letzteAusfTmp.compareTo(heute) <= 0) {
+                Calendar tmp2 = Calendar.getInstance();
+                tmp2.setTime(letzteAusfTmp.getTime());
                 Buchung neu = new Buchung(dauerauftrag.getBetrag(), dauerauftrag.getAdressat(),
-                        dauerauftrag.getDatum().getStartzeit(),
-                        dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
+                        tmp2, dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
                 this.addBuchung(neu);
                 Calendar tmp1 = Calendar.getInstance();
                 tmp1.setTime(letzteAusfTmp.getTime());

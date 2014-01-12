@@ -58,7 +58,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     private JCheckBox checkBoxNewBooking;
     private JScrollPane tableScrollPane;
     private JComboBox<Kategorie> categories;
-
+    
     private JPanel createInAndOut() {
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
