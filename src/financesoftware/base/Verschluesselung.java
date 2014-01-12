@@ -3,8 +3,6 @@ package financesoftware.base;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -27,7 +25,8 @@ public abstract class Verschluesselung {
         User Load = null;
 
         try {
-            File lFile = new File("./temp.temp");
+            String dateiname = "./Benutzer/" + toHexString(uBenutzer.getBytes());
+            File lFile = new File(dateiname);
 
             //Verschluesselung hinzufuegen
             byte[] input = FileUtils.readFileToByteArray(lFile);
@@ -63,6 +62,7 @@ public abstract class Verschluesselung {
     {
         try
         {
+            String dateiname = "./Benutzer/" + toHexString(uUser.getName().getBytes());
             FileOutputStream lFile = new FileOutputStream("./temp.temp");
             
             JAXBContext context = JAXBContext.newInstance( User.class );
@@ -75,7 +75,7 @@ public abstract class Verschluesselung {
             byte[] input = FileUtils.readFileToByteArray(lFile2);
             byte[] output = Crypt(input, uUser.getPassword(), true);            
 
-            FileUtils.writeByteArrayToFile(new File("./temp.temp"), output);
+            FileUtils.writeByteArrayToFile(new File(dateiname), output);
             lFile.close();
             deleteTmp();
         } catch (Exception e) {
@@ -188,5 +188,23 @@ public abstract class Verschluesselung {
             if(file.exists()){
                 file.delete();
             }
+    }
+    
+    public static String toHexString(byte[] ba) 
+   {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < ba.length; i++) {
+            str.append(String.format("%x", ba[i]));
+        }
+        return str.toString();
+    }
+
+    public static String fromHexString(String hex) 
+    {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < hex.length(); i += 2) {
+            str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
+        }
+        return str.toString();
     }
 }
