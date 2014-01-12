@@ -13,11 +13,15 @@ import financesoftware.tools.GUIHelper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Niels
  */
+@XmlTransient //Prevents the mapping of a JavaBean property/type to XML representation
+@XmlSeeAlso({ChartAnalysis.class, CompareAnalysis.class})
 public abstract class Analysis implements Serializable
 {
     //Member

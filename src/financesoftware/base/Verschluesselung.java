@@ -76,6 +76,7 @@ public abstract class Verschluesselung {
             lFile.close();
             deleteTmp();
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;
