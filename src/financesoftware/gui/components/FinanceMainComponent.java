@@ -20,13 +20,16 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -142,9 +145,20 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.accounts.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
         if (!this.user.getKonten().isEmpty()) {
             this.accounts.setEnabled(true);
-            this.accounts.setSelectedIndex(0);            
+            this.accounts.setSelectedIndex(0);
+            this.enableOrDisable(true);
+        } else {
+            this.enableOrDisable(false);
         }
         this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
+    }
+    
+    private void enableOrDisable(boolean enable){
+        this.checkBoxNewBooking.setEnabled(enable);
+        this.categories.setEnabled(enable);
+        this.bookingDate.setEnabled(enable);
+        this.bookingTo.setEnabled(enable);
+        this.bookingValue.setEnabled(enable);        
     }
 
     @Override
@@ -197,12 +211,12 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.table.setFillsViewportHeight(true);
 
         // Spezielle Buchung
-        this.bookingDate = new JTextField();
+        this.bookingDate = new JFormattedTextField(new Date());
         this.bookingDate.setPreferredSize(new Dimension(100, 28));
-        this.bookingValue = new JTextField();
+        this.bookingValue = new JFormattedTextField(NumberFormat.getNumberInstance());
         this.bookingTo = new JTextField();
         this.userOverviewPanel = new JPanel();
-        this.currentMoney = new JTextField();
+        this.currentMoney =  new JFormattedTextField(NumberFormat.getCurrencyInstance());
         this.currentMoney.setPreferredSize(new Dimension(100, 28));
         this.currentMoney.setEditable(false);
         this.accounts = new JComboBox(this.user.getKonten().toArray());

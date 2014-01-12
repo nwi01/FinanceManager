@@ -15,11 +15,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -305,7 +307,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         group.add(this.oldStyle);
         group.add(this.newStyle);
 
-        this.kontoStand = new JTextField();
+        this.kontoStand = new JFormattedTextField(NumberFormat.getNumberInstance());
         this.kontoStand.setPreferredSize(new Dimension(100, 28));
         this.kontoIBAN = new JTextField();
         this.kontoBIC = new JTextField();

@@ -13,13 +13,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -292,7 +295,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         group.add(this.untilDate);
         this.repeat.addActionListener(this);
         this.untilDate.addActionListener(this);
-        this.untilDateTextField = new JTextField();
+        this.untilDateTextField = new JFormattedTextField(new Date());
         this.untilDateTextField.setPreferredSize(new Dimension(100, 28));
         this.repeatTextField = new JSpinner();
         this.repeatTextField.setPreferredSize(new Dimension(100, 28));
@@ -304,10 +307,10 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.intervall = new JComboBox(Zeitraum.getIntervallEnums());
         this.intervall.addActionListener(this);
 
-        this.startDate = new JTextField();
+        this.startDate = new JFormattedTextField(new Date());
         this.startDate.setPreferredSize(new Dimension(100, 28));
         this.startDate.addActionListener(this);
-        this.money = new JTextField();
+        this.money = new JFormattedTextField(NumberFormat.getNumberInstance());
         this.to = new JTextField();
 
         this.auftraege = null;

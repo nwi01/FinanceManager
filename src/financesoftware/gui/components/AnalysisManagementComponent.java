@@ -8,7 +8,7 @@ import financesoftware.base.analysis.ChartAnalysis;
 import financesoftware.base.analysis.ChartEnum;
 import financesoftware.base.analysis.CompareAnalysis;
 import financesoftware.gui.base.ManagementBaseComponent;
-import financesoftware.tools.ChartFactory;
+import financesoftware.tools.ChartFactoryMapper;
 import financesoftware.tools.GUIHelper;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,6 +17,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -24,6 +25,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -352,7 +354,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
             if (this.checkBoxNewAnalysis.isSelected()) {
 
             } else {
-                this.currentCharts = ChartFactory.getMappedCharts(((ChartAnalysis) this.analysisBox.getSelectedItem()).getCharts());
+                this.currentCharts = ((ChartAnalysis) this.analysisBox.getSelectedItem()).getCharts();
             }
 
             this.getNext().setEnabled(true);
@@ -451,9 +453,9 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         this.isCompareAnalysis = new JRadioButton("(Vergleich von Konten)");
         this.isCompareAnalysis.addActionListener(this);
 
-        this.from = new JTextField();
+        this.from = new JFormattedTextField(new Date());
         this.from.setPreferredSize(new Dimension(100, 28));
-        this.to = new JTextField();
+        this.to = new JFormattedTextField(new Date());
         this.to.setPreferredSize(new Dimension(100, 28));
         this.name = new JTextField();
         this.checkBoxNewAnalysis = new JCheckBox("(neue Auswertung anlegen)");
@@ -461,7 +463,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
         //Diagramme
         this.currentCharts = new ArrayList();
-        this.availCharts = ChartFactory.getAllAvailableCharts();
+        this.availCharts = ChartFactoryMapper.getAllAvailableCharts();
         this.availChartsList = new JList(this.availCharts.toArray());
         this.currentChartsList = new JList(this.currentCharts.toArray());
         this.addChartButton = new JButton(">>");

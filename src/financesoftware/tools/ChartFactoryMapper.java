@@ -29,19 +29,19 @@ import org.jfree.util.Rotation;
  *
  * @author melanie
  */
-public class ChartFactory {
+public class ChartFactoryMapper {
 
     private final User user;
-    private static ChartFactory instance;
+    private static ChartFactoryMapper instance;
     private boolean accountCompare = true;
 
-    public ChartFactory(User user) {
+    public ChartFactoryMapper(User user) {
         this.user = user;
     }
 
-    public static ChartFactory getInstance() {
+    public static ChartFactoryMapper getInstance() {
         if (instance == null) {
-            instance = new ChartFactory(GUIHelper.getInstance().getUser());
+            instance = new ChartFactoryMapper(GUIHelper.getInstance().getUser());
         }
         return instance;
     }
@@ -52,13 +52,13 @@ public class ChartFactory {
      * @param chartNames
      * @return
      */
-    public List<JFreeChart> getChartsByAnalysis(ChartAnalysis ana, ArrayList<ChartEnum> chartNames) {
+    public List<JFreeChart> getChartsByAnalysis(ChartAnalysis ana) {
         Konto konto = ana.getKonto();
 
         HashMap<Kategorie, Double> mappingCategory = konto.getAllParts(ana.getKategorien());
 
         ArrayList<JFreeChart> charts = new ArrayList();
-        for (ChartEnum chartName : chartNames) {
+        for (ChartEnum chartName : ana.getCharts()) {
             charts.add(this.getChartByName(chartName, mappingCategory));
         }
         return charts;
@@ -113,7 +113,7 @@ public class ChartFactory {
         ArrayList<String> stringList = new ArrayList();
 
         for (JFreeChart chart : list) {
-            stringList.add(ChartFactory.getStringFromChart(chart));
+            stringList.add(ChartFactoryMapper.getStringFromChart(chart));
         }
         return stringList;
     }

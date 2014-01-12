@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 import org.jfree.chart.JFreeChart;
@@ -92,6 +93,7 @@ public class GUIHelper {
         userD.setAuswertungen(list);
         userD.setKonten(kon);
         userD.setKategorien(kateg);
+                list.add(new ChartAnalysis("TestAuswertung", new Zeitraum(new GregorianCalendar(), new GregorianCalendar()), cat1, false, kon.get(0)));
         return userD;
     }
 

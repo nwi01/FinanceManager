@@ -3,6 +3,7 @@ package financesoftware.base.analysis;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.Zeitraum;
+import financesoftware.tools.ChartFactoryMapper;
 import java.util.List;
 import org.jfree.chart.JFreeChart;
 
@@ -11,7 +12,7 @@ import org.jfree.chart.JFreeChart;
  * @author nwi01
  */
 public class ChartAnalysis extends Analysis {
-    private List<JFreeChart> charts;
+    private List<ChartEnum> charts;
     private Konto konto;
     
     public ChartAnalysis(){
@@ -25,14 +26,14 @@ public class ChartAnalysis extends Analysis {
     /**
      * @return the charts
      */
-    public List<JFreeChart> getCharts() {
+    public List<ChartEnum> getCharts() {
         return charts;
     }
 
     /**
      * @param charts the charts to set
      */
-    public void setCharts(List<JFreeChart> charts) {
+    public void setCharts(List<ChartEnum> charts) {
         this.charts = charts;
     }       
 
