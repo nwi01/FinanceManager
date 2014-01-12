@@ -88,14 +88,6 @@ public class Dauerauftrag extends Buchung {
     
     // Getter & Setter Ende
     
-    
-    /**
-     * bucht die faelligen Buchungen des Dauerauftrags
-     */
-                
-        
-     
-    
     @Override
     public String toString(){
         return this.getAdressat() + ": " + this.getBetrag();
