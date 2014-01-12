@@ -40,7 +40,6 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JComboBox intervall;
     private JTextField money;
     private JTextField to;
-    private User user;
     private JRadioButton repeat;
     private JRadioButton untilDate;
     private JTextField untilDateTextField;
@@ -130,7 +129,15 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 1;
+        
+        panel.add(new JLabel("Kategorie:"), constraints);
 
+        constraints.gridx++;
+        panel.add(this.categories, constraints);
+        
+        
+        constraints.gridy++;
+        constraints.gridx = 0;
         panel.add(new JLabel("Startdatum:"), constraints);
 
         constraints.gridx++;
@@ -175,6 +182,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
             this.setAllEnabled(false);
             this.checkBoxNewStandingOrder.setSelected(true);
         }
+        this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
     }
 
     private void setAllEnabled(boolean isEnabled) {
@@ -189,6 +197,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.untilDate.setEnabled(isEnabled);
         this.repeatTextField.setEnabled(isEnabled);
         this.untilDateTextField.setEnabled(isEnabled);
+        this.categories.setEnabled(isEnabled);
     }
 
     @Override
@@ -200,8 +209,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
             this.auftraege.setModel(new DefaultComboBoxModel(((Konto) this.konten.getSelectedItem()).getDauerauftraege().toArray()));
             if (!((Konto) this.konten.getSelectedItem()).getDauerauftraege().isEmpty()) {
                 this.auftraege.setSelectedIndex(0);
-            }
-            else{
+            } else {
                 this.checkBoxNewStandingOrder.setSelected(true);
             }
         }
@@ -256,11 +264,11 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         if (this.checkBoxNewStandingOrder.isSelected()) {
             if (bWdh) {
                 Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
-                        i, wdh, "verwendung", (Kategorie)this.categories.getSelectedItem());
+                        i, wdh, "verwendung", (Kategorie) this.categories.getSelectedItem());
                 k.addDauerauftrag(neu);
             } else {
                 Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
-                        i, endezeit, "verwendung", (Kategorie)this.categories.getSelectedItem());
+                        i, endezeit, "verwendung", (Kategorie) this.categories.getSelectedItem());
                 k.addDauerauftrag(neu);
             }
         }

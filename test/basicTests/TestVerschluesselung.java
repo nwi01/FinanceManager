@@ -4,7 +4,12 @@ import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
 import financesoftware.base.Verschluesselung;
+import financesoftware.base.Zeitraum;
+import financesoftware.base.analysis.ChartAnalysis;
+import financesoftware.tools.GUIHelper;
 import java.awt.Color;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,6 +41,18 @@ public class TestVerschluesselung {
     
     @After
     public void tearDown() {
+    }
+    
+    /**
+     * Testet ob ein User mit einer Auswertung gespeichert und geladen werden kann.
+     */
+    @Test
+    public void testVerschluesselung2(){
+         User user = GUIHelper.getInstance().getDummyUser();
+         user.addAuswertung(new ChartAnalysis("Test", new Zeitraum(new GregorianCalendar(), new GregorianCalendar()), user.getKategorien(), false, user.getKonten().get(0)));                  
+         assertTrue(Verschluesselung.save(user));
+         
+         assertTrue(Verschluesselung.load(user.getName(), user.getPassword()) != null);
     }
     
     @Test

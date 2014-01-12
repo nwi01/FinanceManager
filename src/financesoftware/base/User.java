@@ -152,4 +152,8 @@ public class User implements Serializable
     public void addKonto(Konto konto){
         this.lKonten.add(konto);
     }
+    
+        public void addAuswertung(Analysis ana){
+        this.lAuswertungen.add(ana);
+    }
 }

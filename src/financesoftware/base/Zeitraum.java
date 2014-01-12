@@ -58,6 +58,12 @@ public class Zeitraum {
         lEndezeit  = endezeit;
     }
     
+        public Zeitraum(Calendar startzeit, Calendar endezeit){
+        lStartzeit = startzeit;
+        lIntervall = null;
+        lEndezeit  = endezeit;
+    }
+    
     /**
      * Konstruktor für einfache Buchung
      * @param startzeit 

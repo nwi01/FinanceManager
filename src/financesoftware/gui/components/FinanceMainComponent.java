@@ -76,17 +76,16 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         cons.gridy += 3;
         cons.gridx = 0;
         JPanel panel2 = new JPanel();
-        
+
         JLabel label3 = new JLabel("Aktueller Kontotstand: ");
         label3.setFont(new Font("Dialog", Font.BOLD, 13));
         panel2.add(label3);
         panel2.add(this.currentMoney);
-        
+
         panel.add(panel2, cons);
 
 //        cons.gridx++;
 //        panel.add(this.currentMoney, cons);
-
         cons.gridx++;
         cons.gridheight = 20;
         JSeparator sep2 = new JSeparator(JSeparator.VERTICAL);
@@ -109,6 +108,13 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         panel.add(this.checkBoxNewBooking, cons);
 
         cons.gridy++;
+        panel.add(new JLabel("Kategorie:"), cons);
+
+        cons.gridx++;
+        panel.add(this.categories, cons);
+
+        cons.gridy++;
+        cons.gridx = 4;
         panel.add(new JLabel("Datum (DD.MM.YYYY):"), cons);
 
         cons.gridx++;
@@ -131,77 +137,14 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         return panel;
     }
 
-    private JPanel createCurrentMoneyPanel() {
-        JPanel panel = new JPanel();
-        this.currentMoney.setText(String.valueOf(GUIHelper.getCurrentMoney((Konto) this.accounts.getSelectedItem())));
-        this.currentMoney.setEditable(false);
-        panel.setLayout(new GridLayout(1, 2));
-        panel.setBorder(new EmptyBorder(60, 60, 60, 60));
-
-        panel.add(new JLabel("Aktueller Kontostand: "));
-        panel.add(this.currentMoney);
-
-        return panel;
-    }
-
-    private JPanel createSpecificDatarecord() {
-        JPanel main = new JPanel();
-        main.setLayout(new BoxLayout(main, BoxLayout.X_AXIS));
-        JSeparator sep = new JSeparator(JSeparator.VERTICAL);
-        main.add(sep);
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(9, 9, 9, 9));
-        GridLayout layout = new GridLayout(3, 1);
-        panel.setLayout(layout);
-
-        JPanel specificPanel = new JPanel();
-        specificPanel.setBorder(new EmptyBorder(9, 9, 9, 9));
-        GridLayout layout2 = new GridLayout(5, 2);
-        specificPanel.setLayout(layout2);
-
-//        this.bookingDate.setBorder(new EmptyBorder(30, 5, 30, 5));
-        specificPanel.add(new JLabel("neue Buchung:"));
-        specificPanel.add(new JLabel());
-        specificPanel.add(new JLabel("Datum: "));
-        specificPanel.add(this.bookingDate);
-        specificPanel.add(new JLabel("Betrag: "));
-        specificPanel.add(this.bookingValue);
-        specificPanel.add(new JLabel("Adressat:"));
-        specificPanel.add(this.bookingTo);
-        specificPanel.add(new JLabel());
-
-        panel.add(new JPanel());
-        panel.add(specificPanel);
-
-        main.add(panel);
-        return main;
-    }
-
-    private JPanel createSeparator() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JSeparator separator = new JSeparator(JSeparator.VERTICAL);
-        panel.add(separator);
-
-        return panel;
-    }
-
-    private String[][] getData() {
-        return null;
-
-    }
-
-    private String[] getColumnNames() {
-        return null;
-    }
-
     @Override
     public void updateContent() {
         this.accounts.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
         if (!this.user.getKonten().isEmpty()) {
             this.accounts.setEnabled(true);
-            this.accounts.setSelectedIndex(0);
+            this.accounts.setSelectedIndex(0);            
         }
+        this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
     }
 
     @Override
@@ -222,7 +165,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     @Override
     public void saveOrUpdate() {
         Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
-        boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto, (Kategorie)this.categories.getSelectedItem());
+        boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), selectedKonto, (Kategorie) this.categories.getSelectedItem());
 
         this.bookingDate.setText("");
         this.bookingValue.setText("");

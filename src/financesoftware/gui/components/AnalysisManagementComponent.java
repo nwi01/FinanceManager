@@ -2,8 +2,10 @@ package financesoftware.gui.components;
 
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
+import financesoftware.base.Zeitraum;
 import financesoftware.base.analysis.Analysis;
 import financesoftware.base.analysis.ChartAnalysis;
+import financesoftware.base.analysis.ChartEnum;
 import financesoftware.base.analysis.CompareAnalysis;
 import financesoftware.gui.base.ManagementBaseComponent;
 import financesoftware.tools.ChartFactory;
@@ -28,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -38,7 +41,6 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     private JComboBox analysisBox;
     private JComboBox<Konto> kontoBox;
     private JCheckBox checkBoxNewAnalysis;
-    private boolean isChecked = false;
     private JTextField name;
     private JTextField from;
     private JTextField to;
@@ -322,6 +324,11 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         if(this.kontoBox.getModel().getSize() != 0){
             this.enableOrDisable(true);
         }
+        this.analysisBox.setModel(new DefaultComboBoxModel(this.user.getAuswertungen().toArray()));
+        if(!this.user.getAuswertungen().isEmpty()){
+            this.enableOrDisable(true);
+            this.analysisBox.setEnabled(true);
+        }
     }
 
     @Override
@@ -337,16 +344,6 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.analysisBox) {
 
-        }
-
-        if (event.getSource() == this.checkBoxNewAnalysis) {
-            if (!isChecked) {
-                this.isChecked = true;
-//                this.name.setText("");
-            } else {
-//                this.categoryBox.setSelectedIndex(this.categoryBox.getSelectedIndex());
-                this.isChecked = false;
-            }
         }
 
         if (event.getSource() == this.isChartAnalysis) {
@@ -368,7 +365,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         }
 
         if (event.getSource() == this.addChartButton) {
-            String chart = (String) this.availChartsList.getSelectedValue();
+            ChartEnum chart = (ChartEnum) this.availChartsList.getSelectedValue();
             if (chart != null) {
                 this.currentCharts.add(chart);
                 this.currentChartsList.setListData(this.currentCharts.toArray());
@@ -418,9 +415,19 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-        if (isChecked) {
-            this.analysisBox.setVisible(true);
-            //TODO 
+        if (this.checkBoxNewAnalysis.isSelected()) {
+             String name = this.name.getText();
+             Zeitraum zeit = new Zeitraum(Zeitraum.parseCalendar(this.from.getText()), Zeitraum.Intervall.TAEGLICH, Zeitraum.parseCalendar(this.to.getText()));
+             List<Kategorie> kat = this.currentCategories;
+             if(this.isChartAnalysis.isSelected()){
+                 List<JFreeChart> chart = this.currentCharts;
+                 Konto kon = (Konto)this.kontoBox.getSelectedItem();
+                 ChartAnalysis ana = new ChartAnalysis(name, zeit, kat, false, kon);
+                 this.user.addAuswertung(ana);                 
+             }
+             else{
+                 
+             }
         }
     }
 
@@ -501,7 +508,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         this.availChartsList.setEnabled(enableOrDisable);
         this.addChartButton.setEnabled(enableOrDisable);
         this.removeChartButton.setEnabled(enableOrDisable);
-        this.currentChartsList.setEnabled(enableOrDisable);
+        this.currentChartsList.setEnabled(enableOrDisable);        
 
     }
 }

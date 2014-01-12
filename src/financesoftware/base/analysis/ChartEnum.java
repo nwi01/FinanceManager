@@ -19,6 +19,6 @@ public enum ChartEnum {
     ChartEnum(String name) {
         this.name = name;
     }
+        
     
-
 }

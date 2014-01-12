@@ -23,7 +23,12 @@ public abstract class Analysis implements Serializable
     //Member
     private String name;
     private Zeitraum zeitraum;
-    private List<Kategorie> categories;    
+    private List<Kategorie> categories; 
+    
+    
+    public Analysis(){
+        
+    }
     
     /**
      * Konstruktor

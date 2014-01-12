@@ -12,6 +12,9 @@ import java.util.List;
 public class CompareAnalysis extends Analysis {
     private List<Konto> accounts;  // Konten
     
+    public CompareAnalysis(){
+        
+    }
     public CompareAnalysis(String uName, Zeitraum uZeitraum, List<Kategorie> uKategorien, boolean uIsVergleich){
         super(uName, uZeitraum, uKategorien);
     }

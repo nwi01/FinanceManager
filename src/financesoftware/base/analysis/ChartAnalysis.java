@@ -14,6 +14,9 @@ public class ChartAnalysis extends Analysis {
     private List<JFreeChart> charts;
     private Konto konto;
     
+    public ChartAnalysis(){
+        
+    }
     public ChartAnalysis(String uName, Zeitraum uZeitraum, List<Kategorie> uKategorien, boolean uIsVergleich, Konto konto){
         super(uName, uZeitraum, uKategorien);
         this.konto = konto;
