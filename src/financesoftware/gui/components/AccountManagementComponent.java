@@ -19,6 +19,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -42,6 +43,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     //Konto
     private JCheckBox checkBoxNewAccount;
     private JComboBox<Konto> kontoBox;
+    private JButton deleteKonto;
     private JComboBox<Buchung> buchungBox;
     private JComboBox<Dauerauftrag> dauerauftragBox;
     private JTextField kontoName;
@@ -49,7 +51,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     private JTextField kontoBLZ;
     private JTextField kontoIBAN;
     private JTextField kontoBIC;
-    private JTextField kontoStand;
+    private JFormattedTextField kontoStand;
 
     private JRadioButton oldStyle;
     private JRadioButton newStyle;
@@ -111,6 +113,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             enableOrDisableOldStyle(false);
         }
 
+        if (event.getSource() == this.deleteKonto) {
+            this.user.getKonten().remove((Konto) this.kontoBox.getSelectedItem());
+            this.updateContent();
+        }
+
     }
 
     private void enableOrDisableOldStyle(boolean setOldStyleEnabled) {
@@ -127,19 +134,25 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String nameS = this.kontoName.getText();
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
-            String kontoStandS = this.kontoStand.getText();
+            Long kontoStandD = (Long)this.kontoStand.getValue();
+            String kontoIBANS = this.kontoIBAN.getText();
+            String kontoBICS = this.kontoBIC.getText();
 
-            try {
-                if (!(nameS.isEmpty() && kontoNrS.isEmpty() && kontoBLZS.isEmpty() && kontoStandS.isEmpty())) {
-                    Konto newKonto = new Konto(nameS, kontoNrS, kontoBLZS, Double.parseDouble(kontoStandS));
+            Konto newKonto = null;
+            if (this.oldStyle.isSelected()) {
+                if (!(nameS.isEmpty() && kontoNrS.isEmpty() && kontoBLZS.isEmpty())) {
+                    newKonto = new Konto(nameS, kontoNrS, kontoBLZS, kontoStandD);
                     this.user.addKonto(newKonto);
                     this.kontoBox.setVisible(true);
-                    this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
-                    this.kontoBox.setSelectedItem(newKonto);
                 }
-            } catch (Exception e) {
-                System.out.println("Speichern fehlgeschlagen");
+            } else {
+                if (!(nameS.isEmpty() && kontoIBANS.isEmpty() && kontoBICS.isEmpty())) {
+                    newKonto = new Konto(nameS, kontoStandD, kontoIBANS, kontoBICS);
+                    this.user.addKonto(newKonto);
+                    this.kontoBox.setVisible(true);
+                }
             }
+
         } else {
             String userName = this.name.getText();
             String userPw = this.passwordTF.getPassword().toString();
@@ -147,11 +160,22 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String nameS = this.kontoName.getText();
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
+            String kontoIBANS = this.kontoIBAN.getText();
+            String kontoBICS = this.kontoBIC.getText();
 
-            if (!nameS.equals("") && !kontoNrS.equals("") && !kontoBLZS.equals("")) {
-                currentKonto.setName(nameS);
-                currentKonto.setKontoNr(kontoNrS);
-                currentKonto.setBLZ(kontoBLZS);
+            if (this.oldStyle.isSelected()) {
+                if (!nameS.equals("") && !kontoNrS.equals("") && !kontoBLZS.equals("")) {
+                    currentKonto.setName(nameS);
+                    currentKonto.setKontoNr(kontoNrS);
+                    currentKonto.setBLZ(kontoBLZS);
+                }
+            } else {
+                if (!nameS.equals("") && !kontoIBANS.equals("") && !kontoBICS.equals("")) {
+                    currentKonto.setName(nameS);
+                    currentKonto.setBic(kontoBICS);
+                    currentKonto.setIban(kontoIBANS);
+                    currentKonto.setBLZ(kontoBLZS);
+                }
             }
 
             if (!userName.equals("") && !userPw.equals("")) {
@@ -161,7 +185,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.kontoBox.setVisible(true);
             Verschluesselung.save(user);
         }
-        this.checkBoxNewAccount.setEnabled(true);
+        this.updateContent();
     }
 
     private JPanel createUserManagement() {
@@ -216,6 +240,10 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         constraints.gridx = 3;
         constraints.gridwidth = 5;
         panel.add(kontoBox, constraints);
+
+        constraints.gridx = 9;
+        constraints.gridwidth = 1;
+        panel.add(deleteKonto, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -289,10 +317,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
+        this.deleteKonto = new JButton("X");
+        this.deleteKonto.addActionListener(this);
         this.name = new JTextField();
-        this.passwordTF = new JPasswordField();
+        this.passwordTF = new JPasswordField(this.user.getPassword());
         this.name.setText(this.user.getName());
-        this.passwordTF.setText("Tesdfwefefefst");
 
         this.checkBoxNewAccount = new JCheckBox("(neues Konto anlegen)");
         this.checkBoxNewAccount.addActionListener(this);
@@ -307,7 +336,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         group.add(this.oldStyle);
         group.add(this.newStyle);
 
-        this.kontoStand = new JFormattedTextField(NumberFormat.getNumberInstance());
+        this.kontoStand = new JFormattedTextField(NumberFormat.getIntegerInstance());
         this.kontoStand.setPreferredSize(new Dimension(100, 28));
         this.kontoIBAN = new JTextField();
         this.kontoBIC = new JTextField();
@@ -316,22 +345,31 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         this.kontoBLZ = new JTextField();
         this.kontoBLZ.setPreferredSize(new Dimension(100, 28));
         this.kontoBox = new JComboBox(this.user.getKonten().toArray());
-        kontoBox.addActionListener(this);
-        if (!this.user.getKonten().isEmpty()) {
-            this.kontoBox.setSelectedIndex(0);
-        } else {
-            this.checkBoxNewAccount.setSelected(true);
-            this.checkBoxNewAccount.setEnabled(false);
-            this.kontoBox.setVisible(false);
-        }
-
+        this.kontoBox.addActionListener(this);
         this.newStyle.setSelected(true);
-        enableOrDisableOldStyle(false);
 
+        this.enableOrDisableOldStyle(false);
+        this.updateContent();
+
+    }
+
+    private void enableOrDisableFields(boolean enable) {
+        this.checkBoxNewAccount.setEnabled(enable);
+        this.checkBoxNewAccount.setEnabled(enable);
+        this.kontoBox.setEnabled(enable);
+        this.deleteKonto.setEnabled(enable);
     }
 
     @Override
     public void updateContent() {
+        this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+        if (!this.user.getKonten().isEmpty()) {
+            this.kontoBox.setSelectedIndex(0);
+            this.enableOrDisableFields(true);
+        } else {
+            this.enableOrDisableFields(false);
+            this.checkBoxNewAccount.setSelected(true);
+        }
     }
 
 }

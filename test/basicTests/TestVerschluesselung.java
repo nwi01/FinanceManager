@@ -1,6 +1,7 @@
 package basicTests;
 
 import financesoftware.base.Buchung;
+import financesoftware.base.Dauerauftrag;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.base.User;
@@ -9,6 +10,7 @@ import financesoftware.base.Zeitraum;
 import financesoftware.base.analysis.ChartAnalysis;
 import financesoftware.tools.GUIHelper;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import org.junit.After;
@@ -100,16 +102,32 @@ public class TestVerschluesselung {
         assertNotNull(Verschluesselung.load(user.getName(), user.getPassword()));
     }
 
+    /**
+     * Es wird ein User mit emehreren Buchung, mehreren Kategorien gespeichert.
+     */
     @Test
     public void testVerschluesselung3() {
-        User user = GUIHelper.getInstance().getDummyUser();
+        User user = new User("test", "test");
+        ArrayList<Konto> kon = new ArrayList();
+        Konto kon1 = new Konto("test", "454536", "37010050", 0.0);
+        kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10, "verwendung", new Kategorie("Bl324a", Color.gray)));
+        kon.add(kon1);
+        kon.add(new Konto("test", "454536", "37010050", 0.0));
+        kon.add(new Konto("test2", "222222", "1231231", 0.0));
+        user.setKonten(kon);
 //        user.addAuswertung(new ChartAnalysis("Test", new Zeitraum(new GregorianCalendar(), new GregorianCalendar()), user.getKategorien(), false, user.getKonten().get(0)));
-        user.getKonten().get(0).addBuchung(new Buchung(345.4, "fef", new Zeitraum(new GregorianCalendar()), "Zweck"));
+        user.getKonten().get(0).addBuchung(new Buchung(345.4, "test1", new Zeitraum(new GregorianCalendar()), "Zweck"));
+        user.getKonten().get(0).addBuchung(new Buchung(22.3, "test2", new Zeitraum(new GregorianCalendar()), "Zweck"));
+
+        user.addKategorie(new Kategorie("kat1", Color.orange));
+        user.addKategorie(new Kategorie("kat2", Color.orange));
+
         assertTrue(Verschluesselung.save(user));
 
         user = Verschluesselung.load(user.getName(), user.getPassword());
         assertNotNull(user);
+        assertTrue("User besitzt nicht 2 sondern " + user.getKonten().get(0).getBuchungen().size() + " Buchungen", user.getKonten().get(0).getBuchungen().size() == 2);
+        assertTrue("User besitzt nicht 2 sondern " + user.getKategorien().size() + " Kategorien", user.getKategorien().size() == 2);
 
-        assertTrue(!user.getKonten().get(0).getBuchungen().isEmpty());
     }
 }

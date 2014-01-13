@@ -2,16 +2,19 @@
 package financesoftware.base;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.Calendar;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Mike
  */
-public class Buchung {
+public class Buchung implements Serializable {
 
     //Member
-    private Zeitraum lDatum;  // TODO mit Zeitraum Objekt ersetzen ....
+    private Zeitraum lDatum;
     private double lBetrag = 0.0;
     private String lAdressat = "";
     private String lVerwendungszweck;
@@ -108,10 +111,22 @@ public class Buchung {
         this.lAdressat = lAdressat;
     }
 
+    /**
+     * 
+     * @param uZweck 
+     */
+    public void setVerwendungszweck(String uZweck) {
+        lVerwendungszweck = uZweck;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
     public String getVerwendungszweck() {
         return lVerwendungszweck;
     }
-
+    
     /**
      * @return the kategorie
      */

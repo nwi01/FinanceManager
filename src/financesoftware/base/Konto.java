@@ -141,6 +141,10 @@ public class Konto implements Serializable {
     public List<Buchung> getBuchungen() {
         return lBuchungen;
     }
+    
+    public void setBuchungen(List<Buchung> uBuchungen) {
+        lBuchungen = uBuchungen;
+    }
 
     public void addBuchung(Buchung buch) {
         lKontostand += buch.getBetrag();
@@ -276,5 +280,33 @@ public class Konto implements Serializable {
             }
 
         }
+    }
+
+    /**
+     * @return the iban
+     */
+    public String getIban() {
+        return iban;
+    }
+
+    /**
+     * @param iban the iban to set
+     */
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
+
+    /**
+     * @return the bic
+     */
+    public String getBic() {
+        return bic;
+    }
+
+    /**
+     * @param bic the bic to set
+     */
+    public void setBic(String bic) {
+        this.bic = bic;
     }
 }
