@@ -68,7 +68,12 @@ public class CSVImport
             {
                 while((lEintrag = csvParser.read()) != null)
                 {
-                    lRueckgabe.add(new HilfsBuchung(Double.parseDouble(lEintrag.get(8)), lEintrag.get(5), lEintrag.get(2), lEintrag.get(0), lEintrag.get(4)));
+                    String lBetrag = lEintrag.get(8);
+                    if(lBetrag.contains(","))
+                    {
+                        lBetrag = lBetrag.replace(",", ".");
+                    }
+                    lRueckgabe.add(new HilfsBuchung(Double.parseDouble(lBetrag), lEintrag.get(5), lEintrag.get(2), lEintrag.get(0), lEintrag.get(4)));
                 }
             }
             return lRueckgabe;
@@ -124,7 +129,13 @@ public class CSVImport
                         lVerwendungszweck += lEintrag.get(k) + "\n";
                     }
                     
-                    lRueckgabe.add(new HilfsBuchung(Double.parseDouble(lEintrag.get(19)), lEintrag.get(3), lEintrag.get(1), lEintrag.get(0), lVerwendungszweck));
+                    String lBetrag = lEintrag.get(19);
+                    if(lBetrag.contains(","))
+                    {
+                        lBetrag = lBetrag.replace(",", ".");
+                    }
+                    
+                    lRueckgabe.add(new HilfsBuchung(Double.parseDouble(lBetrag), lEintrag.get(3), lEintrag.get(1), lEintrag.get(0), lVerwendungszweck));
                 }
             }
             return lRueckgabe;
