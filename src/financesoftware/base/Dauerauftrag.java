@@ -1,12 +1,13 @@
 package financesoftware.base;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  *
  * @author Mike
  */
-public class Dauerauftrag extends Buchung {
+public class Dauerauftrag extends Buchung implements Serializable{
 
     //Member
     Calendar letzteAusfuehrung;

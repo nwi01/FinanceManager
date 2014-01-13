@@ -141,6 +141,10 @@ public class Konto implements Serializable {
     public List<Buchung> getBuchungen() {
         return lBuchungen;
     }
+    
+    public void setBuchungen(List<Buchung> uBuchungen) {
+        lBuchungen = uBuchungen;
+    }
 
     public void addBuchung(Buchung buch) {
         lKontostand += buch.getBetrag();
