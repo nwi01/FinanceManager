@@ -91,10 +91,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                     this.kontoNummer.setText(((Konto) this.kontoBox.getSelectedItem()).getKontoNr());
                     this.kontoBLZ.setText(((Konto) this.kontoBox.getSelectedItem()).getBLZ());
                 } else {
-                    // Felder leeren
-                    this.kontoName.setText("");
-                    this.kontoNummer.setText("");
-                    this.kontoBLZ.setText("");
+                    
                 }
 
             } else {
