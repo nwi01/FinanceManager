@@ -2,3 +2,4 @@
 /build/
 /dist/
 /Benutzer/
+*.temp

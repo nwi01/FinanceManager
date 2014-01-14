@@ -8,6 +8,7 @@ import financesoftware.tools.GUIHelper;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,39 +51,22 @@ public class TestCSVImport {
         
         
         boolean lKSKTest = CSVImport.Import("KSK", "./KSKTestDatei.csv");
-        
-        if(lKSKTest)
-        {
-            System.out.println("KSKImport stattgefunden");
-            System.out.println(lUser.getKonten().get(0).getAktuellerKontostand());
-        }
-        else
-        {
-            System.out.println("Kein Import");
-        }
-        
-        /*boolean lPBTest = CSVImport.Import("PB", "./PBTestDatei.csv");
-        
-        if(lPBTest)
-        {
-            System.out.println("PBImport stattgefunden");
+        assertTrue(lKSKTest);
+        System.out.println("KSKImport stattgefunden");
         System.out.println(lUser.getKonten().get(0).getAktuellerKontostand());
-        }
-        else
-        {
-            System.out.println("Kein Import");
-        }*/
+        assertTrue(lUser.getKonten().get(0).getBuchungen().get(0).getBetrag() == -555.78);
         
+        
+        /*
+        boolean lPBTest = CSVImport.Import("PB", "./PBTestDatei.csv");
+        assertTrue(lPBTest);
+        System.out.println("PBImport stattgefunden");
+        assertTrue(lUser.getKonten().get(0).getAktuellerKontostand() == -555.78);
+       */
+                
         boolean lVBTest = CSVImport.Import("VB", "./VBTestDatei.csv");
-        
-        if(lVBTest)
-        {
-            System.out.println("VBImport stattgefunden");
-            System.out.println(lUser.getKonten().get(0).getAktuellerKontostand());
-        }
-        else
-        {
-            System.out.println("Kein Import");
-        }
+        assertTrue(lVBTest);
+        System.out.println("VBImport stattgefunden");
+        assertTrue(lUser.getKonten().get(0).getBuchungen().get(1).getBetrag() == -555.78);
     }
 }
