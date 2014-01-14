@@ -65,6 +65,10 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.kontoBox) {
+            //Falls ein bestehendes Konto angeschaut wird soll der Aktuelle KontoStand nicht veränderbar sein
+            if(!this.checkBoxNewAccount.isSelected()){
+                this.kontoStand.setEnabled(false);
+            }
             currentKonto = (Konto) this.kontoBox.getSelectedItem();
             int index = this.user.getKonten().indexOf(currentKonto);
             this.buchungBox = new JComboBox(this.user.getKonten().get(index).getBuchungen().toArray());
@@ -72,6 +76,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.kontoName.setText(currentKonto.getName());
             this.kontoNummer.setText(currentKonto.getKontoNr());
             this.kontoBLZ.setText(currentKonto.getBLZ());
+            this.kontoStand.setValue(currentKonto.getAktuellerKontostand());
 
             if (currentKonto.isOldStyle()) {
                 this.oldStyle.setSelected(true);
@@ -85,11 +90,13 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         }
 
         if (event.getSource() == this.checkBoxNewAccount) {
+            // Die Box wird abgewaehlt
             if (!checkBoxNewAccount.isSelected()) {
                 if (this.kontoBox.getModel().getSize() != 0) {
                     this.kontoName.setText(((Konto) this.kontoBox.getSelectedItem()).getName());
                     this.kontoNummer.setText(((Konto) this.kontoBox.getSelectedItem()).getKontoNr());
-                    this.kontoBLZ.setText(((Konto) this.kontoBox.getSelectedItem()).getBLZ());
+                    this.kontoBLZ.setText(((Konto) this.kontoBox.getSelectedItem()).getBLZ());                    
+                    this.kontoStand.setEnabled(false);
                 } else {
                     
                 }
@@ -99,6 +106,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 if (this.kontoBox.getSelectedIndex() != -1) {
                     this.kontoBox.setSelectedIndex(this.kontoBox.getSelectedIndex());
                 }
+                this.kontoStand.setEnabled(true);
             }
         }
 
@@ -127,6 +135,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
+        //Soll ein neuer Acount angelegt werden?
         if (this.checkBoxNewAccount.isSelected()) {
             String nameS = this.kontoName.getText();
             String kontoNrS = this.kontoNummer.getText();
@@ -289,7 +298,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
         constraints.gridy++;
         constraints.gridx = 0;
-        panel.add(new JLabel("Konto-Stand:"), constraints);
+        panel.add(new JLabel("Start Kontostand:"), constraints);
 
         constraints.gridx++;
         panel.add(this.kontoStand, constraints);
@@ -359,13 +368,14 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void updateContent() {
+        this.oldStyle.doClick();
         this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
         if (!this.user.getKonten().isEmpty()) {
             this.kontoBox.setSelectedIndex(0);
             this.enableOrDisableFields(true);
         } else {
             this.enableOrDisableFields(false);
-            this.checkBoxNewAccount.setSelected(true);
+            this.checkBoxNewAccount.setSelected(true);            
         }
     }
 

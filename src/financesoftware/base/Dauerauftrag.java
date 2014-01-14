@@ -11,7 +11,8 @@ public class Dauerauftrag extends Buchung implements Serializable{
 
     //Member
     Calendar letzteAusfuehrung;
-    boolean aktiv; 
+    boolean aktiv;
+    private boolean isWdh;
     
     /**
      * Default-Konstruktor
@@ -37,6 +38,7 @@ public class Dauerauftrag extends Buchung implements Serializable{
         setDatum(uIntervall);
         this.aktiv = false;
         this.letzteAusfuehrung = null;
+        this.isWdh = true;
     }
     
     /**
@@ -55,6 +57,7 @@ public class Dauerauftrag extends Buchung implements Serializable{
         setDatum(uIntervall);
         this.aktiv = false;
         this.letzteAusfuehrung = null;
+        this.isWdh = false;
     }
     
     // Getter & Setter
@@ -92,5 +95,19 @@ public class Dauerauftrag extends Buchung implements Serializable{
     @Override
     public String toString(){
         return this.getAdressat() + ": " + this.getBetrag();
+    }
+
+    /**
+     * @return the isWdh
+     */
+    public boolean isIsWdh() {
+        return isWdh;
+    }
+
+    /**
+     * @param isWdh the isWdh to set
+     */
+    public void setIsWdh(boolean isWdh) {
+        this.isWdh = isWdh;
     }
 }

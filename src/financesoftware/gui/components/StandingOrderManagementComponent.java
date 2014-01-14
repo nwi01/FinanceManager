@@ -20,6 +20,7 @@ import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -40,6 +41,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
     private JComboBox<Konto> konten;
     private JComboBox<Dauerauftrag> auftraege;
+    private JButton deleteAuftraege;
     private JCheckBox checkBoxNewStandingOrder;
     private JTextField startDate;
     private JComboBox intervall;
@@ -103,6 +105,10 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         constraints.gridx = 3;
         constraints.gridwidth = 5;
         panel.add(this.auftraege, constraints);
+        
+        constraints.gridx = 9;
+        constraints.gridwidth = 1;
+        panel.add(this.deleteAuftraege, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -180,26 +186,6 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         return panel;
     }
 
-    @Override
-    public void updateContent() {
-        this.konten.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
-        if (!this.user.getKonten().isEmpty()) {
-            if (this.auftraege.getModel().getSize() != 0) {
-                this.setAllEnabled(true);
-            } else {
-                this.startDate.setEnabled(true);
-                this.money.setEnabled(true);
-                this.to.setEnabled(true);
-                this.intervall.setEnabled(true);
-                this.konten.setEnabled(true);
-            }
-        } else {
-            this.setAllEnabled(false);
-            this.checkBoxNewStandingOrder.setSelected(true);
-        }
-        this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
-    }
-
     private void setAllEnabled(boolean isEnabled) {
         this.checkBoxNewStandingOrder.setEnabled(isEnabled);
         this.startDate.setEnabled(isEnabled);
@@ -238,6 +224,11 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 this.to.setText(auf.getAdressat());
                 this.intervall.setSelectedItem(auf.getDatum().getIntervall());
                 this.verwendungszweck.setText(auf.getVerwendungszweck());
+                if(auf.isIsWdh()){
+                    this.repeat.doClick();
+                }else{
+                    this.untilDate.doClick();
+                }
             }
         }
 
@@ -259,11 +250,29 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         if (event.getSource() == this.repeat) {
             this.untilDateTextField.setEnabled(false);
             this.repeatTextField.setEnabled(true);
+            if(!this.checkBoxNewStandingOrder.isSelected()){
+                if(this.repeat.isSelected()){
+                    this.repeatTextField.setValue(((Dauerauftrag)this.auftraege.getSelectedItem()).getDatum().getAnzahlWdh());
+                }
+                else{
+                    this.repeatTextField.setValue(0);
+                }
+            }
         }
 
         if (event.getSource() == this.untilDate) {
             this.untilDateTextField.setEnabled(true);
             this.repeatTextField.setEnabled(false);
+            if(this.untilDate.isSelected()){
+                this.untilDateTextField.setText(((Dauerauftrag)this.auftraege.getSelectedItem()).getDatum().getEndezeit().toString());
+            }else{
+                this.untilDateTextField.setText("");
+            }
+        }
+        
+        if(event.getSource() == this.deleteAuftraege){
+            ((Konto)this.konten.getSelectedItem()).getDauerauftraege().remove((Dauerauftrag)this.auftraege.getSelectedItem());
+            this.updateContent();
         }
     }
 
@@ -291,12 +300,11 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 k.addDauerauftrag(neu);
                 k.buchen(neu);
             }
-            
+
             this.startDate.setText("");
             this.money.setText("");
             this.to.setText("");
-        }
-        else{
+        } else {
             d.setAdressat(adressat);
             d.setBetrag(betrag);
             if (bWdh) {
@@ -307,9 +315,9 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                         Zeitraum.parseCalendar(endezeit));
                 d.setDatum(uIntervall);
             }
-            
+
         }
-        Verschluesselung.save(user);
+        this.updateContent();
     }
 
     @Override
@@ -320,11 +328,45 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     }
 
     @Override
+    public void updateContent() {
+        this.konten.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+        if (!this.user.getKonten().isEmpty()) {            
+            this.auftraege.setModel(new DefaultComboBoxModel(this.user.getKonten().get(0).getDauerauftraege().toArray()));
+            this.konten.setSelectedIndex(0);
+            if (this.auftraege.getModel().getSize() != 0) {                
+                this.auftraege.setSelectedIndex(0);
+                this.setAllEnabled(true);
+            } else {
+                this.startDate.setEnabled(true);
+                this.money.setEnabled(true);
+                this.to.setEnabled(true);
+                this.intervall.setEnabled(true);
+                this.konten.setEnabled(true);
+                this.checkBoxNewStandingOrder.setSelected(true);
+                this.checkBoxNewStandingOrder.setEnabled(false);                
+                this.auftraege.setEnabled(false);
+                this.repeat.setSelected(true);
+            }
+        } else {
+            this.setAllEnabled(false);
+            this.checkBoxNewStandingOrder.setSelected(true);
+        }
+        this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
+         this.intervall.setModel(new DefaultComboBoxModel(Zeitraum.getIntervallEnums()));        
+        
+//        this.untilDateTextField.setEnabled(false);
+//        this.repeatTextField.setEnabled(true);
+    }
+
+    @Override
     public void initFields() {
+        this.deleteAuftraege = new JButton("X");
+        this.deleteAuftraege.addActionListener(this);
+
         this.verwendungszweck = new JTextArea();
         this.verwendungszweck.setPreferredSize(new Dimension(200, 100));
         this.verwendungszweck.setRows(3);
-        this.categories = new JComboBox(this.user.getKategorien().toArray());
+        this.categories = new JComboBox();
         this.repeat = new JRadioButton("Wiederholungen:       ");
         this.untilDate = new JRadioButton("bis zum:                     ");
         ButtonGroup group = new ButtonGroup();
@@ -341,7 +383,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.checkBoxNewStandingOrder.addActionListener(this);
 
         this.user = GUIHelper.getInstance().getUser();
-        this.intervall = new JComboBox(Zeitraum.getIntervallEnums());
+        this.intervall = new JComboBox();
         this.intervall.addActionListener(this);
 
         this.startDate = new JFormattedTextField(new Date());
@@ -350,23 +392,11 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.money = new JFormattedTextField(NumberFormat.getNumberInstance());
         this.to = new JTextField();
 
-        this.auftraege = null;
-
-        this.konten = new JComboBox(this.user.getKonten().toArray());
-        this.konten.addActionListener(this);
-        if (!this.user.getKonten().isEmpty()) {
-            this.auftraege = new JComboBox(this.user.getKonten().get(0).getDauerauftraege().toArray());
-            this.konten.setSelectedIndex(0);
-        } else {
-            this.auftraege = new JComboBox();
-            this.setAllEnabled(false);
-            this.checkBoxNewStandingOrder.setSelected(true);
-        }
-
+        this.auftraege = new JComboBox();
         this.auftraege.addActionListener(this);
 
-        this.untilDateTextField.setEnabled(false);
-        this.repeatTextField.setEnabled(true);
+        this.konten = new JComboBox();
+        this.konten.addActionListener(this);
     }
 
 }

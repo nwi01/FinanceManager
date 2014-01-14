@@ -21,6 +21,7 @@ public class Konto implements Serializable {
     private String lName = "";
     private String KontoNr = "";
     private double lKontostand;
+    private double startKontoStand;
     private String lBLZ = "";
     private List<Buchung> lBuchungen = new ArrayList();
     private List<Dauerauftrag> lDauerauftraege = new ArrayList();
@@ -147,7 +148,7 @@ public class Konto implements Serializable {
     }
 
     public void addBuchung(Buchung buch) {
-        lKontostand += buch.getBetrag();
+        setlKontostand(lKontostand + buch.getBetrag());
         this.lBuchungen.add(buch);
     }
 
@@ -308,5 +309,26 @@ public class Konto implements Serializable {
      */
     public void setBic(String bic) {
         this.bic = bic;
+    }
+
+    /**
+     * @param lKontostand the lKontostand to set
+     */
+    public void setlKontostand(double lKontostand) {
+        this.lKontostand = lKontostand;
+    }
+
+    /**
+     * @return the startKontoStand
+     */
+    public double getStartKontoStand() {
+        return startKontoStand;
+    }
+
+    /**
+     * @param startKontoStand the startKontoStand to set
+     */
+    public void setStartKontoStand(double startKontoStand) {
+        this.startKontoStand = startKontoStand;
     }
 }

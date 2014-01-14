@@ -6,7 +6,6 @@
 package financesoftware.gui.components;
 
 import financesoftware.base.Kategorie;
-import financesoftware.base.analysis.Analysis;
 import financesoftware.gui.base.ManagementBaseComponent;
 import financesoftware.tools.GUIHelper;
 import java.awt.Color;
@@ -17,7 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -37,6 +35,7 @@ import javax.swing.JTextField;
 public class CategoriesManagementComponent extends ManagementBaseComponent {
 
     private JComboBox<Kategorie> categoryBox;
+    private JButton deleteKategorie;
     private JCheckBox checkBoxNewCategory;
     //Kategorie
     private JTextField name;
@@ -49,6 +48,10 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
                 this.name.setText(((Kategorie) this.categoryBox.getSelectedItem()).getlName());
                 this.color.setBackground(((Kategorie) this.categoryBox.getSelectedItem()).Farbe());
             }
+        }
+        if (event.getSource() == this.deleteKategorie) {
+            this.user.getKategorien().remove((Kategorie) this.categoryBox.getSelectedItem());
+            this.updateContent();
         }
 
         if (event.getSource() == this.checkBoxNewCategory) {
@@ -81,12 +84,13 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
                 this.categoryBox.setSelectedItem(kat);
                 this.categoryBox.setEnabled(true);
                 this.checkBoxNewCategory.setEnabled(true);
-            } else{
-                if(this.categoryBox.getModel().getSize() != 0){
-                    ((Kategorie)this.categoryBox.getSelectedItem()).setlName(this.name.getText());
-                     ((Kategorie)this.categoryBox.getSelectedItem()).setFarbe(this.color.getBackground());
+            } else {
+                if (this.categoryBox.getModel().getSize() != 0) {
+                    ((Kategorie) this.categoryBox.getSelectedItem()).setlName(this.name.getText());
+                    ((Kategorie) this.categoryBox.getSelectedItem()).setFarbe(this.color.getBackground());
                 }
             }
+            this.updateContent();
         }
     }
 
@@ -118,6 +122,10 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
         constraints.gridx = 3;
         constraints.gridwidth = 5;
         panel.add(this.categoryBox, constraints);
+        
+        constraints.gridx = 9;
+        constraints.gridwidth = 1;
+        panel.add(this.deleteKategorie, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -150,6 +158,8 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
     @Override
     public void initFields() {
         this.name = new JTextField();
+        this.deleteKategorie = new JButton("X");
+        this.deleteKategorie.addActionListener(this);
 
         this.checkBoxNewCategory = new JCheckBox("(neue Kategorie anlegen)");
         this.checkBoxNewCategory.addActionListener(this);
@@ -158,8 +168,13 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
         this.color.addActionListener(this);
         this.color.setPreferredSize(new Dimension(100, 28));
 
-        this.categoryBox = new JComboBox(GUIHelper.getInstance().getUser().getKategorien().toArray());
+        this.categoryBox = new JComboBox();
         this.categoryBox.addActionListener(this);
+    }
+
+    @Override
+    public void updateContent() {
+        this.categoryBox.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
         if (!GUIHelper.getInstance().getUser().getKategorien().isEmpty()) {
             this.categoryBox.setSelectedIndex(0);
         } else {
@@ -167,10 +182,5 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
             this.checkBoxNewCategory.setSelected(true);
             this.checkBoxNewCategory.setEnabled(false);
         }
-
-    }
-
-    @Override
-    public void updateContent() {
     }
 }
