@@ -264,7 +264,9 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
             this.untilDateTextField.setEnabled(true);
             this.repeatTextField.setEnabled(false);
             if(this.untilDate.isSelected()){
-                this.untilDateTextField.setText(((Dauerauftrag)this.auftraege.getSelectedItem()).getDatum().getEndezeit().toString());
+                if(this.auftraege.getModel().getSize() != 0){
+                    this.untilDateTextField.setText(((Dauerauftrag)this.auftraege.getSelectedItem()).getDatum().getEndezeit().toString());
+                }                
             }else{
                 this.untilDateTextField.setText("");
             }
@@ -345,7 +347,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 this.checkBoxNewStandingOrder.setSelected(true);
                 this.checkBoxNewStandingOrder.setEnabled(false);                
                 this.auftraege.setEnabled(false);
-                this.repeat.setSelected(true);
+                this.repeat.doClick();
             }
         } else {
             this.setAllEnabled(false);

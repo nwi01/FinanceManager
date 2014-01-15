@@ -90,7 +90,7 @@ public class Konto implements Serializable {
      * @return Kontostand
      */
     public double getAktuellerKontostand() {
-        return lKontostand;
+        return Math.round(lKontostand);
     }
 
     //Getter_Setter
@@ -142,7 +142,7 @@ public class Konto implements Serializable {
     public List<Buchung> getBuchungen() {
         return lBuchungen;
     }
-    
+
     public void setBuchungen(List<Buchung> uBuchungen) {
         lBuchungen = uBuchungen;
     }
@@ -204,32 +204,36 @@ public class Konto implements Serializable {
     }
 
     /**
-     * Gibt eine HashMap mit einer Kategorie als Schlüssel und einem Double (Anteil) zurueck.
+     * Gibt eine HashMap mit einer Kategorie als Schlüssel und einem Double
+     * (Anteil) zurueck.
+     *
      * @param kategorien
      * @param konto
-     * @return 
+     * @return
      */
     public HashMap<Kategorie, Double> getAllParts(List<Kategorie> kategorien) {
         List<Buchung> buchungen = this.getBuchungen();
         double allOutgoings = this.getAllOutgoings();
 
         HashMap<Kategorie, Double> mapping = new HashMap();
-        for (Kategorie kategorie : kategorien) {
-            mapping.put(kategorie, getPart(kategorie));
+        if (kategorien != null) {
+            for (Kategorie kategorie : kategorien) {
+                mapping.put(kategorie, getPart(kategorie));
+            }
         }
         return mapping;
     }
-    
-    public double getPart(Kategorie kategorie){
+
+    public double getPart(Kategorie kategorie) {
         double allOutgoings = this.getAllOutgoings();
-        
+
         double part = 0;
-        for(Buchung buchung : this.getBuchungen()){
-            if(buchung.getKategorie().equals(kategorie)){
+        for (Buchung buchung : this.getBuchungen()) {
+            if (buchung.getKategorie().equals(kategorie)) {
                 part += buchung.getBetrag();
             }
-        }        
-        return part/allOutgoings;
+        }
+        return part / allOutgoings;
     }
 
     public void buchen(Dauerauftrag dauerauftrag) {
@@ -238,7 +242,7 @@ public class Konto implements Serializable {
         int tage[] = Zeitraum.IntervallInTage(dauerauftrag.getDatum().getIntervall());
 
         if (dauerauftrag.letzteAusfuehrung == null) {
-            if (heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0) {                
+            if (heute.compareTo(dauerauftrag.getDatum().getStartzeit()) > 0) {
                 Buchung neu = new Buchung(dauerauftrag.getBetrag(), dauerauftrag.getAdressat(),
                         dauerauftrag.getDatum().getStartzeit(),
                         dauerauftrag.getVerwendungszweck(), dauerauftrag.getKategorie());
@@ -253,7 +257,7 @@ public class Konto implements Serializable {
             }
         }
         Calendar letzteAusfTmp = Calendar.getInstance();
-        if(buchenPruefen){            
+        if (buchenPruefen) {
             letzteAusfTmp.setTime(dauerauftrag.getLetzteAusfuehrung().getTime());
         }
         while (buchenPruefen) {

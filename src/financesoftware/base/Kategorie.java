@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package financesoftware.base;
 
 import java.awt.Color;
@@ -13,33 +12,39 @@ import java.io.Serializable;
  *
  * @author Mike
  */
-public class Kategorie implements Serializable
-{
+public class Kategorie implements Serializable {
+
     //Member
     private String lName;
     private int lAlpha;
     private int lRed;
     private int lBlue;
     private int lGreen;
-    
+
     //Konstruktor
     /**
      * Default-Konstruktor
      */
-    public Kategorie()
-    {}
-    
-    public Kategorie(String uName, Color uFarbe)
-    {
+    public Kategorie() {
+    }
+
+    public Kategorie(Kategorie kat) {
+        lName = kat.getlName();
+        lAlpha = kat.getlAlpha();
+        lRed = kat.getlRed();
+        lBlue = kat.getlBlue();
+        lGreen = kat.getlGreen();
+    }
+
+    public Kategorie(String uName, Color uFarbe) {
         lName = uName;
         lAlpha = uFarbe.getAlpha();
         lRed = uFarbe.getRed();
         lBlue = uFarbe.getBlue();
         lGreen = uFarbe.getGreen();
     }
-    
-    //Getter_Setter
 
+    //Getter_Setter
     /**
      * @return the lName
      */
@@ -61,8 +66,6 @@ public class Kategorie implements Serializable
         return new Color(getlRed(), getlGreen(), getlBlue(), getlAlpha());
     }
 
-    
-    
     /**
      * @param lFarbe the lFarbe to set
      */
@@ -72,9 +75,9 @@ public class Kategorie implements Serializable
         setlBlue(uFarbe.getBlue());
         setlGreen(uFarbe.getGreen());
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return this.lName;
     }
 

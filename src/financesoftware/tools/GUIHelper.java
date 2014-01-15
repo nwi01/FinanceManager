@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
@@ -55,6 +56,30 @@ public class GUIHelper {
      */
     public void createAndSaveCompareAnalysis(String name, Zeitraum zeitraum, List<Kategorie> kategorien, List<Konto> konten) {
 
+    }
+    
+    public static List<Kategorie> copyCategoryList(List<Kategorie> kats){
+        ArrayList<Kategorie> copyCats = new ArrayList();
+        for(Kategorie kat : kats){
+            copyCats.add(new Kategorie(kat));
+        }
+        
+        return copyCats;
+    }
+    
+    public static Buchung findBuchung(List<Buchung> buchungen, String datum, String value, String to){     
+        for(Buchung buchung : buchungen){            
+            if(GUIHelper.getStringRepresantation(buchung.getDatum().getStartzeit().getTime()).equals(datum)){
+                if(buchung.getBetrag() == Double.parseDouble(value) && buchung.getAdressat().equals(to)){
+                    return buchung;
+                }
+            }
+        }
+        return null;        
+    }
+    
+    public static String getStringRepresantation(Date date){
+        return date.getDate() + "." +(date.getMonth()+1) + "." + (date.getYear() + 1900);
     }
 
     /**
@@ -109,7 +134,7 @@ public class GUIHelper {
         if (konto != null) {
             String[][] result = new String[konto.getBuchungen().size()][3];
             for (int i = 0; i < konto.getBuchungen().size(); i++) {
-                result[i][0] = konto.getBuchungen().get(i).getDatum().toString();
+                result[i][0] = GUIHelper.getStringRepresantation(konto.getBuchungen().get(i).getDatum().getStartzeit().getTime());
                 result[i][1] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
                 result[i][2] = konto.getBuchungen().get(i).getAdressat();
 //            return new String[][]{{"Datum", "Betrag", "Empfänger"}, {"erfe","wdwd","wwww"}};
@@ -160,7 +185,7 @@ public class GUIHelper {
             } catch (NumberFormatException e) {
                 return false;
             }
-            konto.addBuchung(new Buchung(valueL, to, date, "", kat));
+            konto.addBuchung(new Buchung(valueL, to, date, verwendungszweck, kat));
             return true;
         }
         return false;

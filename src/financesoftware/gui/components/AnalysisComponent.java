@@ -130,7 +130,9 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
                 yEnd += 100;
             }
             iframe.add(chartPanel);
+            this.setVisible(false);
             this.desktopPane.add(iframe);
+            this.setVisible(true);
         }
         this.analysisPanel.removeAll();
         this.analysisPanel.add(this.desktopPane);

@@ -159,7 +159,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
         if (e.getSource() == this.save) {
             this.saveOrUpdate();
             if (Verschluesselung.save(this.user)) {
-                showSaved();                
+                showSaved();
             }
             return true;
         }
@@ -171,6 +171,8 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
         this.showPanel.removeAll();
         currentPage = 0;
         this.showPanel.add(this.sections.get(this.currentPage));
+        this.getNext().setVisible(true);
+        this.save.setVisible(false);
     }
 
     /**

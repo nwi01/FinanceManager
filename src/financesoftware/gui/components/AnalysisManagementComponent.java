@@ -41,8 +41,8 @@ import org.jfree.chart.JFreeChart;
 public class AnalysisManagementComponent extends ManagementBaseComponent {
 
     private JComboBox analysisBox;
+    private JButton deleteAnalysis;
     private JComboBox<Konto> kontoBox;
-    private JCheckBox checkBoxNewAnalysis;
     private JTextField name;
     private JTextField from;
     private JTextField to;
@@ -102,10 +102,9 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         constraints.gridwidth = 5;
         panel.add(this.analysisBox, constraints);
 
-        constraints.gridy++;
-        constraints.gridx = 0;
+        constraints.gridx = 9;
         constraints.gridwidth = 1;
-        panel.add(this.checkBoxNewAnalysis, constraints);
+        panel.add(this.deleteAnalysis, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -318,22 +317,6 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     }
 
     @Override
-    public void updateContent() {
-        this.availCategories = this.user.getKategorien();
-        this.availCategoriesList.setListData(this.availCategories.toArray());
-
-        this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
-        if(this.kontoBox.getModel().getSize() != 0){
-            this.enableOrDisable(true);
-        }
-        this.analysisBox.setModel(new DefaultComboBoxModel(this.user.getAuswertungen().toArray()));
-        if(!this.user.getAuswertungen().isEmpty()){
-            this.enableOrDisable(true);
-            this.analysisBox.setEnabled(true);
-        }
-    }
-
-    @Override
     public ArrayList<JPanel> getSectionPanels() {
         ArrayList<JPanel> sectionsD = new ArrayList();
         sectionsD.add(this.createBasicStepPanel());
@@ -345,19 +328,31 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.analysisBox) {
+            Analysis ana = (Analysis) this.analysisBox.getSelectedItem();
+            if (ana != null) {
+                this.name.setText(ana.getName());
+                this.from.setText(GUIHelper.getStringRepresantation(ana.getZeitraum().getStartzeit().getTime()));
+                this.to.setText(GUIHelper.getStringRepresantation(ana.getZeitraum().getEndezeit().getTime()));
+
+                if (ana instanceof ChartAnalysis) {
+                    ChartAnalysis chartAna = (ChartAnalysis) ana;
+                    this.currentCharts.clear();
+                    this.currentCharts.addAll(chartAna.getCharts());
+                    this.currentChartsList.setListData(this.currentCharts.toArray());
+                    this.isChartAnalysis.doClick();
+                } else {
+                    CompareAnalysis compareAna = (CompareAnalysis) ana;
+                    this.currentCategories.clear();
+                    this.currentCategories.addAll(compareAna.getKategorien());
+                    this.isCompareAnalysis.doClick();
+                }
+            }
 
         }
 
         if (event.getSource() == this.isChartAnalysis) {
             this.sections.remove(2);
-            this.sections.add(2, this.createChartAnalysis());
-            if (this.checkBoxNewAnalysis.isSelected()) {
-
-            } else {
-                this.currentCharts = ((ChartAnalysis) this.analysisBox.getSelectedItem()).getCharts();
-            }
-
-            this.getNext().setEnabled(true);
+            this.sections.add(2, this.createChartAnalysis());         
         }
 
         if (event.getSource() == this.isCompareAnalysis) {
@@ -413,34 +408,41 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         if (event.getSource() == this.kontoBox) {
         }
 
+        if (event.getSource() == this.deleteAnalysis) {
+            Analysis ana = ((Analysis) this.analysisBox.getSelectedItem());
+            this.user.getAuswertungen().remove(ana);
+            this.updateContent();
+        }
+
     }
 
     @Override
     public void saveOrUpdate() {
-        if (this.checkBoxNewAnalysis.isSelected()) {
-             String name = this.name.getText();
-             Zeitraum zeit = new Zeitraum(Zeitraum.parseCalendar(this.from.getText()), Zeitraum.Intervall.TAEGLICH, Zeitraum.parseCalendar(this.to.getText()));
-             List<Kategorie> kat = this.currentCategories;
-             if(this.isChartAnalysis.isSelected()){
-                 List<JFreeChart> chart = this.currentCharts;
-                 Konto kon = (Konto)this.kontoBox.getSelectedItem();
-                 ChartAnalysis ana = new ChartAnalysis(name, zeit, kat, false, kon);
-                 this.user.addAuswertung(ana);                 
-             }
-             else{
-                 
-             }
-        }
+        
+            String nameS = this.name.getText();
+            Zeitraum zeit = new Zeitraum(Zeitraum.parseCalendar(this.from.getText()), Zeitraum.Intervall.TAEGLICH, Zeitraum.parseCalendar(this.to.getText()));
+            List<Kategorie> kat = GUIHelper.copyCategoryList(this.currentCategories);
+            if (this.isChartAnalysis.isSelected()) {
+                List<ChartEnum> charts = this.currentCharts;
+                Konto kon = (Konto) this.kontoBox.getSelectedItem();
+                ChartAnalysis ana = new ChartAnalysis(nameS, zeit, kat, false, kon);
+                ana.setCharts(charts);
+                this.user.addAuswertung(ana);
+            } else {
+
+            }
     }
 
     @Override
     public void initFields() {
+        this.deleteAnalysis = new JButton("X");
+        this.deleteAnalysis.addActionListener(this);
 
         //Kategorien
         this.currentCategories = new ArrayList();
         this.availCategories = this.user.getKategorien();
-        this.availCategoriesList = new JList(this.availCategories.toArray());
-        this.currentCategoriesList = new JList(this.currentCategories.toArray());
+        this.availCategoriesList = new JList();
+        this.currentCategoriesList = new JList();
         this.addCategoryButton = new JButton(">>");
         this.addCategoryButton.setToolTipText("Zur Auswahl hinzufügen");
         this.addCategoryButton.addActionListener(this);
@@ -458,14 +460,12 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         this.to = new JFormattedTextField(new Date());
         this.to.setPreferredSize(new Dimension(100, 28));
         this.name = new JTextField();
-        this.checkBoxNewAnalysis = new JCheckBox("(neue Auswertung anlegen)");
-        this.checkBoxNewAnalysis.addActionListener(this);
 
         //Diagramme
         this.currentCharts = new ArrayList();
         this.availCharts = ChartFactoryMapper.getAllAvailableCharts();
-        this.availChartsList = new JList(this.availCharts.toArray());
-        this.currentChartsList = new JList(this.currentCharts.toArray());
+        this.availChartsList = new JList();
+        this.currentChartsList = new JList();
         this.addChartButton = new JButton(">>");
         this.addChartButton.setToolTipText("Zur Auswahl hinzufügen");
         this.addChartButton.addActionListener(this);
@@ -473,36 +473,34 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         this.removeChartButton.setToolTipText("Von der Auswahl entfernen");
         this.removeChartButton.addActionListener(this);
         //
-        this.analysisBox = new JComboBox(GUIHelper.getInstance().getUser().getAuswertungen().toArray());
+        this.analysisBox = new JComboBox();
         this.analysisBox.addActionListener(this);
-        if (!GUIHelper.getInstance().getUser().getAuswertungen().isEmpty()) {
-            this.analysisBox.setSelectedIndex(0);
-            Analysis ana = this.user.getAuswertungen().get(0);
-            if (ana instanceof ChartAnalysis) {
-                ChartAnalysis chartAna = (ChartAnalysis) ana;
-                this.currentCharts.clear();
-                this.currentCharts.addAll(chartAna.getCharts());
-                this.currentChartsList.setListData(this.currentCharts.toArray());
-            } else {
-                CompareAnalysis compareAna = (CompareAnalysis) ana;
-                this.currentCategories.clear();
-                this.currentCategories.addAll(compareAna.getKategorien());
-            }
-        } else {
-            this.analysisBox.setEnabled(false);
-            this.checkBoxNewAnalysis.setSelected(true);
-            this.checkBoxNewAnalysis.setEnabled(false);
-        }
 
-        this.kontoBox = new JComboBox(GUIHelper.getInstance().getUser().getKonten().toArray());
+        this.kontoBox = new JComboBox();
         this.kontoBox.addActionListener(this);
-        if (this.kontoBox.getModel().getSize() != 0) {
+    }
 
+    @Override
+    public void updateContent() {
+        this.currentCategoriesList.setListData(this.currentCategories.toArray());
+        this.availCategories = this.user.getKategorien();
+        this.availCategoriesList.setListData(this.availCategories.toArray());
+
+        this.availChartsList.setListData(this.availCharts.toArray());
+        this.currentChartsList.setListData(this.currentCharts.toArray());
+
+        this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+        if (this.kontoBox.getModel().getSize() != 0) {
+            this.enableOrDisable(true);
         } else {
             this.enableOrDisable(false);
         }
-
-        this.getNext().setEnabled(false);
+        this.analysisBox.setModel(new DefaultComboBoxModel(this.user.getAuswertungen().toArray()));
+        if (!this.user.getAuswertungen().isEmpty()) {
+            this.analysisBox.setSelectedIndex(0);
+        } else {
+            this.analysisBox.setEnabled(false);
+        }
     }
 
     private void enableOrDisable(boolean enableOrDisable) {
@@ -510,7 +508,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         this.availChartsList.setEnabled(enableOrDisable);
         this.addChartButton.setEnabled(enableOrDisable);
         this.removeChartButton.setEnabled(enableOrDisable);
-        this.currentChartsList.setEnabled(enableOrDisable);        
+        this.currentChartsList.setEnabled(enableOrDisable);
 
     }
 }

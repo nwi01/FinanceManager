@@ -5,30 +5,25 @@
  */
 package financesoftware.gui.components;
 
+import financesoftware.base.Buchung;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.gui.base.ManagementBaseComponent;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.GUIHelper;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,7 +32,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -99,6 +94,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
         cons.gridy += 3;
         cons.gridx = 0;
+        cons.gridheight = 10;
         panel.add(tableScrollPane, cons);
 
         cons.gridy = 4;
@@ -176,16 +172,26 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        System.out.println("Test");
-
+         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+         
+        String date = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 0);
+        String value = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 1);
+        String to = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 2);
+        
+        Buchung buch = GUIHelper.findBuchung(((Konto)this.accounts.getSelectedItem()).getBuchungen(), date, value, to);
+        if(buch != null){
+            this.bookingDate.setText(GUIHelper.getStringRepresantation(buch.getDatum().getStartzeit().getTime()));
+            this.bookingValue.setText(value);
+            this.bookingTo.setText(to);
+            this.verwendungszweck.setText(buch.getVerwendungszweck());
+        }        
     }
 
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.accounts) {
-            this.setVisible(false);
+            this.currentMoney.setText(((Konto)this.accounts.getSelectedItem()).getAktuellerKontostand() + "");
             this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData((Konto) this.accounts.getSelectedItem()), GUIHelper.getBookingColumnName((Konto) this.accounts.getSelectedItem())));
-            this.setVisible(true);
         }
     }
 
@@ -227,7 +233,9 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.table.setShowHorizontalLines(true);
         this.table.getSelectionModel().addListSelectionListener(this);
         this.tableScrollPane = new JScrollPane(table);
+        this.tableScrollPane.setPreferredSize(new Dimension(400, 200));
         this.table.setFillsViewportHeight(true);
+       
 
         // Spezielle Buchung
         this.bookingDate = new JFormattedTextField(new Date());
