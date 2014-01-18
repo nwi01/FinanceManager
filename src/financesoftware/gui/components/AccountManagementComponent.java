@@ -118,9 +118,20 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                     this.kontoName.setText(((Konto) this.kontoBox.getSelectedItem()).getName());
                     this.kontoNummer.setText(((Konto) this.kontoBox.getSelectedItem()).getKontoNr());
                     this.kontoBLZ.setText(((Konto) this.kontoBox.getSelectedItem()).getBLZ());                    
-                    this.kontoStand.setEnabled(false);
-                } else {
+                    this.kontoStand.setValue(((Konto) this.kontoBox.getSelectedItem()).getAktuellerKontostand());
                     
+                    this.kontoStand.setEnabled(false);
+                    this.kontoBox.setEnabled(true);
+
+               
+                } else {
+                    this.kontoStand.setEnabled(true);
+                    this.kontoBox.setEnabled(false);
+                
+                    this.kontoName.setText("");
+                    this.kontoNummer.setText("");
+                    this.kontoBLZ.setText("");
+                    this.kontoStand.setValue(0);
                 }
 
             } else {
@@ -181,11 +192,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                     this.kontoBox.setVisible(true);
                 }
             }
-            
-             JOptionPane.showMessageDialog(null, newKonto.getAktuellerKontostand(), "Kontostand", JOptionPane.OK_OPTION);
-            
-            
-
+          
         } else {
             String userName = this.name.getText();
             String userPw = this.passwordTF.getPassword().toString();
@@ -325,7 +332,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
         constraints.gridy++;
         constraints.gridx = 0;
-        panel.add(new JLabel("Start Kontostand:"), constraints);
+        panel.add(new JLabel("Kontostand:"), constraints);
 
         constraints.gridx++;
         panel.add(this.kontoStand, constraints);
