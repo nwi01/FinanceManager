@@ -1,0 +1,13 @@
+Ein- & Ausgabe
+Hier wird eine Übersicht über die Buchungen eines 
+jeweiligen Kontos angezeigt. Zudem besteht die 
+Möglichkeit, eine neue Buchung hinzuzufügen.
+Nach Auswahl des Kontos in der Combobox wird der 
+aktuelle Kontostand, sowie die Buchungen, mit Datum, 
+Adressat und Betrag, in einer Tabelle angezeigt.
+Um eine neue Buchung anzulegen muss die Checkbox 
+„neue Buchung anlegen“ ausgewählt sein. Danach können 
+die Kategorie, das Datum, der Betrag und der Adressat 
+eingegeben werden. 
+Nach dem Speichern wird automatisch der neue 
+Kontostand angezeigt.

@@ -28,7 +28,7 @@ public class HelpComponent extends JComponent implements ViewComponent, MouseLis
         GridLayout layout = new GridLayout(1, 2);
         this.setLayout(layout);
 
-        Object[] help = {"Grundlegendes", "Account", "Bla"};
+        Object[] help = {"Konto verwalten", "Kategorien verwalten", "Daueraufträge verwalten", "Ein- & Ausgabe"};
         this.list = new JList(help);
         list.addMouseListener(this);
 

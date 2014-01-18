@@ -1,0 +1,21 @@
+Konto verwalten
+Hier können die Konten eines Benutzers verwaltet werden. 
+Konten können neu angelegt oder bestehende geändert werden.
+
+Neuanlage eines Kontos
+Soll ein neues Konto hinzugefügt werden, muss die Checkbox 
+„neues Konto anlegen“ ausgewählt werden. Darunter muss 
+ausgewählt werden, ob die alte Variante, mit Kontonummer 
+und BLZ, oder die neue Variante, mit IBAN und BIC, verwendet 
+werden soll. Bei Betätigung des entsprechenden Buttons werden 
+die für die Varianten benötigten Felder freigegeben und 
+müssen ausgefüllt werden. Zudem müssen die Felder „Name“ und 
+„Kontostand“ gefüllt werden. Durch Druck des Speichern-Buttons 
+wird das neue Konto dem Benutzer hinzugefügt.
+
+Änderung eines Kontos
+Zum Ändern eines bestehenden Kontos muss das entsprechende 
+Konto aus der Combobox ausgewählt werden. Die entsprechenden 
+Daten werden automatisch in die unten stehenden Felder gefüllt. 
+Dort können die geändert werden. Um die Änderungen zu übernehmen, 
+muss der Speichern-Button betätigt werden.

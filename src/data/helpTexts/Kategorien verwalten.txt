@@ -1,0 +1,17 @@
+Kategorien verwalten
+Hier können die Kategorien für die Ein- und Ausgaben verwaltet 
+werden. Es  besteht die Möglichkeit neue Kategorien anzulegen 
+oder bestehende zu ändern.
+
+Anlage einer Kategorie
+Zur Erstellung einer neuen Kategorie muss die Checkbox 
+„neue Kategorie anlegen“ ausgewählt werden. Dann können Name 
+und Farbe ausgewählt werden. Über die Schaltfläche „Speichern“ 
+wird die neue Kategorie gespeichert.
+
+Änderung einer Kategorie
+Um eine Kategorie zu ändern muss der entsprechende Eintrag aus 
+der Combobox ausgewählt werden. Die Daten werden automatisch 
+in die Eingabefelder übernommen. Über diese können Änderungen 
+an der Kategorie vorgenommen werden. Mit dem Speichern-Button 
+wird die geänderte Kategorie gespeichert.

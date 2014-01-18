@@ -1,0 +1,39 @@
+Daueraufträge  verwalten
+Hier können Daueraufträge angelegt und verwaltet werden. 
+Dazu muss zunächst das Konto ausgewählt werden, welches 
+den Dauerauftrag enthält/enthalten soll.
+
+Neuen Dauerauftrag anlegen
+Um einen neuen Dauerauftrag zu erstellen muss die Checkbox 
+„neuen Dauerauftrag anlegen“ ausgewählt werden. Nun können 
+Kategorie, Startdatum, Adressat, Betrag und das Intervall 
+der Buchungen über die entsprechenden Felder angegeben werden. 
+Es gibt zwei Methoden, um die Laufzeit eines Dauerauftrages 
+festzulegen. Zum einen besteht die Möglichkeit  die Anzahl 
+der Wiederholungen anzugeben. Zum Anderen kann das Endedatum 
+angegeben werden. Hierbei muss beachtet werden, dass unter 
+Umständen am Endedatum nicht mehr gebucht wird. Wird durch das 
+Intervall berechnet, dass am Tag des Endedatum selbst keine 
+Buchung nötig ist, so wird diese auch nicht ausgeführt.
+
+Beispiel
+Startdatum: 01.01.2014
+Intervall: Wöchentlich
+Endedatum: 11.01.2014
+Die erste Buchung wird am 01.01.2014 ausgeführt. Eine Woche 
+später, am 08.01.2014 wird die zweite Buchung ausgeführt. Eine 
+dritte Buchung wird nicht ausgeführt, denn diese wäre am 
+15.01.2014 fällig, wobei hier das Endedatum überschritten wurde. 
+Soll zusätzlich am Endedatum, also am 11.01.2014 eine Buchung 
+erfolgen, so muss die separat über die Ein & Ausgabe verwaltet 
+werden.
+
+Änderung eines Dauerauftrages
+Der Auftrag, welcher geändert werden soll, kann über die Combobox 
+ausgewählt werden. Die Daten werden in die entsprechenden 
+Eingabefelder gefüllt. Änderungen in diesen Feldern werden nach 
+dem Speichern in den Dauerauftrag übernommen.
+Hierbei ist zu beachten, dass sich Änderungen nur auf zukünftige 
+Buchungen des Dauerauftrags auswirken. Bestehende Buchungen bleiben 
+in ihrem Intervall, Datum, Empfänger und Betrag unverändert. 
+Diese müssen gegebenenfalls manuell geändert werden.
