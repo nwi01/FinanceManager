@@ -18,6 +18,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +38,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.InternationalFormatter;
 
 /**
  *
@@ -48,7 +51,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     private JTable table;
     // Spezielle Buchung
     private JTextField bookingDate;
-    private JTextField bookingValue;
+    private JFormattedTextField bookingValue;
     private JTextField bookingTo;
     private JPanel userOverviewPanel;
     private JCheckBox checkBoxNewBooking;
@@ -175,7 +178,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
          ListSelectionModel lsm = (ListSelectionModel)e.getSource();
          
         String date = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 0);
-        String value = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 1);
+        String value = (String)this.table.getModel().getValueAt(e.getFirstIndex(), 1);
         String to = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 2);
         
         Buchung buch = GUIHelper.findBuchung(((Konto)this.accounts.getSelectedItem()).getBuchungen(), date, value, to);
@@ -199,11 +202,11 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     public void saveOrUpdate() {
         if (this.checkBoxNewBooking.isSelected()) {
             Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
-            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getText(), this.bookingTo.getText(), 
+            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getValue().toString(), this.bookingTo.getText(), 
                     selectedKonto, (Kategorie) this.categories.getSelectedItem(), this.verwendungszweck.getText());
 
             this.bookingDate.setText("");
-            this.bookingValue.setText("");
+            this.bookingValue.setValue(new Float(0.00));
             this.bookingTo.setText("");
             this.verwendungszweck.setText("");
             if (saved) {
@@ -241,6 +244,22 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.bookingDate = new JFormattedTextField(new Date());
         this.bookingDate.setPreferredSize(new Dimension(100, 28));
         this.bookingValue = new JFormattedTextField(NumberFormat.getNumberInstance());
+        
+        this.bookingValue = new JFormattedTextField(new Float(0.00));
+        this.bookingValue.setFormatterFactory(new JFormattedTextField.AbstractFormatterFactory() {
+            @Override
+            public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+                NumberFormat format = DecimalFormat.getInstance();
+                format.setMinimumFractionDigits(2);
+                format.setMaximumFractionDigits(2);
+                format.setRoundingMode(RoundingMode.HALF_UP);
+                InternationalFormatter formatter = new InternationalFormatter(format);
+                formatter.setAllowsInvalid(false);
+                
+                return formatter;
+            }
+        });
+        
         this.bookingTo = new JTextField();
         this.userOverviewPanel = new JPanel();
         this.currentMoney = new JFormattedTextField(NumberFormat.getCurrencyInstance());

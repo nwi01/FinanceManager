@@ -21,7 +21,7 @@ public class Konto implements Serializable {
     private String lName = "";
     private String KontoNr = "";
     private double lKontostand;
-    private double startKontoStand;
+    
     private String lBLZ = "";
     private List<Buchung> lBuchungen = new ArrayList();
     private List<Dauerauftrag> lDauerauftraege = new ArrayList();
@@ -90,7 +90,7 @@ public class Konto implements Serializable {
      * @return Kontostand
      */
     public double getAktuellerKontostand() {
-        return Math.round(lKontostand);
+        return lKontostand;
     }
 
     //Getter_Setter
@@ -321,18 +321,13 @@ public class Konto implements Serializable {
     public void setlKontostand(double lKontostand) {
         this.lKontostand = lKontostand;
     }
-
+    
     /**
-     * @return the startKontoStand
+     * 
+     * @return 
      */
-    public double getStartKontoStand() {
-        return startKontoStand;
-    }
-
-    /**
-     * @param startKontoStand the startKontoStand to set
-     */
-    public void setStartKontoStand(double startKontoStand) {
-        this.startKontoStand = startKontoStand;
+    public double getlKontostand()
+    {
+        return lKontostand;
     }
 }

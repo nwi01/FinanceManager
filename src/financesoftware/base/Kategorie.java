@@ -7,6 +7,7 @@ package financesoftware.base;
 
 import java.awt.Color;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -43,7 +44,7 @@ public class Kategorie implements Serializable {
         lBlue = uFarbe.getBlue();
         lGreen = uFarbe.getGreen();
     }
-
+   
     //Getter_Setter
     /**
      * @return the lName

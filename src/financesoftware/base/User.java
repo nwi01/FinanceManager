@@ -56,6 +56,17 @@ public class User implements Serializable
         this.createDefaultCategories();
     }
      
+    public List<Kategorie> copyKategorien()
+    {
+        List<Kategorie> lRueckgabe = new ArrayList<>();
+        
+        for(Kategorie lKat : kategorien)
+        {
+            lRueckgabe.add(new Kategorie(lKat));
+        }
+        return lRueckgabe;
+    }
+     
      /**
       * Standard Kategorien
       * TODO: Sollte aktiviert werden, wenn die verschluesselung klappt

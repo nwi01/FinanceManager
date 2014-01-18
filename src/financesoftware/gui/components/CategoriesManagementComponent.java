@@ -62,9 +62,12 @@ public class CategoriesManagementComponent extends ManagementBaseComponent {
                 } else {
                     this.name.setText("");
                 }
+                this.categoryBox.setEnabled(true);
             } else {
                 this.categoryBox.setSelectedIndex(this.categoryBox.getSelectedIndex());
                 this.checkBoxNewCategory.setSelected(true);
+                this.name.setText("");
+                 this.categoryBox.setEnabled(false);
             }
         }
 

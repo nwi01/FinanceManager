@@ -43,7 +43,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JComboBox<Dauerauftrag> auftraege;
     private JButton deleteAuftraege;
     private JCheckBox checkBoxNewStandingOrder;
-    private JTextField startDate;
+    private JFormattedTextField startDate;
     private JComboBox intervall;
     private JTextField money;
     private JTextField to;
@@ -204,7 +204,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.konten) {
-            this.startDate.setText("");
+            this.startDate.setValue(new Date());
             this.money.setText("");
             this.to.setText("");
             this.verwendungszweck.setText("");
@@ -219,7 +219,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         if (event.getSource() == this.auftraege) {
             Dauerauftrag auf = (Dauerauftrag) this.auftraege.getSelectedItem();
             if (auf != null) {
-                this.startDate.setText(auf.getDatum().toString());
+                this.startDate.setValue(auf.getDatum());
                 this.money.setText(auf.getBetrag() + "");
                 this.to.setText(auf.getAdressat());
                 this.intervall.setSelectedItem(auf.getDatum().getIntervall());
@@ -238,7 +238,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
         if (event.getSource() == this.checkBoxNewStandingOrder) {
             if (!this.checkBoxNewStandingOrder.isSelected()) {
-                this.startDate.setText("");
+                this.startDate.setValue(new Date());
                 this.money.setText("");
                 this.to.setText("");
                 this.verwendungszweck.setText("");
@@ -303,7 +303,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 k.buchen(neu);
             }
 
-            this.startDate.setText("");
+            this.startDate.setValue(new Date());
             this.money.setText("");
             this.to.setText("");
         } else {

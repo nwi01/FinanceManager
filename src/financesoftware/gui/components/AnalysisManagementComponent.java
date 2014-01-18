@@ -440,7 +440,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
         //Kategorien
         this.currentCategories = new ArrayList();
-        this.availCategories = this.user.getKategorien();
+        this.availCategories = this.user.copyKategorien();//this.user.getKategorien();
         this.availCategoriesList = new JList();
         this.currentCategoriesList = new JList();
         this.addCategoryButton = new JButton(">>");
@@ -483,7 +483,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     @Override
     public void updateContent() {
         this.currentCategoriesList.setListData(this.currentCategories.toArray());
-        this.availCategories = this.user.getKategorien();
+        this.availCategories = this.user.copyKategorien();//this.user.getKategorien();
         this.availCategoriesList.setListData(this.availCategories.toArray());
 
         this.availChartsList.setListData(this.availCharts.toArray());
