@@ -40,8 +40,8 @@ public class FinanceSoftwareGUI extends JFrame implements MouseListener {
 
         //Standardangaben fuer das JFrame
         this.setLocation(100, 300);
-        this.setResizable(false);
-        this.setSize(1000, 500);
+//        this.setResizable(false);
+        this.setSize(1200, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Hinzufuegen der Menueleiste zum Frame 

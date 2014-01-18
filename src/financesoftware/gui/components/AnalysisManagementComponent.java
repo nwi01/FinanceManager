@@ -23,7 +23,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -32,7 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -325,14 +323,46 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         return sectionsD;
     }
 
+    private List<Kategorie> getAvailList(List<Kategorie> list) {
+        ArrayList<Kategorie> newList = new ArrayList();
+        List<Kategorie> old = this.user.getKategorien();
+        ArrayList<String> doppelt = new ArrayList();
+        for (Kategorie kat : old) {
+            boolean containts = false;
+            for (Kategorie kat2 : list) {
+                if (kat2.getlName().equals(kat.getlName())) {
+                    containts = true;
+                }
+            }
+
+            if (!containts && !(doppelt.contains(kat.getlName()))) {
+                newList.add(kat);
+                doppelt.add(kat.getlName());
+            }
+        }
+        return newList;
+    }
+
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.analysisBox) {
+            this.analysisBox.setEnabled(true);
             Analysis ana = (Analysis) this.analysisBox.getSelectedItem();
             if (ana != null) {
                 this.name.setText(ana.getName());
                 this.from.setText(GUIHelper.getStringRepresantation(ana.getZeitraum().getStartzeit().getTime()));
                 this.to.setText(GUIHelper.getStringRepresantation(ana.getZeitraum().getEndezeit().getTime()));
+
+                this.currentCategories.clear();
+                this.availCategoriesList.removeAll();
+
+                this.currentCategoriesList.setListData(ana.getKategorien().toArray());
+                this.currentCategories.addAll(ana.getKategorien());
+
+                List<Kategorie> list = getAvailList(ana.getKategorien());
+                this.availCategoriesList.setListData(list.toArray());
+                this.availCategories.clear();
+                this.availCategories.addAll(list);
 
                 if (ana instanceof ChartAnalysis) {
                     ChartAnalysis chartAna = (ChartAnalysis) ana;
@@ -352,7 +382,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
         if (event.getSource() == this.isChartAnalysis) {
             this.sections.remove(2);
-            this.sections.add(2, this.createChartAnalysis());         
+            this.sections.add(2, this.createChartAnalysis());
         }
 
         if (event.getSource() == this.isCompareAnalysis) {
@@ -418,19 +448,19 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void saveOrUpdate() {
-        
-            String nameS = this.name.getText();
-            Zeitraum zeit = new Zeitraum(Zeitraum.parseCalendar(this.from.getText()), Zeitraum.Intervall.TAEGLICH, Zeitraum.parseCalendar(this.to.getText()));
-            List<Kategorie> kat = GUIHelper.copyCategoryList(this.currentCategories);
-            if (this.isChartAnalysis.isSelected()) {
-                List<ChartEnum> charts = this.currentCharts;
-                Konto kon = (Konto) this.kontoBox.getSelectedItem();
-                ChartAnalysis ana = new ChartAnalysis(nameS, zeit, kat, false, kon);
-                ana.setCharts(charts);
-                this.user.addAuswertung(ana);
-            } else {
 
-            }
+        String nameS = this.name.getText();
+        Zeitraum zeit = new Zeitraum(Zeitraum.parseCalendar(this.from.getText()), Zeitraum.Intervall.TAEGLICH, Zeitraum.parseCalendar(this.to.getText()));
+        List<Kategorie> kat = GUIHelper.copyCategoryList(this.currentCategories);
+        if (this.isChartAnalysis.isSelected()) {
+            List<ChartEnum> charts = this.currentCharts;
+            Konto kon = (Konto) this.kontoBox.getSelectedItem();
+            ChartAnalysis ana = new ChartAnalysis(nameS, zeit, kat, false, kon);
+            ana.setCharts(charts);
+            this.user.addAuswertung(ana);
+        } else {
+
+        }
     }
 
     @Override
@@ -483,8 +513,6 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     @Override
     public void updateContent() {
         this.currentCategoriesList.setListData(this.currentCategories.toArray());
-        this.availCategories = this.user.copyKategorien();//this.user.getKategorien();
-        this.availCategoriesList.setListData(this.availCategories.toArray());
 
         this.availChartsList.setListData(this.availCharts.toArray());
         this.currentChartsList.setListData(this.currentCharts.toArray());
@@ -500,6 +528,9 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
             this.analysisBox.setSelectedIndex(0);
         } else {
             this.analysisBox.setEnabled(false);
+            this.availCategoriesList.setListData(this.user.getKategorien().toArray());
+            this.availCategories.clear();
+            this.availCategories.addAll(this.user.getKategorien());
         }
     }
 

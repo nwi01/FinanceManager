@@ -11,6 +11,7 @@ import financesoftware.base.analysis.ChartAnalysis;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.ChartFactoryMapper;
 import financesoftware.tools.GUIHelper;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -20,15 +21,19 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import static java.lang.Math.random;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -49,13 +54,14 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
     private User user = GUIHelper.getInstance().getUser();
     private JPanel analysisPanel = new JPanel();
     private JDesktopPane desktopPane = new JDesktopPane();
+    private JFrame dummy = new JFrame();
     private JPanel comparePanel = new JPanel();
 
     public AnalysisComponent() {
         super(true);
         initFields();
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        desktopPane.setPreferredSize(dim);
+//        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        desktopPane.setPreferredSize(new Dimension(1000, 800));
         this.mainPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints cons = new GridBagConstraints();
@@ -86,21 +92,32 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
         cons.gridy++;
         cons.gridwidth = 10;
         cons.gridheight = 10;
-        this.mainPanel.add(analysisPanel, cons);
-
-        this.createTestIFrames1(desktopPane);
-        this.createTestIFrames2(desktopPane);
-
+//        this.dummy.add(desktopPane);
+        this.mainPanel.add(desktopPane, cons);
         this.setVisible(true);
+    }
+
+    private void updateDesktopPane() {
+        this.mainPanel.remove(this.desktopPane);
+        GridBagConstraints cons = new GridBagConstraints();
+        cons.gridx = 0;
+        cons.gridy = 2;
+        cons.gridwidth = 10;
+        cons.gridheight = 10;
+        cons.fill = GridBagConstraints.HORIZONTAL;
+        cons.anchor = GridBagConstraints.CENTER;
+        cons.insets = new Insets(5, 5, 5, 500);
+        this.mainPanel.add(desktopPane, cons);
     }
 
     private void initFields() {
         this.analysisBox = new JComboBox(this.user.getAuswertungen().toArray());
         this.analysisBox.addActionListener(this);
-        if(!this.user.getAuswertungen().isEmpty()){
+        if (!this.user.getAuswertungen().isEmpty()) {
             this.analysisBox.setSelectedIndex(0);
         }
         this.analysisPanel.setPreferredSize(new Dimension(500, 500));
+        this.analysisPanel.add(this.desktopPane);
     }
 
     private void createChartAnalysis() {
@@ -110,10 +127,12 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
         List<JFreeChart> charts = ChartFactoryMapper.getInstance().getChartsByAnalysis(ana);
         int xStart = 0;
         int yStart = 0;
-        int xEnd = 100;
-        int yEnd = 100;
+        int xEnd = 500;
+        int yEnd = 400;
         for (JFreeChart chart : charts) {
 
+            //Setzen der chart werte:
+//            ChartFactoryMapper.
             JInternalFrame iframe = new JInternalFrame("Chart", true, true, true, true);
             iframe.setBounds(xStart, yStart, xEnd, yEnd);
             ChartPanel chartPanel = new ChartPanel(chart);
@@ -121,21 +140,20 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
             chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
             chartPanel.setVisible(true);
 
-            xStart += 100;
-            xEnd += 100;
-            if (xStart > 500) {
+            xStart += 400;
+            xEnd += 500;
+            if (xStart >= 800) {
                 xStart = 0;
-                yStart += 100;
+                yStart += 400;
                 xEnd = 0;
-                yEnd += 100;
+                yEnd += 400;
             }
             iframe.add(chartPanel);
-            this.setVisible(false);
+            iframe.setVisible(true);
             this.desktopPane.add(iframe);
-            this.setVisible(true);
         }
-        this.analysisPanel.removeAll();
-        this.analysisPanel.add(this.desktopPane);
+        this.updateDesktopPane();
+//        this.setVisible(true);
     }
 
     private void createCompareAnalysis() {
@@ -155,103 +173,18 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
         }
     }
 
-    private void createTestIFrames1(JDesktopPane desktopPane) {
-        JInternalFrame iframe = new JInternalFrame("Chart 1", true, true, true, true);
-
-//        iframe.setBounds((int) (4 * 100), (int) (4 * 100),
-//                100 + (int) (4 * 400), 100 + (int) (4 * 300));
-        iframe.setBounds(100, 100, 300, 300);
-
-        iframe.add(createTestPie());
-        iframe.setVisible(true);
-//        iframe.setSize( /* width = */ 200, /* height = */ 100 );
-
-        desktopPane.add(iframe);
-    }
-
-    private void createTestIFrames2(JDesktopPane desktopPane) {
-        JInternalFrame iframe = new JInternalFrame("Chart 1", true, true, true, true);
-
-//        iframe.setBounds((int) (4 * 100), (int) (4 * 100),
-//                100 + (int) (4 * 400), 100 + (int) (4 * 300));
-        iframe.setBounds(300, 300, 500, 500);
-
-        iframe.add(createTestPie());
-        iframe.setVisible(true);
-//        iframe.setSize( /* width = */ 200, /* height = */ 100 );
-
-        desktopPane.add(iframe);
-    }
-
-    private JComponent createTestPie() {
-        PieDataset dataset = createDataset();
-        // based on the dataset we create the chart
-        JFreeChart chart = createChart(dataset, chartTitle);
-        // we put the chart into a panel
-        ChartPanel chartPanel = new ChartPanel(chart);
-        // default size
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-
-        chartPanel.setVisible(true);
-        return chartPanel;
-    }
-
-    /**
-     * * Creates a sample dataset
-     */
-    private PieDataset createDataset() {
-        DefaultPieDataset result = new DefaultPieDataset();
-        result.setValue("Allgemein", 29);
-        result.setValue("Essen", 20);
-        result.setValue("Freundin", 51);
-        return result;
-
-    }
-
-    private JFreeChart createChart(PieDataset dataset, String title) {
-
-        JFreeChart chart = ChartFactory.createPieChart3D(title, // chart title
-                dataset, // data
-                true, // include legend
-                true,
-                false);
-
-        PiePlot3D plot = (PiePlot3D) chart.getPlot();
-        plot.setStartAngle(290);
-        plot.setDirection(Rotation.CLOCKWISE);
-        plot.setForegroundAlpha(0.5f);
-        return chart;
-
-    }
-
-    private JPanel createTopPanel() {
-        JPanel panel = new JPanel();
-
-        GridLayout layout = new GridLayout(1, 3);
-        panel.setLayout(layout);
-        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-        JLabel label = new JLabel("Auswertungen:");
-        panel.add(label);
-
-        panel.add(createAnalysisComboBox());
-        panel.setVisible(true);
-        return panel;
-    }
-
-    private JPanel createAnalysisComboBox() {
-        JPanel panel = new JPanel();
-        JComboBox comboBox = new JComboBox(GUIHelper.getInstance().getAllAnaysisVariants());
-        return panel;
-    }
-
     @Override
     public void updateContent() {
         this.analysisBox.setModel(new DefaultComboBoxModel(this.user.getAuswertungen().toArray()));
+        if (this.user.getAuswertungen().size() != 0) {
+            this.analysisBox.setSelectedIndex(0);
+        }
     }
 
     @Override
-    public JComponent getComponent() {
+    public JComponent getComponent() 
+    {
+        this.updateContent();
         return this;
     }
 }

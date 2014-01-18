@@ -80,6 +80,11 @@ public class ChartFactoryMapper {
                 plot.setStartAngle(290);
                 plot.setDirection(Rotation.CLOCKWISE);
                 plot.setForegroundAlpha(0.5f);
+
+                for (Kategorie kat : mapping.keySet()) {
+                    plot.setSectionPaint(kat.getlName(), kat.Farbe());
+                }
+
                 return chartInstance;
             }
 
@@ -88,7 +93,7 @@ public class ChartFactoryMapper {
                 for (Kategorie kat : mapping.keySet()) {
                     dataSet.addValue(mapping.get(kat), kat.getlName(), "Ausgaben");
                 }
-                
+
                 chartInstance = org.jfree.chart.ChartFactory.createBarChart("", "", "", dataSet);
                 PiePlot3D plot = (PiePlot3D) chartInstance.getPlot();
                 plot.setStartAngle(290);
@@ -103,8 +108,8 @@ public class ChartFactoryMapper {
     public static ArrayList<ChartEnum> getAllAvailableCharts() {
         ArrayList<ChartEnum> charts = new ArrayList();
         ChartEnum[] array = ChartEnum.values();
-        
-        for(ChartEnum enumDummy : array){
+
+        for (ChartEnum enumDummy : array) {
             charts.add(enumDummy);
         }
         return charts;

@@ -290,7 +290,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         Zeitraum.Intervall i = (Zeitraum.Intervall) this.intervall.getSelectedItem();
         double betrag = Double.parseDouble(this.money.getValue().toString());
         
-        JOptionPane.showMessageDialog(null, betrag, "Anmeldung fehlgeschlagen", JOptionPane.OK_OPTION);
+//        JOptionPane.showMessageDialog(null, betrag, "Anmeldung fehlgeschlagen", JOptionPane.OK_OPTION);
         
         String adressat = this.to.getText();
         boolean bWdh = this.repeat.isSelected();

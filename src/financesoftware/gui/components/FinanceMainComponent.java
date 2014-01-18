@@ -89,15 +89,17 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
 //        cons.gridx++;
 //        panel.add(this.currentMoney, cons);
-        cons.gridx++;
-        cons.gridheight = 20;
-        JSeparator sep2 = new JSeparator(JSeparator.VERTICAL);
-        sep2.setPreferredSize(new Dimension(10, 500));
-        panel.add(sep2, cons);
+//        cons.gridx++;
+//        cons.gridheight = 20;
+//        cons.gridwidth = 8;
+//        JSeparator sep2 = new JSeparator(JSeparator.VERTICAL);
+//        sep2.setPreferredSize(new Dimension(10, 500));
+//        panel.add(sep2, cons);
 
-        cons.gridy += 3;
+        cons.gridy += 2;
         cons.gridx = 0;
-        cons.gridheight = 10;
+        cons.gridheight = 15;
+        cons.gridwidth = 1;
         panel.add(tableScrollPane, cons);
 
         cons.gridy = 4;
@@ -236,7 +238,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.table.setShowHorizontalLines(true);
         this.table.getSelectionModel().addListSelectionListener(this);
         this.tableScrollPane = new JScrollPane(table);
-        this.tableScrollPane.setPreferredSize(new Dimension(400, 200));
+        this.tableScrollPane.setPreferredSize(new Dimension(500, 400));
         this.table.setFillsViewportHeight(true);
        
 

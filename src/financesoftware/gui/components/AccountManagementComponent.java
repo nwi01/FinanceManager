@@ -72,33 +72,43 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.kontoBox) {
             currentKonto = (Konto) this.kontoBox.getSelectedItem();
-            
+
             //Falls ein bestehendes Konto angeschaut wird soll der Aktuelle KontoStand nicht veränderbar sein
-            if(!this.checkBoxNewAccount.isSelected()){
+            if (!this.checkBoxNewAccount.isSelected()) {
 
                 this.kontoStand.setEnabled(false);
                 this.kontoBox.setEnabled(true);
+                this.oldStyle.setEnabled(false);
+                this.newStyle.setEnabled(false);
 
                 this.kontoName.setText(currentKonto.getName());
-                this.kontoNummer.setText(currentKonto.getKontoNr());
-                this.kontoBLZ.setText(currentKonto.getBLZ());
                 this.kontoStand.setValue(currentKonto.getAktuellerKontostand());
-            }
-            else
-            {
+                if (currentKonto.isOldStyle()) {
+                    this.kontoNummer.setEnabled(true);
+                    this.kontoBLZ.setEnabled(true);
+                    this.kontoBIC.setEnabled(false);
+                    this.kontoIBAN.setEnabled(false);
+                } else {
+                    this.kontoBIC.setEnabled(true);
+                    this.kontoIBAN.setEnabled(true);
+                    this.kontoNummer.setEnabled(false);
+                    this.kontoBLZ.setEnabled(false);
+                }
+            } else {
                 this.kontoStand.setEnabled(true);
                 this.kontoBox.setEnabled(false);
-                
+
+                this.oldStyle.setEnabled(false);
+                this.newStyle.setEnabled(false);
                 this.kontoName.setText("");
                 this.kontoNummer.setText("");
                 this.kontoBLZ.setText("");
                 this.kontoStand.setValue(0);
             }
-           
+
             int index = this.user.getKonten().indexOf(currentKonto);
             this.buchungBox = new JComboBox(this.user.getKonten().get(index).getBuchungen().toArray());
             this.dauerauftragBox = new JComboBox(this.user.getKonten().get(index).getDauerauftraege().toArray());
-            
 
             if (currentKonto.isOldStyle()) {
                 this.oldStyle.setSelected(true);
@@ -115,19 +125,37 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             // Die Box wird abgewaehlt
             if (!checkBoxNewAccount.isSelected()) {
                 if (this.kontoBox.getModel().getSize() != 0) {
-                    this.kontoName.setText(((Konto) this.kontoBox.getSelectedItem()).getName());
-                    this.kontoNummer.setText(((Konto) this.kontoBox.getSelectedItem()).getKontoNr());
-                    this.kontoBLZ.setText(((Konto) this.kontoBox.getSelectedItem()).getBLZ());                    
-                    this.kontoStand.setValue(((Konto) this.kontoBox.getSelectedItem()).getAktuellerKontostand());
-                    
+                    Konto kon = (Konto) this.kontoBox.getSelectedItem();
+                    this.kontoName.setText(kon.getName());
+                    if (kon.isOldStyle()) {
+                        this.kontoNummer.setText(kon.getKontoNr());
+                        this.kontoBLZ.setText(kon.getBLZ());
+                        this.kontoNummer.setEnabled(true);
+                        this.kontoBLZ.setEnabled(true);
+                        this.kontoIBAN.setEnabled(false);
+                        this.kontoBIC.setEnabled(false);
+                    } else {
+//                        this.kontoIBAN.setText(kon.getIban());
+//                        this.kontoBIC.setText(kon.getBic());
+//                        this.kontoNummer.setEnabled(false);
+//                        this.kontoBLZ.setEnabled(false);
+//                        this.kontoIBAN.setEnabled(true);
+//                        this.kontoBIC.setEnabled(true);
+                        if (this.kontoBox.getModel().getSize() != 0) {
+                            this.kontoBox.setSelectedIndex(0);
+                        }
+
+                    }
+
+                    this.kontoStand.setValue(kon.getAktuellerKontostand());
+
                     this.kontoStand.setEnabled(false);
                     this.kontoBox.setEnabled(true);
 
-               
                 } else {
                     this.kontoStand.setEnabled(true);
                     this.kontoBox.setEnabled(false);
-                
+
                     this.kontoName.setText("");
                     this.kontoNummer.setText("");
                     this.kontoBLZ.setText("");
@@ -135,10 +163,8 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 }
 
             } else {
-                //Event ausloesen
-                if (this.kontoBox.getSelectedIndex() != -1) {
-                    this.kontoBox.setSelectedIndex(this.kontoBox.getSelectedIndex());
-                }
+                this.oldStyle.setEnabled(true);
+                this.newStyle.setEnabled(true);
                 this.kontoStand.setEnabled(true);
             }
         }
@@ -174,10 +200,10 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String kontoNrS = this.kontoNummer.getText();
             String kontoBLZS = this.kontoBLZ.getText();
             double kontoStandD = Double.parseDouble(this.kontoStand.getValue().toString());
-            
+
             String kontoIBANS = this.kontoIBAN.getText();
             String kontoBICS = this.kontoBIC.getText();
-            
+
             Konto newKonto = null;
             if (this.oldStyle.isSelected()) {
                 if (!(nameS.isEmpty() && kontoNrS.isEmpty() && kontoBLZS.isEmpty())) {
@@ -192,7 +218,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                     this.kontoBox.setVisible(true);
                 }
             }
-          
+
         } else {
             String userName = this.name.getText();
             String userPw = this.passwordTF.getPassword().toString();
@@ -202,7 +228,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             String kontoBLZS = this.kontoBLZ.getText();
             String kontoIBANS = this.kontoIBAN.getText();
             String kontoBICS = this.kontoBIC.getText();
-           
+
             if (this.oldStyle.isSelected()) {
                 if (!nameS.equals("") && !kontoNrS.equals("") && !kontoBLZS.equals("")) {
                     currentKonto.setName(nameS);
@@ -376,7 +402,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         group.add(this.oldStyle);
         group.add(this.newStyle);
 
-        
         this.kontoStand = new JFormattedTextField(new Float(10.01));
         this.kontoStand.setFormatterFactory(new AbstractFormatterFactory() {
             @Override
@@ -387,12 +412,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 format.setRoundingMode(RoundingMode.HALF_UP);
                 InternationalFormatter formatter = new InternationalFormatter(format);
                 formatter.setAllowsInvalid(false);
-                
+
                 return formatter;
             }
-});
-            
-            
+        });
+
 //        this.kontoStand = new JFormattedTextField(NumberFormat.getNumberInstance());
         this.kontoStand.setPreferredSize(new Dimension(100, 28));
         this.kontoIBAN = new JTextField();
@@ -426,7 +450,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.enableOrDisableFields(true);
         } else {
             this.enableOrDisableFields(false);
-            this.checkBoxNewAccount.setSelected(true);            
+            this.checkBoxNewAccount.setSelected(true);
         }
     }
 

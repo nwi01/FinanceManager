@@ -229,7 +229,7 @@ public class Konto implements Serializable {
 
         double part = 0;
         for (Buchung buchung : this.getBuchungen()) {
-            if (buchung.getKategorie().equals(kategorie)) {
+            if (buchung.getKategorie().getlName().equals(kategorie.getlName())) {
                 part += buchung.getBetrag();
             }
         }
