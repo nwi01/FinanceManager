@@ -7,6 +7,7 @@ package financesoftware.base;
 
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -73,6 +74,16 @@ public class Zeitraum {
         lIntervall = null;
         lAnzahlWdh = 0;
         lEndezeit  = startzeit;
+    }
+    
+    public static String formatDate(Calendar datum)
+    {
+        String lRueckgabe = "";
+        lRueckgabe += datum.get(Calendar.DAY_OF_MONTH) + ".";
+        lRueckgabe += (datum.get(Calendar.MONTH)+1) + ".";
+        lRueckgabe += datum.get(Calendar.YEAR);
+        
+        return lRueckgabe;
     }
     
     /**

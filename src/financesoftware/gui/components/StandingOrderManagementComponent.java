@@ -14,6 +14,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,12 +28,14 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.InternationalFormatter;
 
 /**
  *
@@ -43,9 +47,9 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JComboBox<Dauerauftrag> auftraege;
     private JButton deleteAuftraege;
     private JCheckBox checkBoxNewStandingOrder;
-    private JFormattedTextField startDate;
+    private JTextField startDate;
     private JComboBox intervall;
-    private JTextField money;
+    private JFormattedTextField money;
     private JTextField to;
     private JRadioButton repeat;
     private JRadioButton untilDate;
@@ -204,7 +208,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.konten) {
-            this.startDate.setValue(new Date());
+            this.startDate.setText("");
             this.money.setText("");
             this.to.setText("");
             this.verwendungszweck.setText("");
@@ -219,8 +223,8 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         if (event.getSource() == this.auftraege) {
             Dauerauftrag auf = (Dauerauftrag) this.auftraege.getSelectedItem();
             if (auf != null) {
-                this.startDate.setValue(auf.getDatum());
-                this.money.setText(auf.getBetrag() + "");
+                this.startDate.setText(Zeitraum.formatDate(auf.getDatum().getStartzeit()));
+                this.money.setValue(auf.getBetrag());
                 this.to.setText(auf.getAdressat());
                 this.intervall.setSelectedItem(auf.getDatum().getIntervall());
                 this.verwendungszweck.setText(auf.getVerwendungszweck());
@@ -238,7 +242,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
 
         if (event.getSource() == this.checkBoxNewStandingOrder) {
             if (!this.checkBoxNewStandingOrder.isSelected()) {
-                this.startDate.setValue(new Date());
+                this.startDate.setText("");
                 this.money.setText("");
                 this.to.setText("");
                 this.verwendungszweck.setText("");
@@ -284,7 +288,10 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         Dauerauftrag d = (Dauerauftrag) this.auftraege.getSelectedItem();
         String startzeit = this.startDate.getText();
         Zeitraum.Intervall i = (Zeitraum.Intervall) this.intervall.getSelectedItem();
-        double betrag = Double.parseDouble(this.money.getText());
+        double betrag = Double.parseDouble(this.money.getValue().toString());
+        
+        JOptionPane.showMessageDialog(null, betrag, "Anmeldung fehlgeschlagen", JOptionPane.OK_OPTION);
+        
         String adressat = this.to.getText();
         boolean bWdh = this.repeat.isSelected();
         int wdh = (Integer) this.repeatTextField.getValue();
@@ -303,7 +310,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 k.buchen(neu);
             }
 
-            this.startDate.setValue(new Date());
+            this.startDate.setText("");
             this.money.setText("");
             this.to.setText("");
         } else {
@@ -391,7 +398,21 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.startDate = new JFormattedTextField(new Date());
         this.startDate.setPreferredSize(new Dimension(100, 28));
         this.startDate.addActionListener(this);
-        this.money = new JFormattedTextField(NumberFormat.getNumberInstance());
+        this.money = new JFormattedTextField(new Float(0.00));
+        this.money.setFormatterFactory(new JFormattedTextField.AbstractFormatterFactory() {
+            @Override
+            public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+                NumberFormat format = DecimalFormat.getInstance();
+                format.setMinimumFractionDigits(2);
+                format.setMaximumFractionDigits(2);
+                format.setRoundingMode(RoundingMode.HALF_UP);
+                InternationalFormatter formatter = new InternationalFormatter(format);
+                formatter.setAllowsInvalid(false);
+                
+                return formatter;
+            }
+});
+        
         this.to = new JTextField();
 
         this.auftraege = new JComboBox();
