@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -140,6 +141,7 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
             this.dispose();
         } else {
             this.passwordTF.setForeground(Color.RED);
+            JOptionPane.showMessageDialog(null, "Falscher Name oder falsches Passwort", "Anmeldung fehlgeschlagen", JOptionPane.OK_OPTION);
         }
     }
 
@@ -154,6 +156,10 @@ public class PermissionCheck extends JDialog implements ActionListener, MouseLis
                     GUIHelper.getInstance().setUser(newUser);
                     this.dispose();
                 }
+            }
+            else
+            {
+               JOptionPane.showMessageDialog(null, "Bitte Benutzername und Passwort eingeben", "Registrierung fehlgeschlagen", JOptionPane.OK_OPTION); 
             }
         }
     }
