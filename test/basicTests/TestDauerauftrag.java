@@ -59,7 +59,7 @@ public class TestDauerauftrag {
         k.addDauerauftrag(d);
         assertTrue(k.getDauerauftraege().size() == 1);
         k.buchen(d);
-        assertTrue(k.getBuchungen().size() == 2);
+        assertTrue(k.getBuchungen().size() == 3);
         assertTrue(d.getAdressat().equals("Hans"));
         assertTrue(d.getBetrag() == 5.3);
         assertTrue(d.getAktiv() == true);
@@ -75,7 +75,7 @@ public class TestDauerauftrag {
         k.addDauerauftrag(d1);
         assertTrue(k.getDauerauftraege().size() == 2);
         k.buchen(d1);
-        assertTrue(k.getBuchungen().size() == 2);         
+        assertTrue(k.getBuchungen().size() == 3);         
         assertTrue(d1.getAktiv() == false);
     }
     
