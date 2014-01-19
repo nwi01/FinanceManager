@@ -476,7 +476,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.enableOrDisableFields(true);
         } else {
             this.enableOrDisableFields(false);
-            this.checkBoxNewAccount.doClick();
+            this.checkBoxNewAccount.setSelected(true);            
         }
     }
 
