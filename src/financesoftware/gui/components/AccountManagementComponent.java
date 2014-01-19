@@ -108,8 +108,8 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 this.kontoStand.setEnabled(true);
                 this.kontoBox.setEnabled(false);
 
-                this.oldStyle.setEnabled(false);
-                this.newStyle.setEnabled(false);
+                this.oldStyle.setEnabled(true);
+                this.newStyle.setEnabled(true);
                 this.kontoName.setText("");
                 this.kontoNummer.setText("");
                 this.kontoBLZ.setText("");
@@ -476,7 +476,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.enableOrDisableFields(true);
         } else {
             this.enableOrDisableFields(false);
-            this.checkBoxNewAccount.setSelected(true);
+            this.checkBoxNewAccount.doClick();
         }
     }
 
