@@ -46,7 +46,7 @@ public class TestCSVImport {
         */
         
         User lUser = new User("test", "test");
-        lUser.addKonto(new Konto("allgKonto", "45614", "31251220", 100.00));
+        lUser.addKonto(new Konto("allgKonto", "45614", "31251220", 0.00));
         GUIHelper.getInstance().setUser(lUser);
         
         
@@ -56,14 +56,12 @@ public class TestCSVImport {
         System.out.println(lUser.getKonten().get(0).getAktuellerKontostand());
         assertTrue(lUser.getKonten().get(0).getBuchungen().get(0).getBetrag() == -555.78);
         
-        
         /*
         boolean lPBTest = CSVImport.Import("PB", "./PBTestDatei.csv");
         assertTrue(lPBTest);
         System.out.println("PBImport stattgefunden");
-        assertTrue(lUser.getKonten().get(0).getAktuellerKontostand() == -555.78);
-       */
-                
+        assertTrue(lUser.getKonten().get(0).getAktuellerKontostand() == -555.78);*/
+                       
         boolean lVBTest = CSVImport.Import("VB", "./VBTestDatei.csv");
         assertTrue(lVBTest);
         System.out.println("VBImport stattgefunden");
