@@ -120,7 +120,7 @@ public class Zeitraum {
         int monate = tmp[1];        
                
         GregorianCalendar kalender = new GregorianCalendar(startzeit.get(Calendar.YEAR),
-                                                           startzeit.get(Calendar.MONTH) + 1, 
+                                                           startzeit.get(Calendar.MONTH), 
                                                            startzeit.get(Calendar.DAY_OF_MONTH));        
         if(tage != 0){
             tage *= anzahlWdh;     
