@@ -491,6 +491,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
             CompareAnalysis ana = new CompareAnalysis(nameS, zeit, kat, true, (Konto) this.konto1.getSelectedItem(), (Konto) this.konto2.getSelectedItem());
             this.user.addAuswertung(ana);
         }
+        this.updateContent();
     }
 
     @Override
