@@ -18,6 +18,7 @@ import java.util.List;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.Dataset;
@@ -46,6 +47,19 @@ public class ChartFactoryMapper {
         }
         return instance;
     }
+    
+    private List<Kategorie> getRealList(List<Kategorie> list){
+        List<Kategorie> real = new ArrayList(this.user.getKategorien());
+        List<Kategorie> realContainer = this.user.getKategorien();
+        for(Kategorie kat : list){            
+                for(Kategorie kat2 : real){
+                    if(kat.getlName().equals(kat2.getlName())){
+                        realContainer.add(kat2.copy());
+                    }
+                }
+        }
+        return realContainer;
+    }
 
     /**
      *
@@ -55,8 +69,8 @@ public class ChartFactoryMapper {
      */
     public List<JFreeChart> getChartsByAnalysis(ChartAnalysis ana) {
         Konto konto = ana.getKonto();
-
-        HashMap<Kategorie, Double> mappingCategory = konto.getAllParts(ana.getKategorien());
+        List<Kategorie> newList = getRealList(ana.getKategorien());
+        HashMap<Kategorie, Double> mappingCategory = konto.getAllParts(newList);
 
         ArrayList<JFreeChart> charts = new ArrayList();
 //        if
@@ -84,6 +98,7 @@ public class ChartFactoryMapper {
 
                 for (Kategorie kat : mapping.keySet()) {
                     plot.setSectionPaint(kat.getlName(), kat.Farbe());
+                    plot.getSectionPaint(kat.getlName());
                 }
 
                 return chartInstance;
@@ -97,11 +112,15 @@ public class ChartFactoryMapper {
 
                 chartInstance = org.jfree.chart.ChartFactory.createBarChart("", "", "", dataSet);
                 CategoryPlot plot = (CategoryPlot) chartInstance.getPlot();
+                CategoryItemRenderer ren = plot.getRenderer();
 //                plot.setStartAngle(290);
 //                plot.setDirection(Rotation.CLOCKWISE);
                 plot.setForegroundAlpha(0.5f);
+                int count = 0;
                 for (Kategorie kat : mapping.keySet()) {
-//                    plot.setSectionPaint(kat.getlName(), kat.Farbe());
+//                    plot. (kat.getlName(), kat.Farbe());
+                    ren.setSeriesPaint(count, kat.Farbe());
+                    count++;
 //                    plot.set
                 }
                 return chartInstance;

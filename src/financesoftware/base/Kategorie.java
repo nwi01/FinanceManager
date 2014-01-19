@@ -36,13 +36,17 @@ public class Kategorie implements Serializable {
         lBlue = uFarbe.getBlue();
         lGreen = uFarbe.getGreen();
     }
-   
+
     //Getter_Setter
     /**
      * @return the lName
      */
     public String getlName() {
         return lName;
+    }
+
+    public Kategorie copy() {
+        return new Kategorie(this.lName, this.Farbe());
     }
 
     /**

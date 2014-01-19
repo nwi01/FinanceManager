@@ -52,8 +52,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     //Konto
     private JCheckBox checkBoxNewAccount;
     private JComboBox<Konto> kontoBox;
-    private JButton deleteKonto;
-    private JButton importKonto;
+    private JButton deleteKonto;    
     private JComboBox<Buchung> buchungBox;
     private JComboBox<Dauerauftrag> dauerauftragBox;
     private JTextField kontoName;
@@ -190,16 +189,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         if (event.getSource() == this.deleteKonto) {
             this.user.getKonten().remove((Konto) this.kontoBox.getSelectedItem());
             this.updateContent();
-        }
-
-        if (event.getSource() == this.importKonto) {
-            JFileChooser chooser = new JFileChooser();
-            int ret = chooser.showOpenDialog(this);
-            if (ret == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
-                CSVImport.Import(null, file.getPath());
-                this.updateContent();
-            }
         }
     }
 
@@ -383,11 +372,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         panel.add(this.kontoStand, constraints);
 
         constraints.gridy++;
-        constraints.gridx = 2;
-        constraints.gridwidth = 1;
-        panel.add(this.importKonto, constraints);
-
-        constraints.gridy++;
         constraints.gridx = 0;
         constraints.gridwidth = 8;
         constraints.insets = new Insets(5, 5, 200, 5);
@@ -407,8 +391,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
-        this.importKonto = new JButton("Import");
-        this.importKonto.addActionListener(this);
         this.deleteKonto = new JButton("X");
         this.deleteKonto.addActionListener(this);
         this.name = new JTextField();

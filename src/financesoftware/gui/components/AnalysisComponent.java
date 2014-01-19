@@ -131,7 +131,7 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
             chartPanel.setVisible(true);
 
             xStart += 400;
-            xEnd += 500;
+            xEnd += 300;
             if (xStart >= 800) {
                 xStart = 0;
                 yStart += 400;

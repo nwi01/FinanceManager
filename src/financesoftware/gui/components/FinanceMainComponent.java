@@ -6,6 +6,7 @@
 package financesoftware.gui.components;
 
 import financesoftware.base.Buchung;
+import financesoftware.base.CSVImport;
 import financesoftware.base.Kategorie;
 import financesoftware.base.Konto;
 import financesoftware.gui.base.ManagementBaseComponent;
@@ -18,14 +19,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,6 +53,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     private JTextField currentMoney;
     private JComboBox<Konto> accounts;
     private JTable table;
+    private JButton importKonto;
     // Spezielle Buchung
     private JTextField bookingDate;
     private JFormattedTextField bookingValue;
@@ -148,6 +153,13 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         cons.gridheight = 3;
         panel.add(this.verwendungszweck, cons);
 
+        cons.gridy += 4;
+        cons.gridx--;
+        cons.gridwidth = 1;
+        cons.gridheight = 1;
+
+        panel.add(this.importKonto, cons);
+
         return panel;
     }
 
@@ -194,11 +206,11 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     }
 
     private void setCategorieByName(String name) {
-        for(int i = 0; i < this.categories.getModel().getSize(); i++){
-            if(this.categories.getModel().getElementAt(i).getlName().equals(name)){
+        for (int i = 0; i < this.categories.getModel().getSize(); i++) {
+            if (this.categories.getModel().getElementAt(i).getlName().equals(name)) {
                 this.categories.getModel().setSelectedItem(this.categories.getModel().getElementAt(i));
             }
-            
+
         }
     }
 
@@ -207,6 +219,16 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         if (event.getSource() == this.accounts) {
             this.currentMoney.setText(((Konto) this.accounts.getSelectedItem()).getAktuellerKontostand() + "");
             this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData((Konto) this.accounts.getSelectedItem()), GUIHelper.getBookingColumnName((Konto) this.accounts.getSelectedItem())));
+        }
+
+        if (event.getSource() == this.importKonto) {
+            JFileChooser chooser = new JFileChooser();
+            int ret = chooser.showOpenDialog(this);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                CSVImport.Import(null, file.getPath());
+                this.updateContent();
+            }
         }
     }
 
@@ -240,6 +262,8 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     @Override
     public void initFields() {
+        this.importKonto = new JButton("Import");
+        this.importKonto.addActionListener(this);
         this.verwendungszweck = new JTextArea();
         this.verwendungszweck.setPreferredSize(new Dimension(150, 100));
         this.categories = new JComboBox(this.user.getKategorien().toArray());
