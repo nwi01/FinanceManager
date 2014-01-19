@@ -410,7 +410,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         group.add(this.oldStyle);
         group.add(this.newStyle);
 
-        this.kontoStand = new JFormattedTextField(new Float(10.01));
+        this.kontoStand = new JFormattedTextField(new Float(0.00));
         this.kontoStand.setFormatterFactory(new AbstractFormatterFactory() {
             @Override
             public AbstractFormatter getFormatter(JFormattedTextField tf) {

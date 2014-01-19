@@ -35,11 +35,7 @@ public class CSVImport
             if(file.getName().contains("VB")){
                 uBank = "VB";
             }
-            if(uBank == null){
-                uBank = "PB";
-            }
-            
-        }
+          }
         switch(uBank)
         {
             case "KSK": lRueckgabe = KSKImport(uPath); break;
