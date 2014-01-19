@@ -46,7 +46,6 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     private JComboBox<Konto> konten;
     private JComboBox<Dauerauftrag> auftraege;
     private JButton deleteAuftraege;
-    private JCheckBox checkBoxNewStandingOrder;
     private JTextField startDate;
     private JComboBox intervall;
     private JFormattedTextField money;
@@ -109,16 +108,12 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         constraints.gridx = 3;
         constraints.gridwidth = 5;
         panel.add(this.auftraege, constraints);
-        
+
         constraints.gridx = 9;
         constraints.gridwidth = 1;
         panel.add(this.deleteAuftraege, constraints);
 
-        constraints.gridy++;
-        constraints.gridx = 0;
         constraints.gridwidth = 1;
-        constraints.insets = new Insets(5, 5, 20, 5);
-        panel.add(this.checkBoxNewStandingOrder, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -191,7 +186,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     }
 
     private void setAllEnabled(boolean isEnabled) {
-        this.checkBoxNewStandingOrder.setEnabled(isEnabled);
+//        this.checkBoxNewStandingOrder.setEnabled(isEnabled);
         this.startDate.setEnabled(isEnabled);
         this.money.setEnabled(isEnabled);
         this.to.setEnabled(isEnabled);
@@ -216,7 +211,7 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
             if (!((Konto) this.konten.getSelectedItem()).getDauerauftraege().isEmpty()) {
                 this.auftraege.setSelectedIndex(0);
             } else {
-                this.checkBoxNewStandingOrder.setSelected(true);
+//                this.checkBoxNewStandingOrder.setSelected(true);
             }
         }
 
@@ -228,9 +223,15 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 this.to.setText(auf.getAdressat());
                 this.intervall.setSelectedItem(auf.getDatum().getIntervall());
                 this.verwendungszweck.setText(auf.getVerwendungszweck());
-                if(auf.isIsWdh()){
-                    this.repeat.doClick();
+                this.categories.setSelectedItem(auf.getKategorie());
+                if (auf.isIsWdh()) {
+                    this.repeatTextField.setValue(auf.getDatum().getAnzahlWdh());
                 }else{
+                    this.untilDateTextField.setText(GUIHelper.getStringRepresantation(auf.getDatum().getEndezeit().getTime()));
+                }
+                if (auf.isIsWdh()) {
+                    this.repeat.doClick();
+                } else {
                     this.untilDate.doClick();
                 }
             }
@@ -240,44 +241,22 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
             //TODO eventuell den JCalendar benutzen : http://www.toedter.com/en/jcalendar/
         }
 
-        if (event.getSource() == this.checkBoxNewStandingOrder) {
-            if (!this.checkBoxNewStandingOrder.isSelected()) {
-                this.startDate.setText("");
-                this.money.setText("");
-                this.to.setText("");
-                this.verwendungszweck.setText("");
-            } else {
-                this.auftraege.setSelectedIndex(this.auftraege.getSelectedIndex());
-            }
-        }
-
         if (event.getSource() == this.repeat) {
             this.untilDateTextField.setEnabled(false);
             this.repeatTextField.setEnabled(true);
-            if(!this.checkBoxNewStandingOrder.isSelected()){
-                if(this.repeat.isSelected()){
-                    this.repeatTextField.setValue(((Dauerauftrag)this.auftraege.getSelectedItem()).getDatum().getAnzahlWdh());
-                }
-                else{
-                    this.repeatTextField.setValue(0);
-                }
-            }
         }
 
         if (event.getSource() == this.untilDate) {
             this.untilDateTextField.setEnabled(true);
             this.repeatTextField.setEnabled(false);
-            if(this.untilDate.isSelected()){
-                if(this.auftraege.getModel().getSize() != 0){
-                    this.untilDateTextField.setText(((Dauerauftrag)this.auftraege.getSelectedItem()).getDatum().getEndezeit().toString());
-                }                
-            }else{
+            if (this.untilDate.isSelected()) {
+            } else {
                 this.untilDateTextField.setText("");
             }
         }
-        
-        if(event.getSource() == this.deleteAuftraege){
-            ((Konto)this.konten.getSelectedItem()).getDauerauftraege().remove((Dauerauftrag)this.auftraege.getSelectedItem());
+
+        if (event.getSource() == this.deleteAuftraege) {
+            ((Konto) this.konten.getSelectedItem()).getDauerauftraege().remove((Dauerauftrag) this.auftraege.getSelectedItem());
             this.updateContent();
         }
     }
@@ -289,43 +268,29 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         String startzeit = this.startDate.getText();
         Zeitraum.Intervall i = (Zeitraum.Intervall) this.intervall.getSelectedItem();
         double betrag = Double.parseDouble(this.money.getValue().toString());
-        
+
 //        JOptionPane.showMessageDialog(null, betrag, "Anmeldung fehlgeschlagen", JOptionPane.OK_OPTION);
-        
         String adressat = this.to.getText();
         boolean bWdh = this.repeat.isSelected();
         int wdh = (Integer) this.repeatTextField.getValue();
         String endezeit = this.untilDateTextField.getText();
 
-        if (this.checkBoxNewStandingOrder.isSelected()) {
-            if (bWdh) {
-                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
-                        i, wdh, this.verwendungszweck.getText(), (Kategorie) this.categories.getSelectedItem());
-                k.addDauerauftrag(neu);
-                k.buchen(neu);
-            } else {
-                Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
-                        i, endezeit, this.verwendungszweck.getText(), (Kategorie) this.categories.getSelectedItem());
-                k.addDauerauftrag(neu);
-                k.buchen(neu);
-            }
-
-            this.startDate.setText("");
-            this.money.setText("");
-            this.to.setText("");
+        if (bWdh) {
+            Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
+                    i, wdh, this.verwendungszweck.getText(), (Kategorie) this.categories.getSelectedItem());
+            k.addDauerauftrag(neu);
+            k.buchen(neu);
         } else {
-            d.setAdressat(adressat);
-            d.setBetrag(betrag);
-            if (bWdh) {
-                Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), i, wdh);
-                d.setDatum(uIntervall);
-            } else {
-                Zeitraum uIntervall = new Zeitraum(Zeitraum.parseCalendar(startzeit), i,
-                        Zeitraum.parseCalendar(endezeit));
-                d.setDatum(uIntervall);
-            }
-
+            Dauerauftrag neu = new Dauerauftrag(betrag, adressat, startzeit,
+                    i, endezeit, this.verwendungszweck.getText(), (Kategorie) this.categories.getSelectedItem());
+            k.addDauerauftrag(neu);
+            k.buchen(neu);
         }
+
+        this.startDate.setText("");
+        this.money.setText("");
+        this.to.setText("");
+
         this.updateContent();
     }
 
@@ -339,10 +304,10 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
     @Override
     public void updateContent() {
         this.konten.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
-        if (!this.user.getKonten().isEmpty()) {            
+        if (!this.user.getKonten().isEmpty()) {
             this.auftraege.setModel(new DefaultComboBoxModel(this.user.getKonten().get(0).getDauerauftraege().toArray()));
             this.konten.setSelectedIndex(0);
-            if (this.auftraege.getModel().getSize() != 0) {                
+            if (this.auftraege.getModel().getSize() != 0) {
                 this.auftraege.setSelectedIndex(0);
                 this.setAllEnabled(true);
             } else {
@@ -351,18 +316,18 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 this.to.setEnabled(true);
                 this.intervall.setEnabled(true);
                 this.konten.setEnabled(true);
-                this.checkBoxNewStandingOrder.setSelected(true);
-                this.checkBoxNewStandingOrder.setEnabled(false);                
+//                this.checkBoxNewStandingOrder.setSelected(true);
+//                this.checkBoxNewStandingOrder.setEnabled(false);                
                 this.auftraege.setEnabled(false);
                 this.repeat.doClick();
             }
         } else {
             this.setAllEnabled(false);
-            this.checkBoxNewStandingOrder.setSelected(true);
+//            this.checkBoxNewStandingOrder.setSelected(true);
         }
         this.categories.setModel(new DefaultComboBoxModel(this.user.getKategorien().toArray()));
-         this.intervall.setModel(new DefaultComboBoxModel(Zeitraum.getIntervallEnums()));        
-        
+        this.intervall.setModel(new DefaultComboBoxModel(Zeitraum.getIntervallEnums()));
+
 //        this.untilDateTextField.setEnabled(false);
 //        this.repeatTextField.setEnabled(true);
     }
@@ -388,9 +353,8 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
         this.repeatTextField = new JSpinner();
         this.repeatTextField.setPreferredSize(new Dimension(100, 28));
 
-        this.checkBoxNewStandingOrder = new JCheckBox("(neuen Dauerauftrag anlegen)");
-        this.checkBoxNewStandingOrder.addActionListener(this);
-
+//        this.checkBoxNewStandingOrder = new JCheckBox("(neuen Dauerauftrag anlegen)");
+//        this.checkBoxNewStandingOrder.addActionListener(this);
         this.user = GUIHelper.getInstance().getUser();
         this.intervall = new JComboBox();
         this.intervall.addActionListener(this);
@@ -408,11 +372,11 @@ public class StandingOrderManagementComponent extends ManagementBaseComponent {
                 format.setRoundingMode(RoundingMode.HALF_UP);
                 InternationalFormatter formatter = new InternationalFormatter(format);
                 formatter.setAllowsInvalid(false);
-                
+
                 return formatter;
             }
-});
-        
+        });
+
         this.to = new JTextField();
 
         this.auftraege = new JComboBox();

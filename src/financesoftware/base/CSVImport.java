@@ -7,6 +7,7 @@
 package financesoftware.base;
 
 import financesoftware.tools.GUIHelper;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +24,22 @@ public class CSVImport
     public static boolean Import(String uBank, String uPath)
     {
         List<HilfsBuchung> lRueckgabe;
+        if(uBank == null){
+            File file = new File(uPath);
+            if(file.getName().contains("PB")){
+                uBank = "PB";
+            }
+            if(file.getName().contains("KSK")){
+                uBank = "KSK";
+            }
+            if(file.getName().contains("VB")){
+                uBank = "VB";
+            }
+            if(uBank == null){
+                uBank = "PB";
+            }
+            
+        }
         switch(uBank)
         {
             case "KSK": lRueckgabe = KSKImport(uPath); break;

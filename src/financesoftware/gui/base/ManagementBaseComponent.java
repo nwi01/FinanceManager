@@ -31,13 +31,13 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
 
     public User user = GUIHelper.getInstance().getUser();
 
-    private final JPanel showPanel = new JPanel(); // Hier werden die einzelnen Pages/Arbeitsschritte angezeigt
+    public final JPanel showPanel = new JPanel(); // Hier werden die einzelnen Pages/Arbeitsschritte angezeigt
     private final JPanel nextAndSavePanel = new JPanel();
     public ArrayList<JPanel> sections = new ArrayList();
-    private int currentPage = 0;
+    public int currentPage = 0;
     private final JButton previous = new JButton("Zurück");
     private final JButton next = new JButton("Weiter");
-    private final JButton save = new JButton("Speichern");
+    public final JButton save = new JButton("Speichern");
 
     public ManagementBaseComponent() {
         super(true);
@@ -159,7 +159,7 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
         if (e.getSource() == this.save) {
             this.saveOrUpdate();
             if (Verschluesselung.save(this.user)) {
-                //showSaved();
+                showSaved();
             }
             return true;
         }
@@ -168,11 +168,6 @@ public abstract class ManagementBaseComponent extends BaseComponent implements V
     }
 
     public void showSaved() {
-        this.showPanel.removeAll();
-        currentPage = 0;
-        this.showPanel.add(this.sections.get(this.currentPage));
-        this.getNext().setVisible(true);
-        this.save.setVisible(false);
     }
 
     /**

@@ -9,6 +9,7 @@ import financesoftware.base.Verschluesselung;
 import financesoftware.base.Zeitraum;
 import financesoftware.base.analysis.Analysis;
 import financesoftware.base.analysis.ChartAnalysis;
+import financesoftware.base.analysis.CompareAnalysis;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
@@ -57,29 +58,28 @@ public class GUIHelper {
     public void createAndSaveCompareAnalysis(String name, Zeitraum zeitraum, List<Kategorie> kategorien, List<Konto> konten) {
 
     }
-    
-    public static List<Kategorie> copyCategoryList(List<Kategorie> kats){
-        ArrayList<Kategorie> copyCats = new ArrayList();
-        for(Kategorie kat : kats){
-            copyCats.add(new Kategorie(kat));
-        }
-        
-        return copyCats;
-    }
-    
-    public static Buchung findBuchung(List<Buchung> buchungen, String datum, String value, String to){     
-        for(Buchung buchung : buchungen){            
-            if(GUIHelper.getStringRepresantation(buchung.getDatum().getStartzeit().getTime()).equals(datum)){
-                if(buchung.getBetrag() == Double.parseDouble(value) && buchung.getAdressat().equals(to)){
+
+//    public static List<Kategorie> copyCategoryList(List<Kategorie> kats){
+//        ArrayList<Kategorie> copyCats = new ArrayList();
+//        for(Kategorie kat : kats){
+//            copyCats.add(new Kategorie(kat));
+//        }
+//        
+//        return copyCats;
+//    }
+    public static Buchung findBuchung(List<Buchung> buchungen, String datum, String value, String to) {
+        for (Buchung buchung : buchungen) {
+            if (GUIHelper.getStringRepresantation(buchung.getDatum().getStartzeit().getTime()).equals(datum)) {
+                if (buchung.getBetrag() == Double.parseDouble(value) && buchung.getAdressat().equals(to)) {
                     return buchung;
                 }
             }
         }
-        return null;        
+        return null;
     }
-    
-    public static String getStringRepresantation(Date date){
-        return date.getDate() + "." +(date.getMonth()+1) + "." + (date.getYear() + 1900);
+
+    public static String getStringRepresantation(Date date) {
+        return date.getDate() + "." + (date.getMonth() + 1) + "." + (date.getYear() + 1900);
     }
 
     /**
@@ -104,7 +104,6 @@ public class GUIHelper {
 
 //        list.add(new ChartAnalysis("Test", new Zeitraum(Calendar.getInstance(), Zeitraum.Intervall.TAEGLICH, 120), cat1));
 //        list.add(new Analysis("Test2", new Zeitraum(Calendar.geInstance(), Zeitraum.Intervall.TAEGLICH, 100), cat2));
-
         Konto kon1 = new Konto("test", "454536", "37010050", 0.0);
         kon1.addDauerauftrag(new Dauerauftrag(89.78, "TestAdressat", "12.12.2015", Zeitraum.Intervall.TAEGLICH, 10, "verwendung", new Kategorie("Bl324a", Color.gray)));
         kon.add(kon1);
@@ -118,7 +117,7 @@ public class GUIHelper {
         userD.setAuswertungen(list);
         userD.setKonten(kon);
         userD.setKategorien(kateg);
-                list.add(new ChartAnalysis("TestAuswertung", new Zeitraum(new GregorianCalendar(), new GregorianCalendar()), cat1, false, kon.get(0)));
+        list.add(new ChartAnalysis("TestAuswertung", new Zeitraum(new GregorianCalendar(), new GregorianCalendar()), cat1, false, kon.get(0)));
         return userD;
     }
 
@@ -132,11 +131,12 @@ public class GUIHelper {
      */
     public static String[][] getBookingData(Konto konto) {
         if (konto != null) {
-            String[][] result = new String[konto.getBuchungen().size()][3];
-            for (int i = 0; i < konto.getBuchungen().size(); i++) {
-                result[i][0] = GUIHelper.getStringRepresantation(konto.getBuchungen().get(i).getDatum().getStartzeit().getTime());
-                result[i][1] = String.valueOf(konto.getBuchungen().get(i).getBetrag());
-                result[i][2] = konto.getBuchungen().get(i).getAdressat();
+            List<Buchung> buch = konto.getBuchungen();
+            String[][] result = new String[buch.size()][3];
+            for (int i = 0; i < buch.size(); i++) {
+                result[i][0] = GUIHelper.getStringRepresantation(buch.get(i).getDatum().getStartzeit().getTime());
+                result[i][1] = String.valueOf(buch.get(i).getBetrag());
+                result[i][2] = buch.get(i).getAdressat();
 //            return new String[][]{{"Datum", "Betrag", "Empfänger"}, {"erfe","wdwd","wwww"}};
             }
             if (result.length == 0) {
@@ -148,6 +148,21 @@ public class GUIHelper {
         }
 
 //        return new String[][]{{"Datum", "Betrag", "Empfänger"}};
+    }
+
+    public static String[][] getCompareData(CompareAnalysis ana) {
+        if (ana != null) {
+            List<Kategorie> kats = ana.getKategorien();
+            String[][] result = new String[kats.size()][3];
+            for (int i = 0; i < kats.size(); i++) {
+                result[i][0] = kats.get(i).getlName();
+                result[i][1] = ana.getAccounts().get(0).partByCategorie(kats.get(i)) +"";
+                result[i][2] = ana.getAccounts().get(1).partByCategorie(kats.get(i)) +"";
+            }
+            
+            return result;
+        }
+        return new String[][]{{"Keine Einträge vorhanden"}};
     }
 
     /**
@@ -167,7 +182,6 @@ public class GUIHelper {
             return 0;
         }
     }
-
 
     /**
      *
@@ -251,19 +265,18 @@ public class GUIHelper {
     }
 
     public boolean isUserValid() {
-        if(this.user != null){
+        if (this.user != null) {
             List<Konto> konten = this.user.getKonten();
-            for(int i = 0; i < konten.size(); i++){
+            for (int i = 0; i < konten.size(); i++) {
                 Konto k = konten.get(i);
                 List<Dauerauftrag> dauerauftraege = k.getDauerauftraege();
-                for(int j = 0; j < dauerauftraege.size(); j++){
+                for (int j = 0; j < dauerauftraege.size(); j++) {
                     Dauerauftrag d = dauerauftraege.get(i);
                     k.buchen(d);
                 }
             }
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

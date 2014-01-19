@@ -95,7 +95,6 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 //        JSeparator sep2 = new JSeparator(JSeparator.VERTICAL);
 //        sep2.setPreferredSize(new Dimension(10, 500));
 //        panel.add(sep2, cons);
-
         cons.gridy += 2;
         cons.gridx = 0;
         cons.gridheight = 15;
@@ -177,25 +176,36 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-         
+        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+
         String date = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 0);
-        String value = (String)this.table.getModel().getValueAt(e.getFirstIndex(), 1);
+        String value = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 1);
         String to = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 2);
-        
-        Buchung buch = GUIHelper.findBuchung(((Konto)this.accounts.getSelectedItem()).getBuchungen(), date, value, to);
-        if(buch != null){
+
+        Buchung buch = GUIHelper.findBuchung(((Konto) this.accounts.getSelectedItem()).getBuchungen(), date, value, to);
+        if (buch != null) {
             this.bookingDate.setText(GUIHelper.getStringRepresantation(buch.getDatum().getStartzeit().getTime()));
             this.bookingValue.setText(value);
             this.bookingTo.setText(to);
             this.verwendungszweck.setText(buch.getVerwendungszweck());
-        }        
+            this.categories.setSelectedItem(buch.getKategorie());
+            setCategorieByName(buch.getKategorie().getlName());
+        }
+    }
+
+    private void setCategorieByName(String name) {
+        for(int i = 0; i < this.categories.getModel().getSize(); i++){
+            if(this.categories.getModel().getElementAt(i).getlName().equals(name)){
+                this.categories.getModel().setSelectedItem(this.categories.getModel().getElementAt(i));
+            }
+            
+        }
     }
 
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.accounts) {
-            this.currentMoney.setText(((Konto)this.accounts.getSelectedItem()).getAktuellerKontostand() + "");
+            this.currentMoney.setText(((Konto) this.accounts.getSelectedItem()).getAktuellerKontostand() + "");
             this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData((Konto) this.accounts.getSelectedItem()), GUIHelper.getBookingColumnName((Konto) this.accounts.getSelectedItem())));
         }
     }
@@ -204,7 +214,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     public void saveOrUpdate() {
         if (this.checkBoxNewBooking.isSelected()) {
             Konto selectedKonto = (Konto) this.accounts.getSelectedItem();
-            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getValue().toString(), this.bookingTo.getText(), 
+            boolean saved = GUIHelper.saveNewBooking(this.bookingDate.getText(), this.bookingValue.getValue().toString(), this.bookingTo.getText(),
                     selectedKonto, (Kategorie) this.categories.getSelectedItem(), this.verwendungszweck.getText());
 
             this.bookingDate.setText("");
@@ -240,13 +250,12 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.tableScrollPane = new JScrollPane(table);
         this.tableScrollPane.setPreferredSize(new Dimension(500, 400));
         this.table.setFillsViewportHeight(true);
-       
 
         // Spezielle Buchung
         this.bookingDate = new JFormattedTextField(new Date());
         this.bookingDate.setPreferredSize(new Dimension(100, 28));
         this.bookingValue = new JFormattedTextField(NumberFormat.getNumberInstance());
-        
+
         this.bookingValue = new JFormattedTextField(new Float(0.00));
         this.bookingValue.setFormatterFactory(new JFormattedTextField.AbstractFormatterFactory() {
             @Override
@@ -257,11 +266,11 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
                 format.setRoundingMode(RoundingMode.HALF_UP);
                 InternationalFormatter formatter = new InternationalFormatter(format);
                 formatter.setAllowsInvalid(false);
-                
+
                 return formatter;
             }
         });
-        
+
         this.bookingTo = new JTextField();
         this.userOverviewPanel = new JPanel();
         this.currentMoney = new JFormattedTextField(NumberFormat.getCurrencyInstance());

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -95,10 +96,14 @@ public class ChartFactoryMapper {
                 }
 
                 chartInstance = org.jfree.chart.ChartFactory.createBarChart("", "", "", dataSet);
-                PiePlot3D plot = (PiePlot3D) chartInstance.getPlot();
-                plot.setStartAngle(290);
-                plot.setDirection(Rotation.CLOCKWISE);
+                CategoryPlot plot = (CategoryPlot) chartInstance.getPlot();
+//                plot.setStartAngle(290);
+//                plot.setDirection(Rotation.CLOCKWISE);
                 plot.setForegroundAlpha(0.5f);
+                for (Kategorie kat : mapping.keySet()) {
+//                    plot.setSectionPaint(kat.getlName(), kat.Farbe());
+//                    plot.set
+                }
                 return chartInstance;
             }
         }

@@ -114,6 +114,17 @@ public class Konto implements Serializable {
     public String getKontoNr() {
         return KontoNr;
     }
+    
+    public double partByCategorie(Kategorie kat){
+        double sum = 0;
+        for(int i = 0; i < this.getBuchungen().size(); i++){
+            if(this.getBuchungen().get(i).getKategorie().getlName().equals(kat.getlName())){
+                sum += this.getBuchungen().get(i).getBetrag();
+            }
+        }
+        
+        return sum;
+    }
 
     /**
      * @param KontoNr the KontoNr to set

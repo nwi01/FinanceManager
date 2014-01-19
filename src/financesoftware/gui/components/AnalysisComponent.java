@@ -6,22 +6,18 @@ package financesoftware.gui.components;
 
 import financesoftware.base.Konto;
 import financesoftware.base.User;
-import financesoftware.base.analysis.Analysis;
 import financesoftware.base.analysis.ChartAnalysis;
+import financesoftware.base.analysis.CompareAnalysis;
 import financesoftware.gui.base.ViewComponent;
 import financesoftware.tools.ChartFactoryMapper;
 import financesoftware.tools.GUIHelper;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import static java.lang.Math.random;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -31,17 +27,11 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
-import org.jfree.chart.ChartFactory;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot3D;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
-import org.jfree.util.Rotation;
 
 /**
  *
@@ -157,9 +147,29 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
     }
 
     private void createCompareAnalysis() {
+        this.desktopPane.removeAll();
+        int xStart = 0;
+        int yStart = 0;
+        int xEnd = 500;
+        int yEnd = 400;
+        JInternalFrame iframe = new JInternalFrame("Vergleich", true, true, true, true);
+        iframe.setBounds(xStart, yStart, xEnd, yEnd);
 
-        this.analysisPanel.removeAll();
-        this.analysisPanel.add(this.comparePanel);
+        CompareAnalysis ana = (CompareAnalysis) this.analysisBox.getSelectedItem();
+        iframe.add(this.createCompareTable(ana));
+        iframe.setVisible(true);
+        this.desktopPane.add(iframe);
+        this.updateDesktopPane();
+    }
+
+    private JTable createCompareTable(CompareAnalysis ana) {
+        JTable table = new JTable();
+        table.setShowHorizontalLines(true);
+        table.setFillsViewportHeight(true);
+        String[] columnNames = {"Kategorie", "1. Konto", "2. Konto"};
+        table.setModel(new DefaultTableModel(GUIHelper.getCompareData(ana), columnNames));
+
+        return table;
     }
 
     @Override
@@ -179,11 +189,13 @@ public class AnalysisComponent extends BaseComponent implements ViewComponent, A
         if (this.user.getAuswertungen().size() != 0) {
             this.analysisBox.setSelectedIndex(0);
         }
+        this.desktopPane.setVisible(false);
+        this.desktopPane.repaint();
+        this.desktopPane.setVisible(true);
     }
 
     @Override
-    public JComponent getComponent() 
-    {
+    public JComponent getComponent() {
         this.updateContent();
         return this;
     }

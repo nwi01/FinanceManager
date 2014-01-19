@@ -55,27 +55,27 @@ public class User implements Serializable
         lPassword = uPassword;
         this.createDefaultCategories();
     }
-     
-    public List<Kategorie> copyKategorien()
-    {
-        List<Kategorie> lRueckgabe = new ArrayList<>();
-        
-        for(Kategorie lKat : kategorien)
-        {
-            lRueckgabe.add(new Kategorie(lKat));
-        }
-        return lRueckgabe;
-    }
+//     
+//    public List<Kategorie> copyKategorien()
+//    {
+//        List<Kategorie> lRueckgabe = new ArrayList<>();
+//        
+//        for(Kategorie lKat : kategorien)
+//        {
+//            lRueckgabe.add(new Kategorie(lKat));
+//        }
+//        return lRueckgabe;
+//    }
      
      /**
       * Standard Kategorien
       * TODO: Sollte aktiviert werden, wenn die verschluesselung klappt
       */
      private void createDefaultCategories(){
-//         this.kategorien.add(new Kategorie("Essen", Color.ORANGE));
-//         this.kategorien.add(new Kategorie("Auto", Color.blue));
-//         this.kategorien.add(new Kategorie("Elektronik", Color.gray));
-//         this.kategorien.add(new Kategorie("Pflanzen", Color.green));
+         this.kategorien.add(new Kategorie("Essen", Color.ORANGE));
+         this.kategorien.add(new Kategorie("Auto", Color.blue));
+         this.kategorien.add(new Kategorie("Elektronik", Color.gray));
+         this.kategorien.add(new Kategorie("Pflanzen", Color.green));
      }
         
     //Getter_Setter

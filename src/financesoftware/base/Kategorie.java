@@ -29,14 +29,6 @@ public class Kategorie implements Serializable {
     public Kategorie() {
     }
 
-    public Kategorie(Kategorie kat) {
-        lName = kat.getlName();
-        lAlpha = kat.getlAlpha();
-        lRed = kat.getlRed();
-        lBlue = kat.getlBlue();
-        lGreen = kat.getlGreen();
-    }
-
     public Kategorie(String uName, Color uFarbe) {
         lName = uName;
         lAlpha = uFarbe.getAlpha();

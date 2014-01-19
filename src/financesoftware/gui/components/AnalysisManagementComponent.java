@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 
 /**
  *
@@ -61,6 +62,10 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
     private List currentCategories;
     private JButton addCategoryButton;
     private JButton removeCategoryButton;
+
+    //Konten auswaehlen
+    private JComboBox<Konto> konto1;
+    private JComboBox<Konto> konto2;
 
     private JRadioButton isCompareAnalysis;
 
@@ -254,6 +259,28 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         labelU.setFont(new Font("Dialog", Font.PLAIN, 18));
         panel.add(labelU, constraints);
 
+        constraints.gridx = 0;
+        constraints.gridy++;
+        constraints.gridwidth = 1;
+        JLabel label1 = new JLabel("1. Konto:");
+        labelU.setFont(new Font("Dialog", Font.PLAIN, 18));
+        panel.add(label1, constraints);
+
+        constraints.gridx = 3;
+        constraints.gridwidth = 5;
+        panel.add(this.konto1, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy++;
+        constraints.gridwidth = 1;
+        JLabel label2 = new JLabel("2. Konto:");
+        labelU.setFont(new Font("Dialog", Font.PLAIN, 18));
+        panel.add(label2, constraints);
+
+        constraints.gridx = 3;
+        constraints.gridwidth = 5;
+        panel.add(this.konto2, constraints);
+
         return panel;
     }
 
@@ -353,7 +380,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
                 this.from.setText(GUIHelper.getStringRepresantation(ana.getZeitraum().getStartzeit().getTime()));
                 this.to.setText(GUIHelper.getStringRepresantation(ana.getZeitraum().getEndezeit().getTime()));
 
-                this.currentCategories.clear();
+                this.currentCategories = new ArrayList();
                 this.availCategoriesList.removeAll();
 
                 this.currentCategoriesList.setListData(ana.getKategorien().toArray());
@@ -361,20 +388,22 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
                 List<Kategorie> list = getAvailList(ana.getKategorien());
                 this.availCategoriesList.setListData(list.toArray());
-                this.availCategories.clear();
+                this.availCategories = new ArrayList();
                 this.availCategories.addAll(list);
 
                 if (ana instanceof ChartAnalysis) {
                     ChartAnalysis chartAna = (ChartAnalysis) ana;
-                    this.currentCharts.clear();
+                    this.currentCharts = new ArrayList();
                     this.currentCharts.addAll(chartAna.getCharts());
                     this.currentChartsList.setListData(this.currentCharts.toArray());
                     this.isChartAnalysis.doClick();
                 } else {
                     CompareAnalysis compareAna = (CompareAnalysis) ana;
-                    this.currentCategories.clear();
+                    this.currentCategories = new ArrayList();
                     this.currentCategories.addAll(compareAna.getKategorien());
                     this.isCompareAnalysis.doClick();
+                    this.konto1.setSelectedItem(compareAna.getAccounts().get(0));
+                    this.konto2.setSelectedItem(compareAna.getAccounts().get(1));
                 }
             }
 
@@ -451,7 +480,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
         String nameS = this.name.getText();
         Zeitraum zeit = new Zeitraum(Zeitraum.parseCalendar(this.from.getText()), Zeitraum.Intervall.TAEGLICH, Zeitraum.parseCalendar(this.to.getText()));
-        List<Kategorie> kat = GUIHelper.copyCategoryList(this.currentCategories);
+        List<Kategorie> kat = this.currentCategories;//GUIHelper.copyCategoryList(this.currentCategories);
         if (this.isChartAnalysis.isSelected()) {
             List<ChartEnum> charts = this.currentCharts;
             Konto kon = (Konto) this.kontoBox.getSelectedItem();
@@ -459,18 +488,30 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
             ana.setCharts(charts);
             this.user.addAuswertung(ana);
         } else {
-
+            CompareAnalysis ana = new CompareAnalysis(nameS, zeit, kat, true, (Konto) this.konto1.getSelectedItem(), (Konto) this.konto2.getSelectedItem());
+            this.user.addAuswertung(ana);
         }
     }
 
     @Override
+    public void showSaved() {
+        this.showPanel.removeAll();
+        currentPage = 0;
+        this.showPanel.add(this.sections.get(this.currentPage));
+        this.getNext().setVisible(true);
+        this.save.setVisible(false);
+    }
+
+    @Override
     public void initFields() {
+        this.konto1 = new JComboBox();
+        this.konto2 = new JComboBox();
         this.deleteAnalysis = new JButton("X");
         this.deleteAnalysis.addActionListener(this);
 
         //Kategorien
         this.currentCategories = new ArrayList();
-        this.availCategories = this.user.copyKategorien();//this.user.getKategorien();
+        this.availCategories = this.user.getKategorien();//this.user.getKategorien();
         this.availCategoriesList = new JList();
         this.currentCategoriesList = new JList();
         this.addCategoryButton = new JButton(">>");
@@ -512,6 +553,9 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void updateContent() {
+        this.konto1.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+        this.konto2.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
+
         this.currentCategoriesList.setListData(this.currentCategories.toArray());
 
         this.availChartsList.setListData(this.availCharts.toArray());
@@ -529,9 +573,18 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         } else {
             this.analysisBox.setEnabled(false);
             this.availCategoriesList.setListData(this.user.getKategorien().toArray());
-            this.availCategories.clear();
+            this.availCategories = new ArrayList();
             this.availCategories.addAll(this.user.getKategorien());
         }
+    }
+
+    private List<Object> getObjects(ListModel list) {
+        ArrayList<Object> objs = new ArrayList();
+        for (int i = 0; i < list.getSize(); i++) {
+            Object obj = list.getElementAt(i);
+        }
+
+        return objs;
     }
 
     private void enableOrDisable(boolean enableOrDisable) {

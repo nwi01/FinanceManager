@@ -5,6 +5,7 @@
 package financesoftware.gui.components;
 
 import financesoftware.base.Buchung;
+import financesoftware.base.CSVImport;
 import financesoftware.base.Dauerauftrag;
 import financesoftware.base.Konto;
 import financesoftware.base.Verschluesselung;
@@ -15,6 +16,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -24,6 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
@@ -50,6 +53,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
     private JCheckBox checkBoxNewAccount;
     private JComboBox<Konto> kontoBox;
     private JButton deleteKonto;
+    private JButton importKonto;
     private JComboBox<Buchung> buchungBox;
     private JComboBox<Dauerauftrag> dauerauftragBox;
     private JTextField kontoName;
@@ -88,11 +92,17 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                     this.kontoBLZ.setEnabled(true);
                     this.kontoBIC.setEnabled(false);
                     this.kontoIBAN.setEnabled(false);
+                    this.kontoNummer.setText(currentKonto.getKontoNr());
+                    this.kontoBLZ.setText(currentKonto.getBLZ());
                 } else {
                     this.kontoBIC.setEnabled(true);
                     this.kontoIBAN.setEnabled(true);
                     this.kontoNummer.setEnabled(false);
                     this.kontoBLZ.setEnabled(false);
+                    this.kontoNummer.setText("");
+                    this.kontoBLZ.setText("");
+                    this.kontoIBAN.setText(currentKonto.getIban());
+                    this.kontoBIC.setText(currentKonto.getBic());
                 }
             } else {
                 this.kontoStand.setEnabled(true);
@@ -182,6 +192,14 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             this.updateContent();
         }
 
+        if (event.getSource() == this.importKonto) {
+            JFileChooser chooser = new JFileChooser();
+            int ret = chooser.showOpenDialog(this);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                CSVImport.Import(null, file.getPath());
+            }
+        }
     }
 
     private void enableOrDisableOldStyle(boolean setOldStyleEnabled) {
@@ -364,6 +382,11 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         panel.add(this.kontoStand, constraints);
 
         constraints.gridy++;
+        constraints.gridx = 2;
+        constraints.gridwidth = 1;
+        panel.add(this.importKonto, constraints);
+
+        constraints.gridy++;
         constraints.gridx = 0;
         constraints.gridwidth = 8;
         constraints.insets = new Insets(5, 5, 200, 5);
@@ -383,6 +406,8 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     @Override
     public void initFields() {
+        this.importKonto = new JButton("Import");
+        this.importKonto.addActionListener(this);
         this.deleteKonto = new JButton("X");
         this.deleteKonto.addActionListener(this);
         this.name = new JTextField();
