@@ -198,6 +198,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             if (ret == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 CSVImport.Import(null, file.getPath());
+                this.updateContent();
             }
         }
     }

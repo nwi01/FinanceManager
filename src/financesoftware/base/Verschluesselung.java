@@ -43,7 +43,6 @@ public abstract class Verschluesselung {
             deleteTmp();
             return Load;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
