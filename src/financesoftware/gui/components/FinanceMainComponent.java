@@ -50,7 +50,7 @@ import javax.swing.text.InternationalFormatter;
  */
 public class FinanceMainComponent extends ManagementBaseComponent implements ViewComponent, ActionListener, ListSelectionListener {
 
-    private JTextField currentMoney;
+    private JFormattedTextField currentMoney;
     private JComboBox<Konto> accounts;
     private JTable table;
     private JButton importKonto;
@@ -190,18 +190,21 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     public void valueChanged(ListSelectionEvent e) {
         ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
+        if(this.table.getModel().getRowCount() > 0)
+        {
         String date = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 0);
-        String value = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 1);
+        double value = Double.parseDouble((String) this.table.getModel().getValueAt(e.getFirstIndex(), 1));
         String to = (String) this.table.getModel().getValueAt(e.getFirstIndex(), 2);
 
         Buchung buch = GUIHelper.findBuchung(((Konto) this.accounts.getSelectedItem()).getBuchungen(), date, value, to);
         if (buch != null) {
             this.bookingDate.setText(GUIHelper.getStringRepresantation(buch.getDatum().getStartzeit().getTime()));
-            this.bookingValue.setText(value);
+            this.bookingValue.setValue(value);
             this.bookingTo.setText(to);
             this.verwendungszweck.setText(buch.getVerwendungszweck());
             this.categories.setSelectedItem(buch.getKategorie());
             setCategorieByName(buch.getKategorie().getlName());
+        }
         }
     }
 
@@ -217,7 +220,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
     @Override
     public void specialAction(ActionEvent event) {
         if (event.getSource() == this.accounts) {
-            this.currentMoney.setText(((Konto) this.accounts.getSelectedItem()).getAktuellerKontostand() + "");
+            this.currentMoney.setValue(((Konto) this.accounts.getSelectedItem()).getAktuellerKontostand());
             this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData((Konto) this.accounts.getSelectedItem()), GUIHelper.getBookingColumnName((Konto) this.accounts.getSelectedItem())));
         }
 
@@ -246,7 +249,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
             if (saved) {
                 table.setVisible(false);
                 this.table.setModel(new DefaultTableModel(GUIHelper.getBookingData(selectedKonto), GUIHelper.getBookingColumnName(selectedKonto)));
-                this.currentMoney.setText(String.valueOf(GUIHelper.getCurrentMoney(selectedKonto)));
+                this.currentMoney.setValue(GUIHelper.getCurrentMoney(selectedKonto));
                 table.setVisible(true);
 //            userOverviewPanel.repaint();
             }
@@ -271,6 +274,7 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         this.table = new JTable();
         this.table.setShowHorizontalLines(true);
         this.table.getSelectionModel().addListSelectionListener(this);
+ 
         this.tableScrollPane = new JScrollPane(table);
         this.tableScrollPane.setPreferredSize(new Dimension(500, 400));
         this.table.setFillsViewportHeight(true);
@@ -278,7 +282,6 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
         // Spezielle Buchung
         this.bookingDate = new JFormattedTextField(new Date());
         this.bookingDate.setPreferredSize(new Dimension(100, 28));
-        this.bookingValue = new JFormattedTextField(NumberFormat.getNumberInstance());
 
         this.bookingValue = new JFormattedTextField(new Float(0.00));
         this.bookingValue.setFormatterFactory(new JFormattedTextField.AbstractFormatterFactory() {
@@ -297,7 +300,20 @@ public class FinanceMainComponent extends ManagementBaseComponent implements Vie
 
         this.bookingTo = new JTextField();
         this.userOverviewPanel = new JPanel();
-        this.currentMoney = new JFormattedTextField(NumberFormat.getCurrencyInstance());
+        this.currentMoney = new JFormattedTextField(new Float(0.00));
+        this.currentMoney.setFormatterFactory(new JFormattedTextField.AbstractFormatterFactory() {
+            @Override
+            public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+                NumberFormat format = DecimalFormat.getInstance();
+                format.setMinimumFractionDigits(2);
+                format.setMaximumFractionDigits(2);
+                format.setRoundingMode(RoundingMode.HALF_UP);
+                InternationalFormatter formatter = new InternationalFormatter(format);
+                formatter.setAllowsInvalid(false);
+
+                return formatter;
+            }
+        });
         this.currentMoney.setPreferredSize(new Dimension(100, 28));
         this.currentMoney.setEditable(false);
         this.accounts = new JComboBox(this.user.getKonten().toArray());

@@ -69,6 +69,8 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     public AccountManagementComponent() {
         super();
+        
+        this.checkBoxNewAccount.doClick();
     }
 
     @Override
@@ -78,14 +80,14 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
             //Falls ein bestehendes Konto angeschaut wird soll der Aktuelle KontoStand nicht veränderbar sein
             if (!this.checkBoxNewAccount.isSelected()) {
-
-                this.kontoStand.setEnabled(false);
+                this.kontoName.setText(currentKonto.getName());
+                this.kontoStand.setValue(currentKonto.getAktuellerKontostand());
+                
                 this.kontoBox.setEnabled(true);
                 this.oldStyle.setEnabled(false);
                 this.newStyle.setEnabled(false);
-
-                this.kontoName.setText(currentKonto.getName());
-                this.kontoStand.setValue(currentKonto.getAktuellerKontostand());
+                this.kontoStand.setEnabled(false);
+                
                 if (currentKonto.isOldStyle()) {
                     this.kontoNummer.setEnabled(true);
                     this.kontoBLZ.setEnabled(true);
@@ -144,12 +146,12 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                         this.kontoIBAN.setEnabled(false);
                         this.kontoBIC.setEnabled(false);
                     } else {
-//                        this.kontoIBAN.setText(kon.getIban());
-//                        this.kontoBIC.setText(kon.getBic());
-//                        this.kontoNummer.setEnabled(false);
-//                        this.kontoBLZ.setEnabled(false);
-//                        this.kontoIBAN.setEnabled(true);
-//                        this.kontoBIC.setEnabled(true);
+                        this.kontoIBAN.setText(kon.getIban());
+                        this.kontoBIC.setText(kon.getBic());
+                        this.kontoNummer.setEnabled(false);
+                        this.kontoBLZ.setEnabled(false);
+                        this.kontoIBAN.setEnabled(true);
+                        this.kontoBIC.setEnabled(true);
                         if (this.kontoBox.getModel().getSize() != 0) {
                             this.kontoBox.setSelectedIndex(0);
                         }
@@ -160,7 +162,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
                     this.kontoStand.setEnabled(false);
                     this.kontoBox.setEnabled(true);
-
+                }
                 } else {
                     this.kontoStand.setEnabled(true);
                     this.kontoBox.setEnabled(false);
@@ -176,7 +178,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
                 this.newStyle.setEnabled(true);
                 this.kontoStand.setEnabled(true);
             }
-        }
+        
 
         if (event.getSource() == this.oldStyle) {
             enableOrDisableOldStyle(true);
@@ -260,6 +262,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
             Verschluesselung.save(user);
         }
         this.updateContent();
+         this.kontoBox.setEnabled(false);
     }
 
     private JPanel createUserManagement() {
@@ -435,6 +438,7 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         this.kontoBLZ.setPreferredSize(new Dimension(100, 28));
         this.kontoBox = new JComboBox(this.user.getKonten().toArray());
         this.kontoBox.addActionListener(this);
+        this.kontoBox.setEnabled(false);
         this.newStyle.setSelected(true);
 
         this.enableOrDisableOldStyle(false);
@@ -444,8 +448,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
 
     private void enableOrDisableFields(boolean enable) {
         this.checkBoxNewAccount.setEnabled(enable);
-        this.checkBoxNewAccount.setEnabled(enable);
-        this.kontoBox.setEnabled(enable);
         this.deleteKonto.setEnabled(enable);
     }
 
@@ -454,7 +456,6 @@ public class AccountManagementComponent extends ManagementBaseComponent {
         this.oldStyle.doClick();
         this.kontoBox.setModel(new DefaultComboBoxModel(this.user.getKonten().toArray()));
         if (!this.user.getKonten().isEmpty()) {
-            this.kontoBox.setSelectedIndex(0);
             this.enableOrDisableFields(true);
         } else {
             this.enableOrDisableFields(false);

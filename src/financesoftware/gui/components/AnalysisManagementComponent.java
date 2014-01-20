@@ -432,7 +432,7 @@ public class AnalysisManagementComponent extends ManagementBaseComponent {
         }
 
         if (event.getSource() == this.removeChartButton) {
-            String chart = (String) this.currentChartsList.getSelectedValue();
+            String chart = this.currentChartsList.getSelectedValue().toString();
             if (chart != null) {
                 this.currentCharts.remove(chart);
                 this.currentChartsList.setListData(this.currentCharts.toArray());

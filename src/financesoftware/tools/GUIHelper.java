@@ -67,10 +67,10 @@ public class GUIHelper {
 //        
 //        return copyCats;
 //    }
-    public static Buchung findBuchung(List<Buchung> buchungen, String datum, String value, String to) {
+    public static Buchung findBuchung(List<Buchung> buchungen, String datum, double value, String to) {
         for (Buchung buchung : buchungen) {
             if (GUIHelper.getStringRepresantation(buchung.getDatum().getStartzeit().getTime()).equals(datum)) {
-                if (buchung.getBetrag() == Double.parseDouble(value) && buchung.getAdressat().equals(to)) {
+                if (buchung.getBetrag() == value && buchung.getAdressat().equals(to)) {
                     return buchung;
                 }
             }
